@@ -1,0 +1,424 @@
+generator client {
+  provider        = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoPropiedad {
+  hotel
+  hostal
+  centro_turistico
+  glamping
+  restaurante
+  bar
+  finca
+  actividad
+}
+
+enum EstadoPropiedad {
+  BORRADOR
+  PUBLICADO
+  ARCHIVADO
+}
+
+enum PlacementType {
+  HOME_BANNER
+  SEARCH_RESULTS_TOP
+  SEARCH_RESULTS_SIDEBAR
+  PROPERTY_DETAIL
+}
+
+enum UserRole {
+  turista
+  propietario
+  admin
+}
+
+enum MetodoPago {
+  TARJETA
+  EFECTIVO
+}
+
+enum EstadoReserva {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  NO_SHOW
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  nombre        String?
+  avatarUrl     String?
+  role          UserRole   @default(turista)
+  supabaseId    String     @unique
+  passwordHash  String?
+  propiedades   Propiedad[]
+  reservas      Reserva[]
+  notificaciones Notificacion[]
+  bannedUntil   DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Propiedad {
+  id                  String              @id @default(cuid())
+  nombre              String
+  tipo                TipoPropiedad
+  descripcion         String?
+  ubicacion           String?
+  coordenadas         Json?
+  telefono            String?
+  email               String?
+  whatsapp            String?
+  direccion           String?
+  ciudad              String?
+  departamento        String?
+  estrellas           Int                 @default(0)
+  horarioCheckIn      String?
+  horarioCheckOut     String?
+  reglamento          String?
+  politicasCancelacion String?
+  admiteMascotas      Boolean             @default(false)
+  seguroDisponible    Boolean             @default(false)
+  capacidadMaxima     Int
+  numeroHabitaciones  Int?
+  numeroBanos         Int?
+  tieneCocina         Boolean             @default(false)
+  tieneParqueadero    Boolean             @default(false)
+  tieneWifi           Boolean             @default(false)
+  precioNoche         Float
+  actividades         String[]
+  videos              String[]
+  servicioImagenes    String[]            @default([])
+  redesSociales       Json?
+  icalImportUrls    String[]            @default([])
+  icalToken         String?             @unique
+  lastIcalSyncAt    DateTime?
+  fuenteDatos       String?             // 'manual' | 'seed' | 'osm' | 'web'
+  ultimaVerificacion DateTime?
+  verificado        Boolean             @default(false)
+  horarioTexto      String?
+  ratingExterno     Float?
+  resenasExternas   Int?                @default(0)
+  estado              EstadoPropiedad     @default(BORRADOR)
+  slug                String              @unique
+  owner               User?               @relation(fields: [ownerId], references: [id])
+  ownerId             String?
+  images              PropiedadImage[]
+  certificados        Certificate[]
+  sponsoredListings   SponsoredListing[]
+  reviews             Review[]
+  reservas            Reserva[]
+  actualizaciones     RegistroActualizacion[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  @@index([tipo])
+  @@index([admiteMascotas])
+  @@index([capacidadMaxima])
+  @@index([estado])
+  @@index([precioNoche])
+}
+
+model PropiedadImage {
+  id          String    @id @default(cuid())
+  propiedad   Propiedad @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  propiedadId String
+  url         String
+  thumbUrl    String?
+  esPrincipal Boolean   @default(false)
+  orden       Int       @default(0)
+  createdAt   DateTime  @default(now())
+}
+
+model Certificate {
+  id               String    @id @default(cuid())
+  propiedad        Propiedad @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  propiedadId      String
+  tipo             String
+  archivoUrl       String
+  fechaEmision     DateTime?
+  fechaVencimiento DateTime?
+  createdAt        DateTime  @default(now())
+}
+
+model Review {
+  id          String    @id @default(cuid())
+  propiedad   Propiedad @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  propiedadId String
+  autorNombre String
+  autorEmail  String?
+  calificacion Int
+  comentario  String?
+  createdAt   DateTime  @default(now())
+
+  @@index([propiedadId])
+  @@index([calificacion])
+}
+
+model AIProvider {
+  id          String   @id @default(cuid())
+  name        String
+  apiEndpoint String
+  websiteUrl  String
+  isActive    Boolean  @default(true)
+  /// true = este proveedor (y su key) lo usa Nati, la asistente del chat
+  paraChat    Boolean  @default(false)
+  apiKeys     APIKey[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model APIKey {
+  id         String     @id @default(cuid())
+  provider   AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  providerId String
+  key        String
+  isActive   Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+
+  @@unique([providerId, key])
+}
+
+model Sponsor {
+  id                  String             @id @default(cuid())
+  nombre              String
+  logoUrl             String?
+  sitioWeb            String?
+  contacto            String?
+  anuncios            Advertisement[]
+  sponsoredListings   SponsoredListing[]
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+}
+
+model Advertisement {
+  id          String        @id @default(cuid())
+  sponsor     Sponsor       @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
+  sponsorId   String
+  titulo      String?
+  imagenUrl   String
+  linkUrl     String
+  placement   PlacementType
+  fechaInicio DateTime
+  fechaFin    DateTime
+  prioridad   Int           @default(0)
+  pagoTotal   Float         @default(0)
+  activo      Boolean       @default(true)
+  impresiones Int           @default(0)
+  clicks      Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([placement, activo, fechaFin])
+}
+
+model SponsoredListing {
+  id          String        @id @default(cuid())
+  sponsor     Sponsor       @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
+  sponsorId   String
+  propiedad   Propiedad     @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  propiedadId String
+  placement   PlacementType @default(SEARCH_RESULTS_TOP)
+  fechaInicio DateTime
+  fechaFin    DateTime
+  prioridad   Int           @default(0)
+  activo      Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([placement, activo, fechaFin])
+}
+
+model Reserva {
+  id             String       @id @default(cuid())
+  propiedadId    String
+  propiedad      Propiedad    @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id])
+  nombre         String
+  email          String
+  telefono       String
+  identificacion String
+  fechaLlegada   DateTime
+  fechaSalida    DateTime
+  huespedes      Int          @default(1)
+  metodoPago     MetodoPago   @default(EFECTIVO)
+  estado         EstadoReserva @default(PENDIENTE)
+  total          Float?
+  notas          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([propiedadId])
+  @@index([userId])
+  @@index([email])
+}
+
+model Notificacion {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tipo      String   @default("info")
+  titulo    String
+  mensaje   String
+  leida     Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, leida])
+}
+
+model SiteConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+model RegistroActualizacion {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  tipo      String   // 'verificacion' | 'cambio' | 'nuevo' | 'posible_cierre' | 'enriquecido'
+  municipio String   @default("")
+  titulo    String
+  detalle   Json?
+  estado    String   @default("pendiente") // pendiente | aplicado | descartado
+  propiedadId String?
+  propiedad  Propiedad? @relation(fields: [propiedadId], references: [id], onDelete: SetNull)
+
+  @@index([estado])
+  @@index([createdAt])
+}
+
+model ClaveApi {
+  id          String   @id @default(cuid())
+  clave       String   @unique // ej: google_places, google_maps
+  nombre      String
+  descripcion String?
+  webUrl      String?  // dónde generar la key
+  valor       String   // cifrado AES-256
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// --- Leads del chat de Nati (CRM de interesados) ---
+model LeadChat {
+  id             String   @id @default(cuid())
+  sessionId      String   @unique
+  nombre         String?
+  email          String?
+  telefono       String?
+  ip             String?  // IP de origen (intranet/LAN) al momento de conversar
+  userAgent      String?  // dispositivo/navegador
+  mensajesTotal  Int      @default(0)
+  primeraPregunta String?
+  ultimaPregunta  String?
+  prefs          Json?    // foto de preferencias: tipo, presupuesto, huéspedes, mascotas, actividad
+  temas          String[] @default([]) // intenciones detectadas: yoga, precios, ubicacion, reserva...
+  transcript     Json?    // últimas 30 intervenciones [{rol, texto}]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([updatedAt])
+  @@index([nombre])
+}
+
+// --- Donaciones vía PayPal ---
+enum EstadoProyectoDonacion {
+  ACTIVO
+  PAUSADO
+  COMPLETADO
+}
+
+enum CategoriaProyecto {
+  ARBOLES
+  CARBONO
+  GENERAL
+}
+
+enum EstadoDonacion {
+  PENDIENTE
+  APROBADA
+  CANCELADA
+}
+
+model ProyectoDonacion {
+  id          String                 @id @default(cuid())
+  titulo      String
+  slug        String                 @unique
+  descripcion String
+  categoria   CategoriaProyecto      @default(GENERAL)
+  meta        Float?                 // meta en la moneda del proyecto (null = sin meta)
+  moneda      String                 @default("USD")
+  imagenUrl   String?
+  media       Json?                  // [{tipo:"imagen"|"video", url}] galería del proyecto
+  paypalLink  String?                // link directo paypal.me (respaldo si no hay API)
+  estado      EstadoProyectoDonacion @default(ACTIVO)
+  orden       Int                    @default(0)
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  donaciones  Donacion[]
+
+  @@index([estado])
+}
+
+model Donacion {
+  id            String         @id @default(cuid())
+  proyecto      ProyectoDonacion @relation(fields: [proyectoId], references: [id], onDelete: Cascade)
+  proyectoId    String
+  monto         Float
+  moneda        String         @default("USD")
+  nombre        String?
+  email         String?
+  mensaje       String?
+  paypalOrderId String?        @unique
+  paypalCaptureId String?
+  estado        EstadoDonacion @default(PENDIENTE)
+  esManual      Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+
+  @@index([proyectoId])
+  @@index([estado])
+}
+
+// --- RAG: base de conocimiento de Nati ---
+enum EstadoDocumento {
+  PROCESANDO
+  LISTO
+  ERROR
+}
+
+model Documento {
+  id          String          @id @default(cuid())
+  titulo      String
+  fuente      String          @default("manual") // manual | docs | upload
+  tipo        String          @default("md")     // md | txt | html
+  estado      EstadoDocumento @default(PROCESANDO)
+  error       String?
+  contenido   String?         // texto fuente (para reindexar con otro modelo)
+  totalChunks Int             @default(0)
+  modeloEmb   String?         // modelo de embeddings usado (null = solo FTS)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  chunks      ChunkDocumento[]
+
+  @@index([estado])
+}
+
+model ChunkDocumento {
+  id          String    @id @default(cuid())
+  documento   Documento @relation(fields: [documentoId], references: [id], onDelete: Cascade)
+  documentoId String
+  orden       Int
+  contenido   String
+  embedding   Float[]   // null = sin vector (solo búsqueda FTS)
+  createdAt   DateTime  @default(now())
+
+  @@index([documentoId])
+}
