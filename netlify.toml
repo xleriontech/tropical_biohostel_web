@@ -1,0 +1,10 @@
+# Netlify: solo se despliega el frontend (Next.js).
+# El backend (NestJS + Postgres + Redis) debe vivir en otro host (Render/Railway/VPS)
+# y su URL pública va en NEXT_PUBLIC_API_URL.
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
