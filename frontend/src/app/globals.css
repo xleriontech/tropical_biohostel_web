@@ -110,7 +110,7 @@
 }
 [data-theme="cundinamarca"] {
   --primary: 200 95% 42%;
-  --primary-foreground: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
   --secondary: 200 90% 94%;
   --secondary-foreground: 222.2 47.4% 11.2%;
   --accent: 200 90% 91%;
@@ -128,7 +128,7 @@
 }
 [data-theme="tucan"] {
   --primary: 22 95% 50%;
-  --primary-foreground: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
   --secondary: 25 100% 93%;
   --secondary-foreground: 222.2 47.4% 11.2%;
   --accent: 25 100% 90%;

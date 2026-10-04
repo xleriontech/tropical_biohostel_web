@@ -227,7 +227,7 @@ export default function ChatWidget() {
                           href={m.ubicacion.mapsUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 rounded-lg bg-emerald-600 px-2 py-1.5 text-center text-xs font-semibold text-white hover:bg-emerald-500"
+                          className="flex-1 rounded-lg bg-emerald-600 px-2 py-1.5 text-center text-xs font-semibold text-white hover:bg-emerald-700"
                         >
                           Google Maps
                         </a>
@@ -235,7 +235,7 @@ export default function ChatWidget() {
                           href={m.ubicacion.wazeUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 rounded-lg bg-sky-600 px-2 py-1.5 text-center text-xs font-semibold text-white hover:bg-sky-500"
+                          className="flex-1 rounded-lg bg-sky-600 px-2 py-1.5 text-center text-xs font-semibold text-white hover:bg-sky-700"
                         >
                           Waze
                         </a>
@@ -310,7 +310,7 @@ export default function ChatWidget() {
               type="submit"
               aria-label="Enviar mensaje"
               disabled={cargando || !entrada.trim()}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500 text-white transition hover:bg-emerald-400 disabled:opacity-40"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500 text-white transition hover:bg-emerald-600 disabled:opacity-40"
             >
               <Send className="h-4 w-4" />
             </button>

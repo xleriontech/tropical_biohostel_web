@@ -206,25 +206,36 @@ export default function PropertyDetailClient({ property }: { property: Property 
             ) : (
               <p className="text-sm text-muted-foreground">{property.ubicacion || "No especificada"}</p>
             )}
-            {property.coordenadas && (
-              <div className="mt-3 space-y-2">
-                <div className="aspect-video overflow-hidden rounded-xl">
-                  <iframe
-                    src={`https://maps.google.com/maps?q=${property.coordenadas}&z=15&output=embed`}
-                    className="h-full w-full"
-                    allowFullScreen
-                    loading="lazy"
-                  />
+            {(() => {
+              const c: any = property.coordenadas;
+              const q = c && typeof c.lat === "number" && typeof c.lng === "number"
+                ? `${c.lat},${c.lng}`
+                : typeof c === "string" && c
+                  ? c
+                  : [property.direccion, property.ciudad, property.departamento].filter(Boolean).join(", ") || property.ubicacion;
+              if (!q) return null;
+              return (
+                <div className="mt-3 space-y-2">
+                  <div className="aspect-video overflow-hidden rounded-xl">
+                    <iframe
+                      title={`Mapa de ${property.nombre}`}
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=15&output=embed`}
+                      className="h-full w-full border-0"
+                      allowFullScreen
+                      loading="lazy"
+                    />
+                  </div>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                  >
+                    Ver en Google Maps <ArrowUpRight className="h-4 w-4" />
+                  </a>
                 </div>
-                <a
-                  href={`https://www.google.com/maps?q=${property.coordenadas}`}
-                  target="_blank"
-                  className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-                >
-                  Ver en Google Maps <ArrowUpRight className="h-4 w-4" />
-                </a>
-              </div>
-            )}
+              );
+            })()}
           </section>
 
           {/* Certificates */}

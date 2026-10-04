@@ -16,6 +16,7 @@ const ADMIN_LINKS = [
   { href: "/admin/ai-providers", label: "Proveedores IA" },
   { href: "/admin/rag", label: "Base de conocimiento" },
   { href: "/admin/interesados", label: "Interesados" },
+  { href: "/admin/repo", label: "Publicar cambios" },
   { href: "/admin/donaciones", label: "Donaciones" },
   { href: "/admin/claves", label: "Claves API" },
   { href: "/admin/reservas", label: "Reservas" },

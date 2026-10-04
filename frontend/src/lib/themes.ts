@@ -102,7 +102,7 @@ export const THEMES: TropicalTheme[] = [
     origen: "Departamento",
     descripcion: "Celeste de la bandera departamental",
     vars: {
-      primary: "200 95% 42%", primaryFg: WHITE_FG,
+      primary: "200 95% 42%", primaryFg: SLATE_FG,
       secondary: "200 90% 94%", secondaryFg: SLATE_FG,
       accent: "200 90% 91%", accentFg: SLATE_FG,
       ring: "200 95% 42%",
@@ -134,7 +134,7 @@ export const THEMES: TropicalTheme[] = [
     origen: "Ave de la selva",
     descripcion: "Naranja del pico del tucán",
     vars: {
-      primary: "22 95% 50%", primaryFg: WHITE_FG,
+      primary: "22 95% 50%", primaryFg: SLATE_FG,
       secondary: "25 100% 93%", secondaryFg: SLATE_FG,
       accent: "25 100% 90%", accentFg: SLATE_FG,
       ring: "22 95% 50%",

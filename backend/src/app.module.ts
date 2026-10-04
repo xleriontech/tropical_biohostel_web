@@ -19,6 +19,7 @@ import { IntegracionesModule } from './integraciones/integraciones.module';
 import { ChatModule } from './chat/chat.module';
 import { RagModule } from './rag/rag.module';
 import { DonacionesModule } from './donaciones/donaciones.module';
+import { RepoModule } from './repo/repo.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { DonacionesModule } from './donaciones/donaciones.module';
     ChatModule,
     RagModule,
     DonacionesModule,
+    RepoModule,
   ],
 })
 export class AppModule {}
