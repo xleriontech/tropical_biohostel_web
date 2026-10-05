@@ -8,8 +8,8 @@ cd /d "%~dp0"
 if exist puertos.txt (
   for /f "tokens=1,2 delims==" %%a in (puertos.txt) do set %%a=%%b
 ) else (
-  set FRONT_PORT=3000
-  set BACK_PORT=3001
+  set FRONT_PORT=3002
+  set BACK_PORT=3003
 )
 
 echo  Deteniendo ventanas TROPICAL (si se abrieron con iniciar-tropical)...

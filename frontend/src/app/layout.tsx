@@ -11,6 +11,9 @@ const inter = Inter({ subsets: ["latin"] });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-nido-sans" });
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-nido-serif", style: ["normal", "italic"] });
 
+// Cloudflare Pages (Workers): todo el render dinámico corre en el edge runtime
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Tropical Biohostel — Naturaleza que se vive | Nocaima",
   description:

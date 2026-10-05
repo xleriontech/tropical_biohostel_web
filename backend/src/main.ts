@@ -30,6 +30,9 @@ async function bootstrap() {
         return callback(null, true);
       }
       if (/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(origin)) return callback(null, true);
+      // Frontends oficiales (Cloudflare Pages producción y previews, Netlify)
+      if (/^https:\/\/([a-z0-9-]+\.)?tropicalbiohostel\.pages\.dev$/.test(origin)) return callback(null, true);
+      if (/^https:\/\/([a-z0-9-]+\.)?tropicalbiohostel\.netlify\.app$/.test(origin)) return callback(null, true);
       callback(null, false);
     },
     credentials: true,

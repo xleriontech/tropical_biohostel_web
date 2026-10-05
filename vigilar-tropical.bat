@@ -10,8 +10,8 @@ cd /d "%~dp0"
 if exist puertos.txt (
   for /f "tokens=1,2 delims==" %%a in (puertos.txt) do set %%a=%%b
 ) else (
-  set FRONT_PORT=3000
-  set BACK_PORT=3001
+  set FRONT_PORT=3002
+  set BACK_PORT=3003
 )
 
 REM Exclusión mutua: si ya hay una revisión en curso, salir (mkdir es atómico)
@@ -82,7 +82,7 @@ if "%SAVED_API%"=="" set URLS_CHANGED=1
 echo %URL_F%>tunel-urls.txt
 echo %URL_B%>>tunel-urls.txt
 
-REM --- backend: debe escuchar en 3001 ---
+REM --- backend: debe escuchar en BACK_PORT ---
 set BACK_UP=0
 for /f %%c in ('powershell -NoProfile -Command "(Get-NetTCPConnection -LocalPort %BACK_PORT% -State Listen -ErrorAction SilentlyContinue | Measure-Object).Count"') do set BACK_UP=%%c
 if "%BACK_UP%"=="0" (
@@ -91,7 +91,7 @@ if "%BACK_UP%"=="0" (
   ping -n 16 127.0.0.1 >nul
 )
 
-REM --- frontend: debe escuchar en 3000 con la API vigente ---
+REM --- frontend: debe escuchar en FRONT_PORT con la API vigente ---
 set FRONT_UP=0
 for /f %%c in ('powershell -NoProfile -Command "(Get-NetTCPConnection -LocalPort %FRONT_PORT% -State Listen -ErrorAction SilentlyContinue | Measure-Object).Count"') do set FRONT_UP=%%c
 set WANT_API=%URL_B%/api
