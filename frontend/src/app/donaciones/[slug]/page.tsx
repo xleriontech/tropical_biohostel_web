@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { CheckCircle2, HeartHandshake } from "lucide-react";
 import DonacionMedia from "@/components/DonacionMedia";
 
+export const runtime = "edge";
+
 declare global {
   interface Window {
     paypal?: any;

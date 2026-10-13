@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import MapPicker from "@/components/MapPicker";
 import ImageUploader from "@/components/ImageUploader";
+
+export const runtime = "edge";
 import { StarRating, TipoIcon } from "@/components/icons";
 import {
   ArrowLeft,

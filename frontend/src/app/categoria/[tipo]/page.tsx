@@ -7,6 +7,8 @@ import AdCarousel from "@/components/AdCarousel";
 import { TipoIcon } from "@/components/icons";
 import { Home, Search } from "lucide-react";
 
+export const runtime = "edge";
+
 const CATEGORY_MAP: Record<string, { tipo: string; label: string; description: string; gradient: string }> = {
   hoteles: {
     tipo: "hotel",

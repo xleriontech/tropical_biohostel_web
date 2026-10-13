@@ -3,6 +3,8 @@ import { api } from "@/lib/api";
 import { Property } from "@/types";
 import PropertyDetailClient from "./PropertyDetailClient";
 
+export const runtime = "edge";
+
 export default async function PropertyPage({
   params,
 }: {
