@@ -6,6 +6,8 @@ import { GitBranch, RefreshCw, UploadCloud } from "lucide-react";
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 interface Estado {
+  disponible?: boolean;
+  motivo?: string;
   rama: string;
   remoto: string;
   cambios: { estado: string; archivo: string }[];
@@ -68,6 +70,11 @@ export default function RepoPage() {
       </div>
 
       {/* Estado */}
+      {estado && estado.disponible === false ? (
+        <div className="rounded-xl border border-amber-300 bg-amber-50 p-5 text-sm text-amber-800 shadow-sm">
+          {estado.motivo || "Publicar no disponible en este servidor."}
+        </div>
+      ) : (
       <div className="grid grid-cols-3 gap-4">
         {[
           { v: estado ? estado.cambios.length : "…", l: "archivos cambiados" },
@@ -80,6 +87,7 @@ export default function RepoPage() {
           </div>
         ))}
       </div>
+      )}
 
       {estado && estado.cambios.length > 0 && (
         <div className="rounded-xl border bg-white p-5 shadow-sm">
@@ -128,7 +136,7 @@ export default function RepoPage() {
         <div className="mt-3 flex gap-2">
           <button
             type="submit"
-            disabled={busy || !mensaje.trim()}
+            disabled={busy || !mensaje.trim() || estado?.disponible === false}
             className="rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
             {busy ? "Publicando…" : "Publicar cambios"}

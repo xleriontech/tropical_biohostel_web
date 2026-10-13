@@ -1,9 +1,7 @@
-import { Sprout, CloudSun, HeartHandshake } from "lucide-react";
+"use client";
 
-export const metadata = {
-  title: "Donaciones · Tropical Biohostel",
-  description: "Apoya la siembra de árboles nativos, la huella de carbono y los proyectos de la finca vía PayPal.",
-};
+import { useEffect, useState } from "react";
+import { Sprout, CloudSun, HeartHandshake } from "lucide-react";
 
 const CATEGORIA: Record<string, { label: string; Icon: any }> = {
   ARBOLES: { label: "Siembra de árboles", Icon: Sprout },
@@ -11,20 +9,15 @@ const CATEGORIA: Record<string, { label: string; Icon: any }> = {
   GENERAL: { label: "Proyecto", Icon: HeartHandshake },
 };
 
-async function getProyectos() {
-  try {
-    const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/donaciones/proyectos`, {
-      next: { revalidate: 60 },
-    });
-    if (!r.ok) return [];
-    return await r.json();
-  } catch {
-    return [];
-  }
-}
+export default function DonacionesPage() {
+  const [proyectos, setProyectos] = useState<any[] | null>(null);
 
-export default async function DonacionesPage() {
-  const proyectos = await getProyectos();
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/donaciones/proyectos`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((d) => setProyectos(Array.isArray(d) ? d : []))
+      .catch(() => setProyectos([]));
+  }, []);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
@@ -41,7 +34,13 @@ export default async function DonacionesPage() {
         PayPal o con tarjeta, sin crear cuenta.
       </p>
 
-      {proyectos.length === 0 ? (
+      {proyectos === null ? (
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-64 animate-pulse rounded-2xl bg-muted" />
+          ))}
+        </div>
+      ) : proyectos.length === 0 ? (
         <div className="mt-10 rounded-2xl border bg-white p-10 text-center shadow-sm">
           <HeartHandshake className="mx-auto h-10 w-10 text-primary" />
           <p className="mt-3 font-semibold">Pronto publicaremos los proyectos</p>

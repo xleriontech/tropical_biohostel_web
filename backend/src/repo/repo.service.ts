@@ -17,9 +17,25 @@ async function git(...args: string[]): Promise<string> {
   }
 }
 
+async function hayRepo(): Promise<boolean> {
+  try {
+    await execGit('git', ['rev-parse', '--is-inside-work-tree'], { cwd: REPO, timeout: 15000 });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 @Injectable()
 export class RepoService {
   async estado() {
+    if (!(await hayRepo())) {
+      return {
+        disponible: false,
+        motivo: 'Este backend corre sin repositorio git (despliegue en la nube). Publica desde tu servidor local en intranet.',
+        rama: '', remoto: '', cambios: [], pendientesPush: 0, ultimosCommits: [],
+      };
+    }
     const [rama, porcelain, log, ahead, remoto] = await Promise.all([
       git('rev-parse', '--abbrev-ref', 'HEAD').catch(() => ''),
       git('status', '--porcelain').catch(() => ''),
@@ -33,6 +49,7 @@ export class RepoService {
       .filter(Boolean)
       .map((l) => ({ estado: l.slice(0, 2).trim() || '?', archivo: l.slice(2).trim() }));
     return {
+      disponible: true,
       rama: rama || 'main',
       remoto: remoto.replace(/:[^@/]+@/, ':***@'),
       cambios,
@@ -42,6 +59,11 @@ export class RepoService {
   }
 
   async publicar(mensaje: string, token?: string) {
+    if (!(await hayRepo())) {
+      throw new BadRequestException(
+        'Este backend no tiene repositorio git (nube). Publica desde tu servidor local en intranet.',
+      );
+    }
     const msg = (mensaje || '').trim().slice(0, 200);
     if (!msg) throw new BadRequestException('Escribe un mensaje para el commit.');
     await git('add', '-A');
