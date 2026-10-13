@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import MobileNav from "./MobileNav";
 import SearchModal from "./SearchModal";
 import ChatWidget from "./ChatWidget";
+import DonarFloat from "./DonarFloat";
 
 /** Chrome público. En /admin* se oculta para no chocar con el panel fijo. */
 export default function PublicChrome({ slot }: { slot: "top" | "bottom" }) {
@@ -18,6 +19,7 @@ export default function PublicChrome({ slot }: { slot: "top" | "bottom" }) {
       <MobileNav />
       <SearchModal />
       <ChatWidget />
+      <DonarFloat />
     </>
   );
 }
