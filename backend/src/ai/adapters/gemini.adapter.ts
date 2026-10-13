@@ -11,8 +11,8 @@ export class GeminiAdapter implements AIAdapter {
     const modelos = [
       process.env.AI_CHAT_MODEL,
       'gemini-flash-lite-latest',
-      'gemini-2.5-flash',
       'gemma-4-26b-a4b-it',
+      'gemini-2.5-flash',
       'gemini-3.8-flash',
     ].filter(Boolean) as string[];
     let ultimoError = '';

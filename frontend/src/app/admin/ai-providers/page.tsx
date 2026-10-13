@@ -53,8 +53,7 @@ export default function AdminAIProvidersPage() {
     fetchProviders();
   };
 
-  const toggleProvider = async (id: string, isActive: boolean) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/${id}`, {
+  const toggleProvider = async (id: string, isActive: boolean) => {    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -65,8 +64,24 @@ export default function AdminAIProvidersPage() {
     fetchProviders();
   };
 
-  const setParaChat = async (id: string) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/${id}`, {
+  const toggleKey = async (keyId: string) => {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/keys/${keyId}/toggle`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    fetchProviders();
+  };
+
+  const removeKey = async (keyId: string) => {
+    if (!confirm("¿Borrar esta API key?")) return;
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/keys/${keyId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    fetchProviders();
+  };
+
+  const setParaChat = async (id: string) => {    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -164,6 +179,32 @@ export default function AdminAIProvidersPage() {
                   <p className="mt-1 text-xs text-muted-foreground">
                     {provider.apiKeys.length} key(s) configurada(s) · {capacidades(provider.name)}
                   </p>
+                  {provider.apiKeys.length > 0 && (
+                    <div className="mt-2 space-y-1">
+                      {provider.apiKeys.map((k: any) => (
+                        <div key={k.id} className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-1.5 text-xs">
+                          <span className="font-mono text-muted-foreground">
+                            agregada {new Date(k.createdAt).toLocaleDateString("es-CO")}
+                          </span>
+                          <span className={`rounded-full px-2 py-0.5 font-semibold ${k.isActive ? "bg-green-100 text-green-800" : "bg-gray-200 text-gray-600"}`}>
+                            {k.isActive ? "activa" : "inactiva"}
+                          </span>
+                          <button
+                            onClick={() => toggleKey(k.id)}
+                            className="ml-auto rounded px-2 py-0.5 font-medium text-primary hover:underline"
+                          >
+                            {k.isActive ? "Desactivar" : "Activar"}
+                          </button>
+                          <button
+                            onClick={() => removeKey(k.id)}
+                            className="rounded px-2 py-0.5 font-medium text-red-600 hover:underline"
+                          >
+                            Borrar
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {pruebas[provider.id] && (
                     <div className="mt-2 space-y-1 rounded-lg bg-muted/50 p-3 text-xs">
                       <p>

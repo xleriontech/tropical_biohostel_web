@@ -234,7 +234,8 @@ export class AiService {
     }
 
     // Diagnóstico extra para Gemini: ¿la key vale y qué modelos ve?
-    if (!chat.ok && /gemini/i.test(name) && apiKey) {
+    // (cuota/transitorios se reportan tal cual, sin culpar al modelo)
+    if (!chat.ok && /gemini/i.test(name) && apiKey && !/Límite|tardó|demasiado|429|50[023]|conexión/i.test(chat.error || '')) {
       try {
         const r = await fetch(`${endpoint}/models?key=${apiKey}`);
         if (r.ok) {
