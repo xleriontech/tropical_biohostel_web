@@ -55,8 +55,7 @@ export default function HomePage() {
       {/* Hero — identidad Tropical */}
       <div className="relative min-h-[calc(100vh-4rem)] overflow-x-clip">
         <ParallaxCarousel />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4">
+        <div className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 bg-black/20">
           <div className="mx-auto w-full max-w-3xl text-center">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-white/80">
               {HERO.es.kicker}
