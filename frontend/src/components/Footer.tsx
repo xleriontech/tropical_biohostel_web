@@ -31,6 +31,7 @@ export default function Footer() {
             <a href="/donaciones" className="font-medium hover:underline">Donar · Siembra y carbono 🌳</a>
             <a href="/busqueda-inteligente" className="hover:underline">Zemisqua · Buscador ancestral</a>
             <a href="/guardados" className="hover:underline">Guardados</a>
+            <a href="/privacidad" className="hover:underline text-xs">Política de privacidad</a>
           </div>
         </div>
         <div>
