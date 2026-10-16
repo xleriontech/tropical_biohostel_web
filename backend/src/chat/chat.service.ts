@@ -399,7 +399,12 @@ export class ChatService {
 
     // --- mascotas: afirmación o negación explícita (antes del RAG para no citar de más) ---
     if (/(mascota|perro|gato|\bpet\b|peludo)/.test(norm) && !/(reserv|apartar|precio|cuanto|donde)/.test(norm)) {
-      const ack = p.mascotas === false ? 'Anotado: sin mascotas 👍 ' : '';
+      const ack =
+        !p.tipo && p.mascotas === false
+          ? 'Anotado: sin mascotas 👍 '
+          : !p.tipo && p.mascotas
+            ? '¡Qué bien! 🐶 '
+            : '';
       return this.flujoBusqueda(sesion, ack);
     }
 

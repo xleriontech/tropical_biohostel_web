@@ -55,6 +55,7 @@ export default function HomePage() {
       {/* Hero — identidad Tropical */}
       <div className="relative min-h-[calc(100vh-4rem)] overflow-x-clip">
         <ParallaxCarousel />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4">
           <div className="mx-auto w-full max-w-3xl text-center">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-white/80">
@@ -166,6 +167,17 @@ export default function HomePage() {
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">Naturaleza que se vive</p>
         <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">{TERRITORIO.es.titulo}</h2>
         <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">{TERRITORIO.es.intro}</p>
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="rounded-xl border bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase">Bosque nativo</div>
+          </div>
+          <div className="rounded-xl border bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase">Café cultivado</div>
+          </div>
+          <div className="rounded-xl border bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase">Frutales diversos</div>
+          </div>
+        </div>
         <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">{TERRITORIO.es.cultivos}</p>
         <div className="mt-6 flex flex-wrap gap-2">
           {TERRITORIO.es.frutales.map((f) => (
@@ -203,22 +215,13 @@ export default function HomePage() {
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             <div className="rounded-xl border bg-white p-5 shadow-sm">
-              <BedDouble className="h-6 w-6 text-primary" />
-              <p className="mt-2 font-semibold">3 cabañas con baño privado</p>
-              <p className="text-sm text-muted-foreground">Capacidad total hasta 10 huéspedes.</p>
+              <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-t-xl">3 cabañas con baño privado</div>
             </div>
             <div className="rounded-xl border bg-white p-5 shadow-sm">
-              <UtensilsCrossed className="h-6 w-6 text-primary" />
-              <p className="mt-2 font-semibold">Comedor para 10 + cocina abierta</p>
-              <p className="text-sm text-muted-foreground">Equipada y pensada para compartir sin prisa.</p>
+              <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-t-xl">Comedor para 10</div>
             </div>
-            <div className="rounded-xl border border-primary/30 bg-white p-5 shadow-sm">
-              <MoonStar className="h-6 w-6 text-primary" />
-              <p className="mt-2 font-semibold">Cosmic Bungaló</p>
-              <p className="text-sm text-muted-foreground">Descanso y contemplación · arquitectura sagrada hexagonal.</p>
-              <a href="/cosmic-bungalo" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">
-                Conocer el refugio →
-              </a>
+            <div className="rounded-xl border bg-white p-5 shadow-sm">
+              <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-t-xl">Cosmic Bungaló</div>
             </div>
           </div>
         </div>
@@ -273,7 +276,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-4 pb-4">
         <div className="grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <UtensilsCrossed className="h-7 w-7 text-primary" />
+            <div className="h-24 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-txl">Del territorio a la mesa</div>
             <h3 className="mt-3 font-display text-xl font-semibold">{GASTRONOMIA.es.titulo}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{GASTRONOMIA.es.cuerpo1}</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{GASTRONOMIA.es.cuerpo2}</p>
@@ -282,7 +285,7 @@ export default function HomePage() {
             </a>
           </div>
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <Coffee className="h-7 w-7 text-primary" />
+            <div className="h-24 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-txl">Experiencias que conectan</div>
             <h3 className="mt-3 font-display text-xl font-semibold">{EXPERIENCIAS.es.titulo}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{EXPERIENCIAS.es.cuerpo1}</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
@@ -297,7 +300,7 @@ export default function HomePage() {
             </a>
           </div>
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <Flower2 className="h-7 w-7 text-primary" />
+            <div className="h-24 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-txl">Bienestar y conexión</div>
             <h3 className="mt-3 font-display text-xl font-semibold">{BIENESTAR.es.titulo}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{BIENESTAR.es.cuerpo1}</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
@@ -330,6 +333,15 @@ export default function HomePage() {
         <p className="mt-2 text-sm text-muted-foreground">
           ¿Prefieres leer en inglés? <a href="/en" className="text-primary hover:underline">Read in English</a>
         </p>
+        <a
+          href="https://www.google.com/maps/search/Tropical%20Biohostel%20Nocaima"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+        >
+          <svg className="h-4 w-4" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L10 14.17l7.58-7.59L19 8l-9 9z"/></svg>
+          Ver en Google Maps
+        </a>
       </section>
 
       {/* Top Rated */}
