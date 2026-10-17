@@ -5,7 +5,7 @@ import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const CARPETAS_PERMITIDAS = ['propiedades', 'ads', 'sponsors', 'parallax', 'logo', 'general', 'certificates'];
+const CARPETAS_PERMITIDAS = ['propiedades', 'ads', 'sponsors', 'parallax', 'logo', 'general', 'certificates', 'menus', 'videos'];
 const EXT_POR_MIME: Record<string, string> = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
@@ -13,6 +13,10 @@ const EXT_POR_MIME: Record<string, string> = {
   'image/webp': 'webp',
   'image/svg+xml': 'svg',
   'application/pdf': 'pdf',
+  'video/mp4': 'mp4',
+  'video/webm': 'webm',
+  'video/quicktime': 'mov',
+  'video/x-msvideo': 'avi',
 };
 
 @Injectable()

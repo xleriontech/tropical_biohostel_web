@@ -2,6 +2,9 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } fro
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsBoolean, IsArray, Min } from 'class-validator';
+import { UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { MenusService, ComidaInput, PlatoInput } from './menus.service';
 
 class PlatoDto {
@@ -19,6 +22,9 @@ class PlatoDto {
 
   @IsOptional() @IsArray()
   etiquetas?: string[];
+
+  @IsOptional() @IsString()
+  imagenUrl?: string | null;
 
   @IsOptional() @IsNumber()
   orden?: number;
@@ -39,6 +45,9 @@ class ComidaDto {
 
   @IsOptional() @IsString()
   imagenUrl?: string | null;
+
+  @IsOptional() @IsString()
+  videoUrl?: string | null;
 
   @IsOptional() @IsString()
   horario?: string | null;
@@ -79,16 +88,49 @@ export class MenusAdminController {
   constructor(private menus: MenusService) {}
 
   @Post(':id/image')
-  @ApiOperation({ summary: 'Subir imagen para el menú (desde PC)' })
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 10 * 1024 * 1024 } }))
   @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Subir imagen para el menú (desde PC)' })
   async uploadImage(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('No se recibió ningún archivo.');
-    const result = await this.menus.uploadService.subirGenerico(file, `menu:${id}`);
-    return { url: result.url };
+    if (!/^image\//.test(file.mimetype)) {
+      throw new BadRequestException('Solo se permiten imágenes (jpg, png, gif, webp).');
+    }
+    return this.menus.uploadImage(id, file);
+  }
+
+  @Post(':id/video')
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 50 * 1024 * 1024 } }))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Subir video para el menú (desde PC)' })
+  async uploadVideo(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) throw new BadRequestException('No se recibió ningún archivo.');
+    if (!/^video\//.test(file.mimetype)) {
+      throw new BadRequestException('Solo se permiten videos (mp4, webm, mov, avi).');
+    }
+    return this.menus.uploadVideo(id, file);
   }
 
   @Get()

@@ -2,7 +2,6 @@ import { Injectable, BadRequestException, NotFoundException, Logger } from '@nes
 import { PrismaService } from '../prisma/prisma.service';
 import { RagService } from '../rag/rag.service';
 import { UploadService } from '../upload/upload.service';
-import { UploadService } from '../upload/upload.service';
 
 export interface PlatoInput {
   nombre: string;
@@ -10,6 +9,7 @@ export interface PlatoInput {
   categoria?: string | null;
   precio?: number | null;
   etiquetas?: string[];
+  imagenUrl?: string | null;
   orden?: number;
 }
 
@@ -19,6 +19,7 @@ export interface ComidaInput {
   tipo?: string;
   descripcion?: string | null;
   imagenUrl?: string | null;
+  videoUrl?: string | null;
   horario?: string | null;
   activo?: boolean;
   orden?: number;
@@ -48,6 +49,7 @@ export class MenusService {
   constructor(
     private prisma: PrismaService,
     private rag: RagService,
+    private uploadService: UploadService,
   ) {}
 
   // ---------- públicos ----------
@@ -157,6 +159,7 @@ export class MenusService {
         tipo: data.tipo ? (data.tipo as any) : undefined,
         descripcion: data.descripcion === undefined ? undefined : data.descripcion || null,
         imagenUrl: data.imagenUrl === undefined ? undefined : data.imagenUrl || null,
+        videoUrl: data.videoUrl === undefined ? undefined : data.videoUrl || null,
         horario: data.horario === undefined ? undefined : data.horario || null,
         activo: data.activo,
         orden: data.orden,
@@ -195,6 +198,7 @@ export class MenusService {
         categoria: data.categoria === undefined ? undefined : data.categoria || null,
         precio: data.precio === undefined ? undefined : data.precio,
         etiquetas: data.etiquetas,
+        imagenUrl: data.imagenUrl === undefined ? undefined : data.imagenUrl || null,
         orden: data.orden,
       },
     });
@@ -207,6 +211,34 @@ export class MenusService {
     await this.prisma.plato.delete({ where: { id: platoId } }).catch(() => undefined);
     await this.reindexar(comidaId);
     return { ok: true };
+  }
+
+  // ---------- upload de archivos ----------
+
+  /** Subir imagen para un menú (desde PC, usa R2 si está configurado o disco local). */
+  public async uploadImage(comidaId: string, file: Express.Multer.File): Promise<{ url: string }> {
+    await this.exigirComida(comidaId);
+    const result = await this.uploadService.subirGenerico(file, `menu:${comidaId}`);
+    await this.actualizarImagen(comidaId, result.url);
+    return { url: result.url };
+  }
+
+  /** Subir video para un menú (desde PC). */
+  public async uploadVideo(comidaId: string, file: Express.Multer.File): Promise<{ url: string }> {
+    await this.exigirComida(comidaId);
+    const result = await this.uploadService.subirGenerico(file, `videos/menu:${comidaId}`);
+    await this.actualizarVideo(comidaId, result.url);
+    return { url: result.url };
+  }
+
+  public async actualizarImagen(comidaId: string, url: string) {
+    await this.prisma.comida.update({ where: { id: comidaId }, data: { imagenUrl: url } });
+    await this.reindexar(comidaId);
+  }
+
+  public async actualizarVideo(comidaId: string, url: string) {
+    await this.prisma.comida.update({ where: { id: comidaId }, data: { videoUrl: url } });
+    await this.reindexar(comidaId);
   }
 
   // ---------- utilidades ----------
@@ -236,6 +268,7 @@ export class MenusService {
       categoria: p.categoria || null,
       precio: typeof p.precio === 'number' ? p.precio : null,
       etiquetas: Array.isArray(p.etiquetas) ? p.etiquetas.filter(Boolean) : [],
+      imagenUrl: p.imagenUrl || null,
       orden: typeof p.orden === 'number' ? p.orden : i,
     };
   }

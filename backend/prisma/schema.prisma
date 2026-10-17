@@ -440,6 +440,7 @@ model Comida {
   tipo        TipoComida @default(OTRO)
   descripcion String?
   imagenUrl   String?
+  videoUrl    String?    // URL de video (YouTube, Vimeo, o archivo subido)
   horario     String?    // ej: "Todos los días 7:00 - 10:00"
   activo      Boolean    @default(true)
   orden       Int        @default(0)
@@ -460,6 +461,7 @@ model Plato {
   categoria   String?  // entrada | principal | postre | bebida | extra
   precio      Float?   // null = incluido / a convenir
   etiquetas   String[] @default([]) // vegetariano, vegano, sin-gluten, picante, tipico...
+  imagenUrl   String?  // URL de imagen del plato
   orden       Int      @default(0)
   createdAt   DateTime @default(now())
 
