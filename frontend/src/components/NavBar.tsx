@@ -11,6 +11,7 @@ const EXPLORAR_LINKS = [
   { href: "/cosmic-bungalo", label: "Cosmic Bungaló", Icon: MoonStar },
   { href: "/territorio", label: "Territorio", Icon: Leaf },
   { href: "/gastronomia", label: "Gastronomía", Icon: UtensilsCrossed },
+  { href: "/comidas", label: "Menús y Comidas", Icon: UtensilsCrossed },
   { href: "/experiencias", label: "Experiencias", Icon: Compass },
   { href: "/bienestar", label: "Bienestar", Icon: Flower2 },
   { href: "/donaciones", label: "Donar 🌳", Icon: HeartHandshake },

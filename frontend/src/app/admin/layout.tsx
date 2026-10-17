@@ -18,6 +18,7 @@ const ADMIN_LINKS = [
   { href: "/admin/interesados", label: "Interesados" },
   { href: "/admin/repo", label: "Publicar cambios" },
   { href: "/admin/donaciones", label: "Donaciones" },
+  { href: "/admin/comidas", label: "Comidas y Menús" },
   { href: "/admin/claves", label: "Claves API" },
   { href: "/admin/reservas", label: "Reservas" },
   { href: "/admin/config", label: "Configuración" },

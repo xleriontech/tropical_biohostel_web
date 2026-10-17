@@ -422,3 +422,46 @@ model ChunkDocumento {
 
   @@index([documentoId])
 }
+
+// --- Comidas y Menús ---
+enum TipoComida {
+  DESAYUNO
+  ALMUERZO
+  CENA
+  MERIENDA
+  CAFETERIA
+  OTRO
+}
+
+model Comida {
+  id          String     @id @default(cuid())
+  titulo      String
+  slug        String     @unique
+  tipo        TipoComida @default(OTRO)
+  descripcion String?
+  imagenUrl   String?
+  horario     String?    // ej: "Todos los días 7:00 - 10:00"
+  activo      Boolean    @default(true)
+  orden       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  platos      Plato[]
+
+  @@index([activo])
+  @@index([tipo])
+}
+
+model Plato {
+  id          String  @id @default(cuid())
+  comida      Comida  @relation(fields: [comidaId], references: [id], onDelete: Cascade)
+  comidaId    String
+  nombre      String
+  descripcion String?
+  categoria   String?  // entrada | principal | postre | bebida | extra
+  precio      Float?   // null = incluido / a convenir
+  etiquetas   String[] @default([]) // vegetariano, vegano, sin-gluten, picante, tipico...
+  orden       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([comidaId])
+}

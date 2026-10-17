@@ -4,6 +4,7 @@ import { AiService } from '../ai/ai.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
 import { RagService } from '../rag/rag.service';
+import { MenusService } from '../menus/menus.service';
 
 interface Turno {
   rol: 'usuario' | 'asistente';
@@ -111,6 +112,7 @@ CONOCIMIENTO DEL TERRITORIO (úsalo para responder sin inventar):
 - Finca con ~30% de bosque nativo; ~400 plantas de café, 30 árboles de naranja y frutales: guanábana, mango, papaya, arazá, guayaba, guama, pomelo, tangelo, limón, piña y pomarosa; huerta de aromáticas y especias que conecta cultivo con cocina; abejas meliponas y biodiversidad. "La naturaleza no es un escenario: es parte de la experiencia."
 - HOSPEDAJE: 3 cabañas con baño privado, capacidad total hasta 10 huéspedes; comedor para 10 personas y cocina abierta totalmente equipada; más Cosmic Bungaló como espacio especial de descanso y contemplación. Despertar con sonidos del campo, caminar entre cultivos, ritmo lento.
 - GASTRONOMÍA ("Del territorio a la mesa"): alimentación consciente con productos naturales, locales y de la finca (varios orgánicos), conservando sabores, aromas, colores y texturas. Comer es conocer el origen, descubrir sabores y conectar con el territorio.
+- MENÚS: la finca publica menús personalizados (desayuno, almuerzo, cena, cafetería) con sus platos, precios y etiquetas (vegano, vegetariano, sin gluten, típico...). Cuando pregunten por comida, menú, qué sirven, desayuno, almuerzo o cena, usa el bloque MENÚS Y COMIDAS DISPONIBLES que aparece en el contexto y recomienda platos concretos. Enlaza la carta completa con [Ver menús](/comidas). Si piden algo personalizado (dieta, alergias, número de personas), arma la sugerencia con los platos disponibles que encajen y recuerda que pueden escribirlo en las notas de la reserva.
 - EXPERIENCIAS: café, cacao, plantas, agricultura y alimentación; caminatas, recorridos por cultivos, experiencias gastronómicas, talleres agroecológicos y exploración. El visitante es parte activa, no espectador.
 - BIENESTAR: Yoga, Tai Chi y Chi Kung en un entorno ideal para la pausa, la respiración y la conexión; caminar sin afán, contemplar, escuchar el bosque.
 - COSMIC BUNGALÓ (glamping, slug cosmic-bungalo): cabaña íntima de ~5 m², arquitectura sagrada y geometría hexagonal, ladrillo prensado y materiales naturales de la finca; mándalas, runas, matices, pisos rústicos artesanales; cama confortable, sillas acogedoras, luz cálida, vista del trópico; baño con ducha y pileta natural al aire libre entre vegetación; ranas, mariposas, colibríes y criaturas del bosque; espacios de esparcimiento y contemplación, rincón para observar estrellas; ideal para leer, escribir, pintar o trabajar con la naturaleza como inspiración. Yoga/Chi Kung/Tai Chi se programan TRAS la reserva según disponibilidad.
@@ -137,6 +139,7 @@ export class ChatService {
     private prisma: PrismaService,
     private redis: RedisService,
     private rag: RagService,
+    private menus: MenusService,
   ) {}
 
   saludo() {
@@ -395,6 +398,57 @@ export class ChatService {
       reply = `¡Qué gran iniciativa! 🌳 Puedes apoyar la siembra de árboles nativos y los proyectos de huella de carbono desde la página de [donaciones](/donaciones), con pagos seguros vía PayPal. ¿Te cuento más o seguimos con tu visita?`;
       sugerencias = ['Busco hospedaje', 'Qué hacer', 'Dónde quedan'];
       return { reply, tarjetas, sugerencias };
+    }
+
+    // --- menús y comidas de la finca (platos, dietas, horarios) ---
+    if (/(menu|carta|plato|desayuno|almuerzo|cena|merienda|cafeteria|que sirven|que hay para comer|vegano|vegetariano|sin gluten|alergia|lactosa)/.test(norm)) {
+      try {
+        const menus = (await this.menus.listarActivos()) as any[];
+        if (menus.length) {
+          const clavesTipo: Record<string, string> = {
+            desayuno: 'DESAYUNO', almuerzo: 'ALMUERZO', cena: 'CENA',
+            merienda: 'MERIENDA', cafeteria: 'CAFETERIA',
+          };
+          let elegidos = menus;
+          for (const [k, tipo] of Object.entries(clavesTipo)) {
+            if (norm.includes(k)) {
+              const filtrado = menus.filter((m) => m.tipo === tipo);
+              if (filtrado.length) elegidos = filtrado;
+              break;
+            }
+          }
+          // dieta/alergias: menús con platos que encajen
+          if (/(vegano|vegetariano|sin gluten|alergia|lactosa)/.test(norm)) {
+            const conEtq = elegidos.filter((m) =>
+              (m.platos || []).some((pl: any) =>
+                (pl.etiquetas || []).some((e: string) =>
+                  /vegan|vegetarian|gluten|lactosa/i.test(e),
+                ),
+              ),
+            );
+            if (conEtq.length) elegidos = conEtq;
+          }
+          const m = elegidos[0];
+          const platos = (m.platos || []).slice(0, 6);
+          const lineas = platos.map((pl: any) => {
+            const precio =
+              typeof pl.precio === 'number' ? ` — $${Number(pl.precio).toLocaleString('es-CO')}` : '';
+            return `• ${pl.nombre}${precio}`;
+          });
+          const etqs = [...new Set(
+            elegidos.flatMap((mm: any) => (mm.platos || []).flatMap((pl: any) => pl.etiquetas || [])),
+          )].slice(0, 5);
+          const otras = elegidos.slice(1).map((mm: any) => mm.titulo);
+          reply =
+            `🍽️ ${m.titulo}${m.horario ? ` (${m.horario})` : ''}${m.descripcion ? `\n${this.recortar(m.descripcion, 120)}` : ''}\n` +
+            (lineas.length ? `${lineas.join('\n')}\n` : '') +
+            (etqs.length ? `Etiquetas disponibles: ${etqs.join(', ')}.\n` : '') +
+            (otras.length ? `También tenemos: ${otras.join(', ')}.\n` : '') +
+            `¿Te armo algo personalizado (dieta, alergias o número de personas)? La carta completa está en [menús](/comidas).`;
+          sugerencias = ['Menú para 2 personas', 'Opciones veganas', 'Dónde comer'];
+          return { reply, tarjetas, sugerencias };
+        }
+      } catch {}
     }
 
     // --- mascotas: afirmación o negación explícita (antes del RAG para no citar de más) ---
@@ -668,7 +722,13 @@ export class ChatService {
       .map((t) => `${t.rol === 'usuario' ? 'Visitante' : 'Nati'}: ${t.texto}`)
       .join('\n');
     const sabe = this.resumenPrefs(p);
-    const prompt = `${SYSTEM_PROMPT}\n\nLO QUE YA SABES DEL VISITANTE: ${sabe}\n\nSITIOS DISPONIBLES:\n${contexto || '(sin resultados para esos filtros)'}${contextoRag}\n\nCONVERSACIÓN:\n${historial}\n\nResponde como Nati al último mensaje. Si recomiendas sitios, menciona sus nombres exactos.`;
+    // Menús de la finca: contexto vivo desde la BD para recomendar platos concretos
+    let contextoMenus = '';
+    try {
+      const cm = await this.menus.contextoParaChat();
+      if (cm) contextoMenus = `\n\n${cm}`;
+    } catch {}
+    const prompt = `${SYSTEM_PROMPT}\n\nLO QUE YA SABES DEL VISITANTE: ${sabe}\n\nSITIOS DISPONIBLES:\n${contexto || '(sin resultados para esos filtros)'}${contextoMenus}${contextoRag}\n\nCONVERSACIÓN:\n${historial}\n\nResponde como Nati al último mensaje. Si recomiendas sitios, menciona sus nombres exactos. Si hablan de comida o menús, usa los MENÚS Y COMIDAS DISPONIBLES.`;
     try {
       const reply = (await this.ai.chatWith(SYSTEM_PROMPT, prompt)).trim().slice(0, 900)
         || 'Mmm, ¿me repites qué buscas? 🪷';
@@ -895,7 +955,9 @@ export class ChatService {
       reserv: 'reserva', ubicacion: 'ubicación', mapa: 'mapa', direccion: 'ubicación',
       cosmic: 'cosmic bungaló', cabana: 'cabañas', hotel: 'hoteles', hostal: 'hostales',
       hospedaje: 'hospedaje', glamping: 'glamping', restaurante: 'restaurante',
-      comida: 'comida', tour: 'tours', cafe: 'café', cacao: 'cacao',
+      comida: 'comida', menu: 'menú', plato: 'platos', desayuno: 'desayuno',
+      almuerzo: 'almuerzo', cena: 'cena', carta: 'carta',
+      tour: 'tours', cafe: 'café', cacao: 'cacao',
       caminata: 'caminatas', clima: 'clima', horario: 'horarios', pago: 'pagos',
       donacion: 'donaciones', arbol: 'siembra árboles', carbono: 'huella carbono',
       bienestar: 'bienestar', pileta: 'pileta natural', estrellas: 'estrellas',
