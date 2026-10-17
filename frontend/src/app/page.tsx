@@ -1,5 +1,6 @@
 "use client";
 
+// Tropical Biohostel - Página principal
 import { useEffect, useState } from "react";
 import { useSearch } from "@/lib/SearchContext";
 import ParallaxCarousel from "@/components/ParallaxCarousel";
