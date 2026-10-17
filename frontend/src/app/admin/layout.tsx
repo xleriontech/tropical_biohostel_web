@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { User } from "@/types";
 import NotificationBell from "@/components/NotificationBell";
 import { useToast } from "@/components/Toast";
@@ -66,6 +66,13 @@ export default function AdminLayout({
 
     checkAuth();
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.dispatchEvent(new Event("auth-change"));
+    router.push("/auth/login");
+  };
 
   const shownNotifsRef = useRef<Set<string>>(new Set());
 
@@ -153,6 +160,18 @@ export default function AdminLayout({
             </a>
           ))}
         </nav>
+        {user && (
+          <div className="mt-4 border-t pt-4">
+            <p className="truncate px-3 text-xs text-muted-foreground">{user.email}</p>
+            <button
+              onClick={handleLogout}
+              className="mt-2 flex w-full items-center gap-2 rounded px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:hover:bg-red-950"
+            >
+              <LogOut className="h-4 w-4" />
+              Cerrar sesión
+            </button>
+          </div>
+        )}
       </aside>
       <main className="min-w-0 flex-1 p-4 sm:p-8 lg:ml-64">{children}</main>
     </div>
