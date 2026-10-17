@@ -80,6 +80,8 @@ export default function AdminComidasPage() {
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState(menuVacio);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [mImagenUrl, setMImagenUrl] = useState<string | null>(null);
+  const [mVideoUrl, setMVideoUrl] = useState<string | null>(null);
   const [platoMenuId, setPlatoMenuId] = useState<string | null>(null);
   const [platoForm, setPlatoForm] = useState(platoVacio);
   const [platoEdit, setPlatoEdit] = useState<{ menuId: string; id: string } | null>(null);
@@ -98,6 +100,8 @@ export default function AdminComidasPage() {
   const cancelarEditar = () => {
     setEditingId(null);
     setForm(menuVacio);
+    setMImagenUrl(null);
+    setMVideoUrl(null);
   };
 
   const guardarMenu = async (e: React.FormEvent) => {
@@ -112,8 +116,12 @@ export default function AdminComidasPage() {
         body: JSON.stringify({ ...form, orden: Number(form.orden) || 0 }),
       });
       if (!r.ok) throw new Error((await r.json()).message || "No se pudo guardar");
+      const data = await r.json();
       setMsg(editingId ? "Menú actualizado." : "Menú creado.");
-      cancelarEditar();
+      // Mantener editingId para habilitar subida de archivos inmediatamente
+      setEditingId(editingId || data.id);
+      setMImagenUrl(data.imagenUrl || null);
+      setMVideoUrl(data.videoUrl || null);
       cargar();
     } catch (err) {
       setMsg((err as Error).message);
@@ -134,6 +142,8 @@ export default function AdminComidasPage() {
       orden: m.orden,
       activo: m.activo,
     });
+    setMImagenUrl(m.imagenUrl || null);
+    setMVideoUrl(m.videoUrl || null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -276,25 +286,32 @@ export default function AdminComidasPage() {
           <button type="submit" disabled={busy} className={btn}>{busy ? "Guardando..." : editingId ? "Guardar cambios" : "Crear menú"}</button>
           {editingId && <button type="button" onClick={cancelarEditar} className={btnSec}>Cancelar</button>}
         </div>
-      </form>
 
-      {editingId && (
-        <div className="rounded-xl border p-4 shadow-sm">
+        {/* Subir archivos desde PC - siempre visible */}
+        <div className="mt-6 pt-4 border-t">
           <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold"><Upload className="h-4 w-4 text-primary" /> Subir archivos desde PC</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border p-3">
               <p className="text-sm font-medium mb-2">Imagen del menú</p>
-              <input id={`file-menu-image-${editingId}`} type="file" accept="image/*" className="block w-full text-sm text-muted-foreground" />
-              <button onClick={() => subirArchivoMenu(editingId, "image")} disabled={busy} className={`w-full ${btnSec} mt-2`}>Subir imagen desde PC</button>
+              <input id={`file-menu-image-${editingId || 'nuevo'}`} type="file" accept="image/*" className="block w-full text-sm text-muted-foreground" />
+              <button onClick={() => {
+                if (!editingId) { setMsg("Guarda el menú primero para subir imágenes."); return; }
+                subirArchivoMenu(editingId, "image");
+              }} disabled={busy || !editingId} className={`w-full ${btnSec} mt-2 ${!editingId ? "opacity-50 cursor-not-allowed" : ""}`}>Subir imagen desde PC</button>
+              {editingId && mImagenUrl && <p className="mt-1 text-xs text-green-600">✓ Imagen cargada: {mImagenUrl}</p>}
             </div>
             <div className="rounded-xl border p-3">
               <p className="text-sm font-medium mb-2">Video del menú</p>
-              <input id={`file-menu-video-${editingId}`} type="file" accept="video/*" className="block w-full text-sm text-muted-foreground" />
-              <button onClick={() => subirArchivoMenu(editingId, "video")} disabled={busy} className={`w-full ${btnSec} mt-2`}>Subir video desde PC</button>
+              <input id={`file-menu-video-${editingId || 'nuevo'}`} type="file" accept="video/*" className="block w-full text-sm text-muted-foreground" />
+              <button onClick={() => {
+                if (!editingId) { setMsg("Guarda el menú primero para subir videos."); return; }
+                subirArchivoMenu(editingId, "video");
+              }} disabled={busy || !editingId} className={`w-full ${btnSec} mt-2 ${!editingId ? "opacity-50 cursor-not-allowed" : ""}`}>Subir video desde PC</button>
+              {editingId && mVideoUrl && <p className="mt-1 text-xs text-green-600">✓ Video cargado: {mVideoUrl}</p>}
             </div>
           </div>
         </div>
-      )}
+      </form>
 
       <div className="space-y-5">
         {menus.length === 0 && <div className="rounded-xl border bg-white p-8 text-center text-sm text-muted-foreground">Aún no hay menús.</div>}
