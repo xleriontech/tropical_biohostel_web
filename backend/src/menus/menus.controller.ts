@@ -78,6 +78,19 @@ export class MenusController {
 export class MenusAdminController {
   constructor(private menus: MenusService) {}
 
+  @Post(':id/image')
+  @ApiOperation({ summary: 'Subir imagen para el menú (desde PC)' })
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  async uploadImage(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) throw new BadRequestException('No se recibió ningún archivo.');
+    const result = await this.menus.uploadService.subirGenerico(file, `menu:${id}`);
+    return { url: result.url };
+  }
+
   @Get()
   @ApiOperation({ summary: 'Listar todos los menús, incluidos inactivos' })
   listar() {

@@ -1,6 +1,8 @@
 import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RagService } from '../rag/rag.service';
+import { UploadService } from '../upload/upload.service';
+import { UploadService } from '../upload/upload.service';
 
 export interface PlatoInput {
   nombre: string;
