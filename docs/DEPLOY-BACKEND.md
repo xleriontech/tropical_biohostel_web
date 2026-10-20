@@ -26,10 +26,30 @@ se rompe (se aplican después con `npm run prisma:deploy`).
 
 > `backend/prisma/init.sql` queda obsoleto: el esquema real ya es `schema.prisma` + la migración `0_init`.
 
+## Arranque automático (baseline + migraciones + seed)
+
+`backend/scripts/start.js` es el entrypoint del backend. Antes de levantar la API se asegura
+que la base de datos esté lista:
+
+1. **baseline** → registra la migración inicial en bases preexistentes (sin ejecutar su SQL)
+2. **migrate deploy** → aplica las migraciones pendientes (crea el esquema si falta)
+3. **seed** → inserta los datos base del catálogo (hostal, actividades, **rutas del café**…)
+
+Los tres pasos son **idempotentes** y **tolerantes a fallos**: si la base no responde se reintenta
+5 veces y la API arranca igual, de modo que un arranque nunca se rompe por un problema puntual de
+conectividad. Si una corrida de seed se interrumpe a mitad, la siguiente completa lo que falte.
+
+Se usa en el `Dockerfile` (`CMD ["node", "scripts/start.js"]`) y en los scripts de npm
+(`npm start` / `npm run start:prod`), así que funciona igual con Docker o Nixpacks.
+
+> Esto significa que **no hay que ejecutar el seed a mano** en cada despliegue: al arrancar el
+> contenedor, las rutas del café aparecen solas en la base de datos.
+
 ## Scripts disponibles (en `backend/`)
 
 | Comando | Qué hace |
 |---|---|
+| `npm start` / `npm run start:prod` | Arranque: baseline + migraciones + seed + API |
 | `npm run prisma:generate` | Regenera el cliente de Prisma |
 | `npm run prisma:migrate` | Crea y aplica una migración nueva en desarrollo |
 | `npm run prisma:deploy` | Aplica migraciones pendientes (producción) |
@@ -37,49 +57,25 @@ se rompe (se aplican después con `npm run prisma:deploy`).
 | `npm run prisma:seed` | Siembra datos (idempotente). Funciona en Windows y Linux |
 | `npm run prisma:seed:prod` | Igual, pero desde el JS compilado (sin `ts-node`) |
 
-## Railway — aplicar el seed (las rutas del café)
+## Railway — verificar que las rutas están en producción
 
-El frontend ya está desplegado en Cloudflare Pages, pero la base de datos de **Railway** es otra
-distinta a la local. Por eso las rutas del café todavía no existen en producción.
-
-### Opción A — Desde la consola de Railway (recomendada)
-
-Abrir el servicio del backend en el dashboard de Railway → **Shell** (o `railway ssh` desde local) y ejecutar:
+El push a `main` dispara el build en Railway. Al arrancar el contenedor, el seed aplica las
+rutas del café automáticamente. Para comprobarlo:
 
 ```bash
-cd /app
-npx prisma migrate deploy      # aplica migraciones pendientes (0_init ya está baselinada)
-node prisma/dist/seed.js       # siembra las 3 rutas del café
-```
-
-Salida esperada del seed:
-
-```
-   - 3 rutas del café creadas
-ℹ️  La base de datos ya tiene datos. Seed omitido.
-```
-
-> `node prisma/dist/seed.js` usa el seed compilado a JS plano y no depende de `ts-node`.
-> Si el build de la imagen aún no lo generó, sirve `npm run prisma:seed`.
-
-### Opción B — Desde el equipo local
-
-Con el `DATABASE_URL` de producción (Postgres de Railway):
-
-```bash
-cd backend
-$env:DATABASE_URL="postgresql://..."   # en PowerShell
-node -r ts-node/register prisma/seed.ts
-```
-
-## Verificación
-
-```bash
-# ¿La ruta existe en producción?
 curl https://tropicalbiohostelweb-production.up.railway.app/api/properties/ruta-del-bosque-a-tu-taza
 ```
 
-Si responde `200` con el JSON de la ruta, la base de producción ya está lista.
+Debe responder `200` con el JSON de la ruta. Si aún responde `404`, revisa los logs del servicio
+en Railway: debería aparecer `3 rutas del café creadas` o `rutas del café ya presentes`.
+
+Si aun así hiciera falta aplicarlo a mano, desde el shell del servicio:
+
+```bash
+cd /app
+npx prisma migrate deploy
+node prisma/dist/seed.js
+```
 
 ## Nota sobre `CredencialesAdmin.txt`
 

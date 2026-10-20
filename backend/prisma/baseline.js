@@ -23,9 +23,25 @@ async function yaEstaAplicada() {
   return filas.length > 0;
 }
 
+/** ¿Existe ya el esquema? (tabla "Propiedad") */
+async function elEsquemaExiste() {
+  const filas = await prisma.$queryRaw`
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'Propiedad'
+    LIMIT 1
+  `.catch(() => []);
+  return filas.length > 0;
+}
+
 async function main() {
   if (await yaEstaAplicada()) {
     console.log("   - migración 0_init ya registrada: no se requiere baseline");
+    return;
+  }
+  if (!(await elEsquemaExiste())) {
+    // Base vacía: no hay nada que baselinear. `migrate deploy` creará el esquema
+    // aplicando la migración 0_init completa.
+    console.log("   - base vacía: la migración 0_init se aplicará con migrate deploy");
     return;
   }
   console.log("   - base sin historial de migraciones: marcando 0_init como aplicada…");

@@ -1,7 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
+
+/** "1 ruta creada" / "3 rutas creadas" */
+const plural = (n: number, singular: string, plural_: string) =>
+  `${n} ${n === 1 ? singular : plural_}`;
 
 const img = (archivos: string[]) =>
   archivos.map((url, i) => ({ url: `/tropical/${url}`, orden: i, esPrincipal: i === 0 }));
@@ -91,36 +95,47 @@ async function asegurarRutasCafe() {
   }
   console.log(
     nuevas > 0
-      ? `   - ${nuevas} rutas del café creadas`
+      ? `   - ${plural(nuevas, "ruta del café creada", "rutas del café creadas")}`
       : "   - rutas del café ya presentes en la base de datos",
   );
+}
+
+/** Crea la propiedad solo si no existe ya ese slug (idempotente). */
+async function crearPropiedad(args: { data: Prisma.PropiedadCreateInput }) {
+  const slug = args.data.slug;
+  const existente = await prisma.propiedad.findUnique({ where: { slug } });
+  if (existente) return false;
+  await prisma.propiedad.create(args);
+  return true;
 }
 
 async function main() {
   // Siempre asegura las rutas del café (idempotente; no depende del seed principal)
   await asegurarRutasCafe();
 
-  const yaHay = await prisma.user.count();
-  if (yaHay > 0) {
-    console.log("ℹ️  La base de datos ya tiene datos. Seed omitido.");
-    return;
+  // Cada sección del seed es idempotente: si falta algo (p. ej. porque una
+  // corrida anterior se interrumpió a mitad), se completa en la siguiente.
+  const emailAdmin = "admin@tropicalbiohostel.com";
+  const adminExistente = await prisma.user.findUnique({ where: { email: emailAdmin } });
+  if (adminExistente) {
+    console.log("   - admin ya existía");
+  } else {
+    const adminHash = bcrypt.hashSync("admin123", 10);
+    const admin = await prisma.user.create({
+      data: {
+        email: emailAdmin,
+        supabaseId: "local_admin@tropicalbiohostel.com",
+        nombre: "Administrador",
+        role: "admin",
+      },
+    });
+    await prisma.$executeRawUnsafe(
+      'UPDATE "User" SET "passwordHash" = $1 WHERE id = $2',
+      adminHash,
+      admin.id,
+    );
+    console.log("   - 1 admin creado (admin@tropicalbiohostel.com / admin123)");
   }
-
-  const adminHash = bcrypt.hashSync("admin123", 10);
-  const admin = await prisma.user.create({
-    data: {
-      email: "admin@tropicalbiohostel.com",
-      supabaseId: "local_admin@tropicalbiohostel.com",
-      nombre: "Administrador",
-      role: "admin",
-    },
-  });
-  await prisma.$executeRawUnsafe(
-    'UPDATE "User" SET "passwordHash" = $1 WHERE id = $2',
-    adminHash,
-    admin.id,
-  );
-  console.log("   - 1 admin creado (admin@tropicalbiohostel.com / admin123)");
 
   const aiProviders = [
     { name: "Gemini", apiEndpoint: "https://generativelanguage.googleapis.com/v1beta", websiteUrl: "https://aistudio.google.com/app/apikey", isActive: true, paraChat: true },
@@ -129,10 +144,18 @@ async function main() {
     { name: "DeepSeek", apiEndpoint: "https://api.deepseek.com/v1", websiteUrl: "https://platform.deepseek.com/api-keys", isActive: false, paraChat: false },
     { name: "Groq", apiEndpoint: "https://api.groq.com/openai/v1", websiteUrl: "https://console.groq.com/keys", isActive: false, paraChat: false },
   ];
+  let nuevosProveedores = 0;
   for (const p of aiProviders) {
+    const existe = await prisma.aIProvider.findFirst({ where: { name: p.name } });
+    if (existe) continue;
     await prisma.aIProvider.create({ data: p });
+    nuevosProveedores++;
   }
-  console.log(`   - ${aiProviders.length} proveedores IA (Gemini marcado para Nati, sin key: agrégala en admin)`);
+  console.log(
+    nuevosProveedores > 0
+      ? `   - ${plural(nuevosProveedores, "proveedor IA creado", "proveedores IA creados")} (Gemini marcado para Nati, sin key: agrégala en admin)`
+      : "   - proveedores IA ya estaban",
+  );
 
   await prisma.siteConfig.upsert({
     where: { key: "site-branding" },
@@ -145,7 +168,7 @@ async function main() {
   console.log("   - marca site-branding creada (Tropical Biohostel)");
 
   // 1) El hostal
-  await prisma.propiedad.create({
+  await crearPropiedad({
     data: {
       nombre: "Tropical Biohostel",
       slug: "tropical-biohostel",
@@ -184,7 +207,7 @@ async function main() {
   });
 
   // 2) Cosmic Bungaló — refugio de arquitectura sagrada hexagonal
-  await prisma.propiedad.create({
+  await crearPropiedad({
     data: {
       nombre: "Cosmic Bungaló",
       slug: "cosmic-bungalo",
@@ -223,7 +246,7 @@ async function main() {
   });
 
   // 3) Tour del café y el cacao
-  await prisma.propiedad.create({
+  await crearPropiedad({
     data: {
       nombre: "Tour del Café y el Cacao",
       slug: "tour-cafe-cacao-tropical",
@@ -249,7 +272,7 @@ async function main() {
   });
 
   // 3) Caminata ecológica + bienestar
-  await prisma.propiedad.create({
+  await crearPropiedad({
     data: {
       nombre: "Caminata Ecológica y Bienestar",
       slug: "caminata-bienestar-tropical",
@@ -275,7 +298,7 @@ async function main() {
   });
 
   // 4) Restaurante de la finca
-  await prisma.propiedad.create({
+  await crearPropiedad({
     data: {
       nombre: "Mesa Tropical — Cocina de la Finca",
       slug: "mesa-tropical",
@@ -301,39 +324,45 @@ async function main() {
     },
   });
 
-  console.log("   - 5 sitios publicados (hostal + Cosmic Bungaló + 2 actividades + restaurante)");
+  console.log("   - sitios base verificados (hostal + Cosmic Bungaló + 2 actividades + restaurante)");
 
-  // Donaciones iniciales (siembra y carbono)
-  const nProy = await prisma.proyectoDonacion.count();
-  if (nProy === 0) {
-    await prisma.proyectoDonacion.createMany({
-      data: [
-        {
-          titulo: "Siembra 100 árboles nativos",
-          slug: "siembra-100-arboles-nativos",
-          descripcion:
-            "Cada aporte siembra árboles nativos en la finca y zonas de restauración: guayacán, cedro, chicalá y especies del bosque seco tropical. Incluye placa con tu nombre y reporte fotográfico de la siembra.\n\nCosto aproximado por árbol: $25.000 (plántula, hoyado, tutorado y 1 año de mantenimiento).",
-          categoria: "ARBOLES",
-          meta: 2500000,
-          moneda: "USD",
-          estado: "ACTIVO",
-          orden: 0,
-        },
-        {
-          titulo: "Huella de carbono: compensa tu visita",
-          slug: "huella-de-carbono-compensa-tu-visita",
-          descripcion:
-            "Calcula y compensa las emisiones de tu viaje apoyando conservación de bosque nativo, huerta orgánica y energías limpias en la finca. Recibirás un certificado simbólico de compensación con los kilos de CO2e apoyados.",
-          categoria: "CARBONO",
-          meta: 1000,
-          moneda: "USD",
-          estado: "ACTIVO",
-          orden: 1,
-        },
-      ],
-    });
-    console.log("   - 2 proyectos de donación creados");
+  // Donaciones iniciales (siembra y carbono) — idempotente por slug
+  const proyectos = [
+    {
+      titulo: "Siembra 100 árboles nativos",
+      slug: "siembra-100-arboles-nativos",
+      descripcion:
+        "Cada aporte siembra árboles nativos en la finca y zonas de restauración: guayacán, cedro, chicalá y especies del bosque seco tropical. Incluye placa con tu nombre y reporte fotográfico de la siembra.\n\nCosto aproximado por árbol: $25.000 (plántula, hoyado, tutorado y 1 año de mantenimiento).",
+      categoria: "ARBOLES" as const,
+      meta: 2500000,
+      moneda: "USD",
+      estado: "ACTIVO" as const,
+      orden: 0,
+    },
+    {
+      titulo: "Huella de carbono: compensa tu visita",
+      slug: "huella-de-carbono-compensa-tu-visita",
+      descripcion:
+        "Calcula y compensa las emisiones de tu viaje apoyando conservación de bosque nativo, huerta orgánica y energías limpias en la finca. Recibirás un certificado simbólico de compensación con los kilos de CO2e apoyados.",
+      categoria: "CARBONO" as const,
+      meta: 1000,
+      moneda: "USD",
+      estado: "ACTIVO" as const,
+      orden: 1,
+    },
+  ];
+  let nuevosProyectos = 0;
+  for (const p of proyectos) {
+    const existe = await prisma.proyectoDonacion.findUnique({ where: { slug: p.slug } });
+    if (existe) continue;
+    await prisma.proyectoDonacion.create({ data: p });
+    nuevosProyectos++;
   }
+  console.log(
+    nuevosProyectos > 0
+      ? `   - ${plural(nuevosProyectos, "proyecto de donación creado", "proyectos de donación creados")}`
+      : "   - proyectos de donación ya estaban",
+  );
   console.log("✅ Seed Tropical Biohostel completo. ⚠️ Revisa los precios placeholder en admin/properties.");
 }
 

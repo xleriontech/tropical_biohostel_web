@@ -24,9 +24,11 @@ RUN npx prisma migrate deploy || echo "⚠️  migrate deploy omitido (BD no acc
 
 COPY tsconfig.json nest-cli.json ./
 COPY src ./src/
+COPY scripts ./scripts/
 
 RUN npx nest build
 
 EXPOSE 3001
 
-CMD ["node", "dist/main.js"]
+# scripts/start.js aplica el seed idempotente y luego levanta la API
+CMD ["node", "scripts/start.js"]

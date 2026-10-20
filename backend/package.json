@@ -5,8 +5,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "nest start --watch",
-    "start": "node dist/main",
-    "start:prod": "node dist/main",
+    "start": "node scripts/start.js",
+    "start:prod": "node scripts/start.js",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:e2e": "jest --config ./test/jest-e2e.json",
