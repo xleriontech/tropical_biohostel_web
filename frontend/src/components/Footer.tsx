@@ -27,6 +27,7 @@ export default function Footer() {
             <a href="/territorio" className="hover:underline">Territorio</a>
             <a href="/gastronomia" className="hover:underline">Gastronomía</a>
             <a href="/experiencias" className="hover:underline">Experiencias</a>
+            <a href="/rutas" className="hover:underline">Rutas del café</a>
             <a href="/bienestar" className="hover:underline">Bienestar · Yoga, Tai Chi, Chi Kung</a>
             <a href="/donaciones" className="font-medium hover:underline">Donar · Siembra y carbono 🌳</a>
             <a href="/busqueda-inteligente" className="hover:underline">Zemisqua · Buscador ancestral</a>

@@ -21,6 +21,15 @@ export default function ExperienciasPage() {
         ))}
       </div>
       <p className="mt-4 font-medium">{t.cierre}</p>
+      <div className="mt-6 rounded-2xl border border-primary/30 bg-gradient-to-br from-secondary to-accent p-5">
+        <p className="text-sm font-semibold">Rutas del café</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Tres experiencias alrededor del café: Del bosque a tu taza, Respira el bosque y Café y raíces colombianas.
+        </p>
+        <a href="/rutas" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">
+          Ver las rutas del café →
+        </a>
+      </div>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         <a href="/property/tour-cafe-cacao-tropical" className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md">
           <p className="font-semibold">Tour del Café y el Cacao</p>

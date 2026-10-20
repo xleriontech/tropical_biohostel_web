@@ -3,10 +3,103 @@ import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+const img = (archivos: string[]) =>
+  archivos.map((url, i) => ({ url: `/tropical/${url}`, orden: i, esPrincipal: i === 0 }));
+
 // Seed inicial de Tropical Biohostel: admin + proveedores IA + marca + oferta real
 // (datos tomados de docs/Tropical_Biohostel.md y fotos de Imagenes/).
 // ⚠️  Los precios son PLACEHOLDER: ajústalos en admin/properties.
+
+type RutaCafeSeed = {
+  nombre: string;
+  slug: string;
+  tipo: "actividad";
+  descripcion: string;
+  capacidadMaxima: number;
+  precioNoche: number;
+  actividades: string[];
+  imagenes: string[];
+};
+
+// Rutas del café (docs/TropicalGuiaCafe.pdf). Se siembran de forma idempotente
+// para que funcionen tanto en una base de datos nueva como en una ya poblada.
+const RUTAS_CAFE: RutaCafeSeed[] = [
+  {
+    nombre: "Del bosque a tu taza",
+    slug: "ruta-del-bosque-a-tu-taza",
+    tipo: "actividad",
+    descripcion:
+      "Ruta de café orgánico y tostión artesanal: caminata de 15 minutos desde el casco urbano, experiencia de tostión con perfiles claro, medio y oscuro, brunch según el menú seleccionado, degustación de café preparado en casa y una porción de café artesanal para llevar.",
+    capacidadMaxima: 10,
+    precioNoche: 150000,
+    actividades: ["cafe", "caminata", "tostion", "gastronomia", "degustacion"],
+    imagenes: ["Hostal5.jpeg", "MAndarina.jpeg", "MandarinaLimon.jpeg"],
+  },
+  {
+    nombre: "Respira el bosque",
+    slug: "ruta-respira-el-bosque",
+    tipo: "actividad",
+    descripcion:
+      "Ruta de bienestar en el bosque: caminata desde el casco urbano, clase de yoga, brunch según el menú seleccionado, experiencia de tostión artesanal, baño de bosque y degustación de café preparado en casa.",
+    capacidadMaxima: 10,
+    precioNoche: 200000,
+    actividades: ["yoga", "bienestar", "cafe", "caminata", "bosque", "degustacion"],
+    imagenes: ["Hostal6.jpeg", "Hostal8.jpeg", "Hostal9.jpeg"],
+  },
+  {
+    nombre: "Café y raíces colombianas",
+    slug: "ruta-cafe-y-raices-colombianas",
+    tipo: "actividad",
+    descripcion:
+      "Ruta cultural y gastronómica: caminata desde el casco urbano, experiencia de tostión artesanal, almuerzo típico de la región, clase de danza tradicional colombiana y degustación de café preparado en casa.",
+    capacidadMaxima: 10,
+    precioNoche: 200000,
+    actividades: ["cafe", "gastronomia", "cultura", "danza", "caminata", "degustacion"],
+    imagenes: ["Hostal7.jpeg", "Hostal10.jpeg", "Hostal11.jpeg"],
+  },
+];
+
+async function asegurarRutasCafe() {
+  let nuevas = 0;
+  for (const r of RUTAS_CAFE) {
+    const existe = await prisma.propiedad.findUnique({ where: { slug: r.slug } });
+    if (existe) continue;
+    await prisma.propiedad.create({
+      data: {
+        nombre: r.nombre,
+        slug: r.slug,
+        tipo: r.tipo,
+        estado: "PUBLICADO",
+        descripcion: r.descripcion,
+        ubicacion: "Finca Tropical Biohostel, Nocaima",
+        ciudad: "Nocaima",
+        telefono: "3118371264",
+        email: "tropical_biostel@gmail.com",
+        whatsapp: "573118371264",
+        departamento: "Cundinamarca",
+        coordenadas: { lat: 5.073441158648125, lng: -74.36892837539479 },
+        capacidadMaxima: r.capacidadMaxima,
+        precioNoche: r.precioNoche,
+        admiteMascotas: true,
+        actividades: r.actividades,
+        fuenteDatos: "manual",
+        verificado: true,
+        images: { create: img(r.imagenes) },
+      },
+    });
+    nuevas++;
+  }
+  console.log(
+    nuevas > 0
+      ? `   - ${nuevas} rutas del café creadas`
+      : "   - rutas del café ya presentes en la base de datos",
+  );
+}
+
 async function main() {
+  // Siempre asegura las rutas del café (idempotente; no depende del seed principal)
+  await asegurarRutasCafe();
+
   const yaHay = await prisma.user.count();
   if (yaHay > 0) {
     console.log("ℹ️  La base de datos ya tiene datos. Seed omitido.");
@@ -50,9 +143,6 @@ async function main() {
     },
   });
   console.log("   - marca site-branding creada (Tropical Biohostel)");
-
-  const img = (archivos: string[]) =>
-    archivos.map((url, i) => ({ url: `/tropical/${url}`, orden: i, esPrincipal: i === 0 }));
 
   // 1) El hostal
   await prisma.propiedad.create({

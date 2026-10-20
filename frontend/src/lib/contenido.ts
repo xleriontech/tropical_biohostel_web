@@ -129,6 +129,134 @@ export const EXPERIENCIAS = {
   },
 };
 
+// Rutas del café — contenido tomado de docs/TropicalGuiaCafe.pdf (Guía Café Tropical Biohostel).
+export const RUTAS = {
+  es: {
+    kicker: "Where coffee begins",
+    titulo: "Rutas del café",
+    intro:
+      "Tres experiencias para descubrir el café, compartir nuestras raíces y regalarte una pausa en el bosque. Todas inician con una caminata desde el casco urbano y se viven a paso lento, entre cafetales, cacao y frutales.",
+    notas:
+      "Los precios de las experiencias incluyen la alimentación correspondiente a cada actividad. Para preparar cada visita de acuerdo con tus preferencias, el menú debe seleccionarse y confirmarse antes de la llegada.",
+    contacto: "311 837 1264",
+    medioPago: "Nequi",
+    guiaPdf: "/guia-cafe-tropical.pdf",
+    rutas: [
+      {
+        slug: "ruta-del-bosque-a-tu-taza",
+        nombre: "Del bosque a tu taza",
+        tagline: "Café orgánico · Proceso artesanal",
+        descripcion:
+          "Una experiencia para descubrir el origen del café, participar en su transformación y disfrutar de sus aromas y sabores.",
+        incluye: [
+          "Caminata desde el casco urbano, de aproximadamente 15 minutos.",
+          "Agua para el recorrido.",
+          "Experiencia de tostión artesanal y explicación de los perfiles de tostión.",
+          "Brunch según el menú previamente seleccionado.",
+          "Degustación de café preparado en casa.",
+          "Una porción de café artesanal para llevar, si se confirma como parte del paquete.",
+        ],
+        precio: 150000,
+      },
+      {
+        slug: "ruta-respira-el-bosque",
+        nombre: "Respira el bosque",
+        tagline: "Yoga · Bienestar · Baño de bosque",
+        descripcion:
+          "Una invitación a bajar el ritmo, respirar conscientemente y reconectar con la naturaleza a través del movimiento y los sentidos.",
+        incluye: [
+          "Caminata desde el casco urbano y agua para el recorrido.",
+          "Clase de yoga.",
+          "Brunch según el menú previamente seleccionado.",
+          "Experiencia de tostión artesanal y explicación de los perfiles de tostión.",
+          "Baño de bosque.",
+          "Degustación de café preparado en casa.",
+          "Una porción de café para llevar, si se confirma como parte del paquete.",
+        ],
+        precio: 200000,
+      },
+      {
+        slug: "ruta-cafe-y-raices-colombianas",
+        nombre: "Café y raíces colombianas",
+        tagline: "Cultura · Gastronomía · Baile tradicional",
+        descripcion:
+          "Un encuentro con las tradiciones colombianas, los saberes campesinos, los sabores de nuestra cocina y la alegría de bailar.",
+        incluye: [
+          "Caminata desde el casco urbano y agua para el recorrido.",
+          "Experiencia de tostión artesanal y explicación de los perfiles de tostión.",
+          "Almuerzo típico de la región según el menú previamente reservado.",
+          "Clase de danza tradicional colombiana.",
+          "Degustación de café preparado en casa.",
+          "Una porción de café para llevar, si se confirma como parte del paquete.",
+        ],
+        precio: 200000,
+      },
+    ],
+  },
+  en: {
+    kicker: "Where coffee begins",
+    titulo: "Coffee Routes",
+    intro:
+      "Three experiences to discover coffee, share our roots, and gift yourself a pause in the forest. All begin with a walk from the town center and unfold at a slow pace among coffee, cacao and fruit trees.",
+    notas:
+      "Experience prices include the meal corresponding to each activity. To prepare each visit according to your preferences, the menu must be selected and confirmed before arrival.",
+    contacto: "311 837 1264",
+    medioPago: "Nequi",
+    guiaPdf: "/guia-cafe-tropical.pdf",
+    rutas: [
+      {
+        slug: "ruta-del-bosque-a-tu-taza",
+        nombre: "From the forest to your cup",
+        tagline: "Organic coffee · Artisan roasting",
+        descripcion:
+          "An experience to discover the origin of coffee, take part in its transformation, and enjoy its aromas and flavors.",
+        incluye: [
+          "Walk from the town center, approximately 15 minutes.",
+          "Water for the journey.",
+          "Artisan roasting experience and explanation of roast profiles.",
+          "Brunch according to the menu previously selected.",
+          "Tasting of house-brewed coffee.",
+          "A portion of artisan coffee to take home, if confirmed as part of the package.",
+        ],
+        precio: 150000,
+      },
+      {
+        slug: "ruta-respira-el-bosque",
+        nombre: "Breathe the forest",
+        tagline: "Yoga · Wellness · Forest bathing",
+        descripcion:
+          "An invitation to slow down, breathe consciously, and reconnect with nature through movement and the senses.",
+        incluye: [
+          "Walk from the town center and water for the journey.",
+          "Yoga class.",
+          "Brunch according to the menu previously selected.",
+          "Artisan roasting experience and explanation of roast profiles.",
+          "Forest bathing.",
+          "Tasting of house-brewed coffee.",
+          "A portion of coffee to take home, if confirmed as part of the package.",
+        ],
+        precio: 200000,
+      },
+      {
+        slug: "ruta-cafe-y-raices-colombianas",
+        nombre: "Coffee and Colombian roots",
+        tagline: "Culture · Gastronomy · Traditional dance",
+        descripcion:
+          "An encounter with Colombian traditions, farming knowledge, the flavors of our cuisine, and the joy of dancing.",
+        incluye: [
+          "Walk from the town center and water for the journey.",
+          "Artisan roasting experience and explanation of roast profiles.",
+          "Typical regional lunch according to the menu previously reserved.",
+          "Colombian traditional dance class.",
+          "Tasting of house-brewed coffee.",
+          "A portion of coffee to take home, if confirmed as part of the package.",
+        ],
+        precio: 200000,
+      },
+    ],
+  },
+};
+
 export const BIENESTAR = {
   es: {
     titulo: "Bienestar y conexión",

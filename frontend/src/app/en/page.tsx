@@ -1,4 +1,4 @@
-import { HERO, TERRITORIO, HOSPEDAJE, GASTRONOMIA, EXPERIENCIAS, BIENESTAR, CIERRE, COSMIC } from "@/lib/contenido";
+import { HERO, TERRITORIO, HOSPEDAJE, GASTRONOMIA, EXPERIENCIAS, RUTAS, BIENESTAR, CIERRE, COSMIC } from "@/lib/contenido";
 
 export const metadata = {
   title: "Tropical Biohostel — Nature, flavors and experiences in Nocaima",
@@ -46,6 +46,20 @@ export default function EnglishPage() {
       <p className="mt-2 leading-relaxed text-muted-foreground">{EXPERIENCIAS.en.cuerpo1}</p>
       <p className="mt-2 leading-relaxed text-muted-foreground">{EXPERIENCIAS.en.cuerpo2}</p>
       <p className="mt-2 font-medium">{EXPERIENCIAS.en.cierre}</p>
+
+      <h2 className="mt-10 font-display text-2xl font-semibold">{RUTAS.en.titulo}</h2>
+      <p className="mt-2 leading-relaxed text-muted-foreground">{RUTAS.en.intro}</p>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        {RUTAS.en.rutas.map((r) => (
+          <a key={r.slug} href={`/property/${r.slug}`} className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{r.tagline}</p>
+            <p className="mt-1 font-semibold">{r.nombre}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{r.descripcion}</p>
+            <p className="mt-2 font-medium text-primary">$ {r.precio.toLocaleString("en-US")} COP / person</p>
+          </a>
+        ))}
+      </div>
+      <p className="mt-3 text-sm text-muted-foreground">{RUTAS.en.notas}</p>
 
       <h2 className="mt-10 font-display text-2xl font-semibold">{BIENESTAR.en.titulo}</h2>
       <p className="mt-2 leading-relaxed text-muted-foreground">{BIENESTAR.en.cuerpo1}</p>
