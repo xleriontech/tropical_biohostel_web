@@ -1,4 +1,4 @@
-import { HERO, TERRITORIO, HOSPEDAJE, GASTRONOMIA, EXPERIENCIAS, RUTAS, BIENESTAR, CIERRE, COSMIC } from "@/lib/contenido";
+import { HERO, TERRITORIO, HOSPEDAJE, GASTRONOMIA, EXPERIENCIAS, RUTAS, FICAL, BIENESTAR, CIERRE, COSMIC } from "@/lib/contenido";
 
 export const metadata = {
   title: "Tropical Biohostel — Nature, flavors and experiences in Nocaima",
@@ -46,6 +46,18 @@ export default function EnglishPage() {
       <p className="mt-2 leading-relaxed text-muted-foreground">{EXPERIENCIAS.en.cuerpo1}</p>
       <p className="mt-2 leading-relaxed text-muted-foreground">{EXPERIENCIAS.en.cuerpo2}</p>
       <p className="mt-2 font-medium">{EXPERIENCIAS.en.cierre}</p>
+
+      <h2 className="mt-10 font-display text-2xl font-semibold">{FICAL.en.titulo}</h2>
+      <p className="mt-2 leading-relaxed text-muted-foreground">{FICAL.en.subtitulo}</p>
+      <div className="mt-3 space-y-2 leading-relaxed text-muted-foreground">
+        {FICAL.en.parrafos.map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
+      </div>
+      <p className="mt-3 font-medium italic">{FICAL.en.cierre}</p>
+      <a href="/fical-y-el-cafe" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">
+        Read the full story →
+      </a>
 
       <h2 className="mt-10 font-display text-2xl font-semibold">{RUTAS.en.titulo}</h2>
       <p className="mt-2 leading-relaxed text-muted-foreground">{RUTAS.en.intro}</p>

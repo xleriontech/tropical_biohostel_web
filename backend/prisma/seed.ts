@@ -10,6 +10,10 @@ const plural = (n: number, singular: string, plural_: string) =>
 const img = (archivos: string[]) =>
   archivos.map((url, i) => ({ url: `/tropical/${url}`, orden: i, esPrincipal: i === 0 }));
 
+// Fotos reales de la finca (frontend/public/fotos/sitio/)
+const imgSitio = (archivos: string[]) =>
+  archivos.map((url, i) => ({ url: `/fotos/sitio/${url}`, orden: i, esPrincipal: i === 0 }));
+
 // Seed inicial de Tropical Biohostel: admin + proveedores IA + marca + oferta real
 // (datos tomados de docs/Tropical_Biohostel.md y fotos de Imagenes/).
 // ⚠️  Los precios son PLACEHOLDER: ajústalos en admin/properties.
@@ -37,7 +41,7 @@ const RUTAS_CAFE: RutaCafeSeed[] = [
     capacidadMaxima: 10,
     precioNoche: 150000,
     actividades: ["cafe", "caminata", "tostion", "gastronomia", "degustacion"],
-    imagenes: ["Hostal5.jpeg", "MAndarina.jpeg", "MandarinaLimon.jpeg"],
+    imagenes: ["tropical-cafe.jpg", "tropical-cafe2.jpg", "tropical-cafe5.jpg"],
   },
   {
     nombre: "Respira el bosque",
@@ -48,7 +52,7 @@ const RUTAS_CAFE: RutaCafeSeed[] = [
     capacidadMaxima: 10,
     precioNoche: 200000,
     actividades: ["yoga", "bienestar", "cafe", "caminata", "bosque", "degustacion"],
-    imagenes: ["Hostal6.jpeg", "Hostal8.jpeg", "Hostal9.jpeg"],
+    imagenes: ["tropical-flores2.jpg", "tropical-gente4.jpg", "tropical-voluntariado.jpg"],
   },
   {
     nombre: "Café y raíces colombianas",
@@ -59,7 +63,7 @@ const RUTAS_CAFE: RutaCafeSeed[] = [
     capacidadMaxima: 10,
     precioNoche: 200000,
     actividades: ["cafe", "gastronomia", "cultura", "danza", "caminata", "degustacion"],
-    imagenes: ["Hostal7.jpeg", "Hostal10.jpeg", "Hostal11.jpeg"],
+    imagenes: ["tropical-cocina.jpg", "tropical-gente3.jpg", "tropical-postre2.jpg"],
   },
 ];
 
@@ -88,7 +92,7 @@ async function asegurarRutasCafe() {
         actividades: r.actividades,
         fuenteDatos: "manual",
         verificado: true,
-        images: { create: img(r.imagenes) },
+        images: { create: imgSitio(r.imagenes) },
       },
     });
     nuevas++;
@@ -98,6 +102,98 @@ async function asegurarRutasCafe() {
       ? `   - ${plural(nuevas, "ruta del café creada", "rutas del café creadas")}`
       : "   - rutas del café ya presentes en la base de datos",
   );
+}
+
+/**
+ * Ajustes idempotentes sobre datos que ya existen en la base.
+ *
+ * Solo cambian valores que siguen en su valor por defecto: si alguien los editó
+ * a mano desde el panel de administración, no se tocan.
+ */
+async function ajustarBase() {
+  // Precio del Cosmic Bungaló: antes $120.000 → ahora $250.000 por pareja.
+  const bung = await prisma.propiedad.findUnique({ where: { slug: "cosmic-bungalo" } });
+  if (bung && bung.precioNoche === 120000) {
+    await prisma.propiedad.update({
+      where: { slug: "cosmic-bungalo" },
+      data: { precioNoche: 250000 },
+    });
+    console.log("   - precio del Cosmic Bungaló actualizado a $250.000");
+  }
+
+  // Portadas de los proyectos de donación (solo si están vacías).
+  const portadas: Record<string, string> = {
+    "siembra-100-arboles-nativos": "/fotos/sitio/tropical-gente4.jpg",
+    "huella-de-carbono-compensa-tu-visita": "/fotos/sitio/tropical-flores2.jpg",
+  };
+  for (const [slug, imagenUrl] of Object.entries(portadas)) {
+    const p = await prisma.proyectoDonacion.findUnique({ where: { slug } });
+    if (p && !p.imagenUrl) {
+      await prisma.proyectoDonacion.update({ where: { slug }, data: { imagenUrl } });
+      console.log(`   - portada asignada a "${p.titulo}"`);
+    }
+  }
+
+  await sincronizarFotosBase();
+}
+
+/**
+ * Sustituye las fotos del catálogo base por las fotos reales de la finca.
+ *
+ * Solo reemplaza si la propiedad sigue con el juego de imágenes que dejó el
+ * propio seed: si alguien cambió las fotos desde el panel, se respetan.
+ */
+const FOTOS_BASE: Record<string, { anteriores: string[]; nuevas: string[] }> = {
+  "tour-cafe-cacao-tropical": {
+    anteriores: ["/tropical/MAndarina.jpeg", "/tropical/MandarinaLimon.jpeg", "/tropical/Hostal8.jpeg"],
+    nuevas: ["tropical-cafe.jpg", "tropical-gente.jpg", "tropical-cafe5.jpg"],
+  },
+  "caminata-bienestar-tropical": {
+    anteriores: ["/tropical/Hostal9.jpeg", "/tropical/Hostal10.jpeg", "/tropical/Hostal11.jpeg"],
+    nuevas: ["tropical-flores2.jpg", "tropical-gente4.jpg", "tropical-voluntariado.jpg"],
+  },
+  "mesa-tropical": {
+    anteriores: ["/tropical/MandarinaLimon.jpeg", "/tropical/MAndarina.jpeg"],
+    nuevas: ["tropical-cocina.jpg", "tropical-postre.jpg", "tropical-cocina2.jpg"],
+  },
+  "ruta-del-bosque-a-tu-taza": {
+    anteriores: ["/tropical/Hostal5.jpeg", "/tropical/MAndarina.jpeg", "/tropical/MandarinaLimon.jpeg"],
+    nuevas: ["tropical-cafe.jpg", "tropical-cafe2.jpg", "tropical-cafe5.jpg"],
+  },
+  "ruta-respira-el-bosque": {
+    anteriores: ["/tropical/Hostal6.jpeg", "/tropical/Hostal8.jpeg", "/tropical/Hostal9.jpeg"],
+    nuevas: ["tropical-flores2.jpg", "tropical-gente4.jpg", "tropical-voluntariado.jpg"],
+  },
+  "ruta-cafe-y-raices-colombianas": {
+    anteriores: ["/tropical/Hostal7.jpeg", "/tropical/Hostal10.jpeg", "/tropical/Hostal11.jpeg"],
+    nuevas: ["tropical-cocina.jpg", "tropical-gente3.jpg", "tropical-postre2.jpg"],
+  },
+};
+
+async function sincronizarFotosBase() {
+  for (const [slug, { anteriores, nuevas }] of Object.entries(FOTOS_BASE)) {
+    const p = await prisma.propiedad.findUnique({
+      where: { slug },
+      include: { images: true },
+    });
+    if (!p) continue;
+
+    const actuales = p.images.map((i) => i.url);
+    const sonLasDelSeed =
+      actuales.length > 0 && actuales.every((u) => anteriores.includes(u));
+    if (!sonLasDelSeed) continue; // cambiadas a mano: no se tocan
+
+    await prisma.propiedadImage.deleteMany({ where: { propiedadId: p.id } });
+    await prisma.propiedadImage.createMany({
+      data: nuevas.map((url, i) => ({
+        propiedadId: p.id,
+        url: `/fotos/sitio/${url}`,
+        orden: i,
+        esPrincipal: i === 0,
+      })),
+    });
+    console.log(`   - fotos actualizadas en "${p.nombre}"`);
+  }
 }
 
 /** Crea la propiedad solo si no existe ya ese slug (idempotente). */
@@ -112,6 +208,7 @@ async function crearPropiedad(args: { data: Prisma.PropiedadCreateInput }) {
 async function main() {
   // Siempre asegura las rutas del café (idempotente; no depende del seed principal)
   await asegurarRutasCafe();
+  await ajustarBase();
 
   // Cada sección del seed es idempotente: si falta algo (p. ej. porque una
   // corrida anterior se interrumpió a mitad), se completa en la siguiente.
@@ -267,7 +364,7 @@ async function main() {
       actividades: ["cafe", "cacao", "caminata", "gastronomia", "taller"],
       fuenteDatos: "manual",
       verificado: true,
-      images: { create: img(["MAndarina.jpeg", "MandarinaLimon.jpeg", "Hostal8.jpeg"]) },
+      images: { create: imgSitio(["tropical-cafe.jpg", "tropical-gente.jpg", "tropical-cafe5.jpg"]) },
     },
   });
 
@@ -293,7 +390,7 @@ async function main() {
       actividades: ["senderismo", "caminata", "yoga", "avistamiento", "bienestar", "bosque"],
       fuenteDatos: "manual",
       verificado: true,
-      images: { create: img(["Hostal9.jpeg", "Hostal10.jpeg", "Hostal11.jpeg"]) },
+      images: { create: imgSitio(["tropical-flores2.jpg", "tropical-gente4.jpg", "tropical-voluntariado.jpg"]) },
     },
   });
 
@@ -320,7 +417,7 @@ async function main() {
       actividades: ["gastronomia", "cafe", "taller"],
       fuenteDatos: "manual",
       verificado: true,
-      images: { create: img(["MandarinaLimon.jpeg", "MAndarina.jpeg"]) },
+      images: { create: imgSitio(["tropical-cocina.jpg", "tropical-postre.jpg", "tropical-cocina2.jpg"]) },
     },
   });
 
@@ -337,6 +434,7 @@ async function main() {
       meta: 2500000,
       moneda: "USD",
       estado: "ACTIVO" as const,
+      imagenUrl: "/fotos/sitio/tropical-gente4.jpg",
       orden: 0,
     },
     {
@@ -348,6 +446,7 @@ async function main() {
       meta: 1000,
       moneda: "USD",
       estado: "ACTIVO" as const,
+      imagenUrl: "/fotos/sitio/tropical-flores2.jpg",
       orden: 1,
     },
   ];

@@ -25,6 +25,28 @@ export default function BienestarPage() {
         Yoga, Chi Kung o Tai Chi para complementar tu descanso.
         <a href="/cosmic-bungalo" className="ml-1 font-medium text-primary hover:underline">Conocer el refugio →</a>
       </div>
+
+      {/* El bosque como escenario de bienestar */}
+      <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {[
+          { src: "/fotos/sitio/tropical-flores2.jpg", alt: "Jardín de bugambilias y dracaena" },
+          { src: "/fotos/sitio/tropical-voluntariado.jpg", alt: "Rincón verde de la finca" },
+          { src: "/fotos/sitio/IMG-20260910-WA0029.jpg", alt: "Mascotas bienvenidas en Tropical Biohostel" },
+        ].map((f) => (
+          <img
+            key={f.src}
+            src={f.src}
+            alt={f.alt}
+            loading="lazy"
+            className="aspect-[4/3] w-full rounded-xl border object-cover shadow-sm"
+          />
+        ))}
+      </div>
+      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+        El entorno es hogar de una gran variedad de aves y de especies como armadillos y zorros.
+        También hay espacios donde puedes trabajar o desarrollar proyectos personales en contacto con
+        la naturaleza, haciendo de la tranquilidad y el entorno parte de tu experiencia.
+      </p>
     </div>
   );
 }

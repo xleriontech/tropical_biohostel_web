@@ -31,13 +31,19 @@ export default function ExperienciasPage() {
         </a>
       </div>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        <a href="/property/tour-cafe-cacao-tropical" className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md">
-          <p className="font-semibold">Tour del Café y el Cacao</p>
-          <p className="text-sm text-muted-foreground">Del grano a la taza entre cafetales, cacao y frutales.</p>
+        <a href="/property/tour-cafe-cacao-tropical" className="overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-md">
+          <img src="/fotos/sitio/tropical-cafe.jpg" alt="Tour del Café y el Cacao" loading="lazy" className="aspect-[21/9] w-full object-cover" />
+          <div className="p-5">
+            <p className="font-semibold">Tour del Café y el Cacao</p>
+            <p className="text-sm text-muted-foreground">Del grano a la taza entre cafetales, cacao y frutales.</p>
+          </div>
         </a>
-        <a href="/property/caminata-bienestar-tropical" className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md">
-          <p className="font-semibold">Caminata Ecológica y Bienestar</p>
-          <p className="text-sm text-muted-foreground">Bosque nativo, respiración y contemplación.</p>
+        <a href="/property/caminata-bienestar-tropical" className="overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-md">
+          <img src="/fotos/sitio/tropical-gente4.jpg" alt="Caminata Ecológica y Bienestar" loading="lazy" className="aspect-[21/9] w-full object-cover" />
+          <div className="p-5">
+            <p className="font-semibold">Caminata Ecológica y Bienestar</p>
+            <p className="text-sm text-muted-foreground">Bosque nativo, respiración y contemplación.</p>
+          </div>
         </a>
       </div>
     </div>

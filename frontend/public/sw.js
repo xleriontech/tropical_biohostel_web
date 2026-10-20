@@ -15,7 +15,7 @@
  * borra las cachés de versiones anteriores.
  */
 
-const VERSION = "v3";
+const VERSION = "v4";
 const CACHE_SHELL = `tb-shell-${VERSION}`;
 const CACHE_ESTATICOS = `tb-estaticos-${VERSION}`;
 const CACHE_PAGINAS = `tb-paginas-${VERSION}`;
@@ -127,7 +127,11 @@ async function respaldo(request, respuestaAlternativa) {
 async function navegacion(request) {
   let respuesta = null;
   try {
-    respuesta = await fetch(request);
+    // cache: "no-store" fuerza a pedir la página real al servidor. Sin esto, el
+    // navegador puede responder con su copia de la caché HTTP y el usuario
+    // vería precios y textos desactualizados tras un despliegue. La copia
+    // offline la guarda este mismo service worker.
+    respuesta = await fetch(request, { cache: "no-store" });
   } catch {
     // Sin conexión: se sirve el respaldo.
   }
@@ -161,7 +165,9 @@ async function cachePrimero(request, nombreCache) {
 async function redPrimero(request, nombreCache) {
   let respuesta = null;
   try {
-    respuesta = await fetch(request);
+    // Igual que en navegaciones: siempre se consulta la red para no servir
+    // datos viejos (precios, disponibilidad) desde la caché del navegador.
+    respuesta = await fetch(request, { cache: "no-store" });
   } catch {
     // Sin conexión: se sirve el respaldo.
   }

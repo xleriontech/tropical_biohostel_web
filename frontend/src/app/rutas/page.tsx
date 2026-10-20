@@ -24,9 +24,36 @@ export default function RutasPage() {
       <h1 className="mt-2 font-display text-4xl font-semibold">{t.titulo}</h1>
       <p className="mt-4 leading-relaxed text-muted-foreground">{t.intro}</p>
 
+      {/* Contexto: la historia del café de la finca */}
+      <div className="mt-6 flex flex-col gap-4 rounded-2xl border bg-white p-5 shadow-sm sm:flex-row sm:items-center">
+        <img
+          src="/fotos/sitio/tropical-gente.jpg"
+          alt="Procesando el café en la cocina de la finca"
+          loading="lazy"
+          className="h-32 w-full rounded-xl object-cover sm:w-44"
+        />
+        <div className="flex-1">
+          <p className="font-display text-lg font-semibold">Fical y el café</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Mi abuela recogía el fruto maduro, lo secaba al sol y lo tostaba en su olla. Hoy hago la
+            misma experiencia con cada uno de nuestros huéspedes: del cafetal a la taza.
+          </p>
+          <a href="/fical-y-el-cafe" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">
+            Conocer la historia →
+          </a>
+        </div>
+      </div>
+
       <div className="mt-10 grid gap-6">
         {t.rutas.map((r, idx) => (
-          <article key={r.slug} className="rounded-2xl border bg-white p-6 shadow-sm">
+          <article key={r.slug} className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+            <img
+              src={r.imagen}
+              alt={r.nombre}
+              loading="lazy"
+              className="aspect-[21/9] w-full object-cover"
+            />
+            <div className="p-6">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
@@ -61,6 +88,7 @@ export default function RutasPage() {
               <a href={tel} className="text-sm font-medium text-primary hover:underline">
                 Escríbenos: {t.contacto}
               </a>
+            </div>
             </div>
           </article>
         ))}

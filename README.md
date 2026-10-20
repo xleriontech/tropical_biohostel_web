@@ -123,6 +123,26 @@ Para cambiar de proveedor, solo activa una nueva API key en el panel admin.
 - Autenticación JWT via Supabase
 - CORS configurado
 
+## Contenido y fotos
+
+El sitio tiene una **biblioteca de contenido** en `frontend/src/lib/contenido.ts` (textos en español e
+inglés de cada sección) y una **galería real de la finca** en `frontend/public/fotos/sitio/`
+(fotografías propias de Tropical Biohostel: café, huerta, frutales, cocina, personas y naturaleza).
+
+| Página | Contenido |
+|---|---|
+| `/` | Portada con fotos reales de territorio, hospedaje, gastronomía, experiencias y bienestar |
+| `/territorio` | Bosque nativo, cultivos, frutales, huerta, fauna |
+| `/gastronomia` | Del territorio a la mesa, con la cocina y los postres de la finca |
+| `/cosmic-bungalo` | El refugio, su arquitectura y el precio del Bungalow |
+| `/rutas` | Las tres rutas del café (Del bosque a tu taza, Respira el bosque, Café y raíces colombianas) |
+| `/fical-y-el-cafe` | La historia de la abuela: del fruto a la taza, paso a paso |
+| `/bienestar` | Yoga, Chi Kung y Tai Chi en el bosque |
+| `/experiencias` | Catálogo de experiencias y actividades |
+
+> La carpeta `ImagenesSitio/` es material de trabajo del usuario y **no se sube al repositorio**
+> (está en `.gitignore`). Las fotos que el sitio usa viven en `frontend/public/fotos/sitio/`.
+
 ## PWA (app instalable)
 
 El sitio es una **Progressive Web App**: se puede instalar desde el navegador (Chrome, Edge, Safari

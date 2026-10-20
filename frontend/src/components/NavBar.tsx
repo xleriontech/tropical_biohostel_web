@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSearch } from "@/lib/SearchContext";
-import { Brain, ChevronDown, Coffee, Compass, Flower2, HeartHandshake, Leaf, Menu, MoonStar, UtensilsCrossed, X } from "lucide-react";
+import { Brain, BookOpen, ChevronDown, Coffee, Compass, Flower2, HeartHandshake, Leaf, Menu, MoonStar, UtensilsCrossed, X } from "lucide-react";
 import ThemePicker from "./ThemePicker";
 import SiteBrand from "./SiteBrand";
 
@@ -14,6 +14,7 @@ const EXPLORAR_LINKS = [
   { href: "/comidas", label: "Menús y Comidas", Icon: UtensilsCrossed },
   { href: "/experiencias", label: "Experiencias", Icon: Compass },
   { href: "/rutas", label: "Rutas del café", Icon: Coffee },
+  { href: "/fical-y-el-cafe", label: "Fical y el café", Icon: BookOpen },
   { href: "/bienestar", label: "Bienestar", Icon: Flower2 },
   { href: "/donaciones", label: "Donar 🌳", Icon: HeartHandshake },
   { href: "/en", label: "English", Icon: Compass },

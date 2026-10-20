@@ -31,8 +31,29 @@ export default function TerritorioPage() {
           </div>
         ))}
       </div>
+      {/* Galería real de la finca */}
+      <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {[
+          { src: "/fotos/sitio/tropical-vegetal.jpg", alt: "Verduras creciendo en la huerta" },
+          { src: "/fotos/sitio/tropical-frutas.jpg", alt: "Cítricos recogidos en el huerto" },
+          { src: "/fotos/sitio/tropical-mandarinas2.jpg", alt: "Mandarina de la finca" },
+          { src: "/fotos/sitio/tropical-flores.jpg", alt: "Bugambilias en flor" },
+          { src: "/fotos/sitio/tropical-gente3.jpg", alt: "La frutería del pueblo de Nocaima" },
+          { src: "/fotos/sitio/IMG-20260910-WA0029.jpg", alt: "Perro descansando en el pasto" },
+        ].map((f) => (
+          <img
+            key={f.src}
+            src={f.src}
+            alt={f.alt}
+            loading="lazy"
+            className="aspect-[4/3] w-full rounded-xl border object-cover shadow-sm"
+          />
+        ))}
+      </div>
+
       <div className="mt-8 flex flex-wrap gap-3">
         <a href="/experiencias" className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">Ver experiencias</a>
+        <a href="/fical-y-el-cafe" className="rounded-full border border-input px-6 py-2.5 text-sm font-medium hover:bg-secondary">Fical y el café</a>
         <a href="/cosmic-bungalo" className="rounded-full border border-input px-6 py-2.5 text-sm font-medium hover:bg-secondary">Conocer Cosmic Bungaló</a>
       </div>
     </div>

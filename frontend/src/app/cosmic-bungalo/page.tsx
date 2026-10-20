@@ -38,6 +38,15 @@ export default function CosmicBungaloPage() {
           <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">{t.nombre}</h1>
           <p className="mx-auto mt-3 max-w-2xl text-lg text-emerald-100/90">{t.eslogan}</p>
           <p className="mx-auto mt-5 max-w-2xl leading-relaxed text-white/85">{t.intro}</p>
+          <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-white/75">{t.habitacion}</p>
+
+          {/* Precio */}
+          <div className="mx-auto mt-8 max-w-xl rounded-2xl border border-white/25 bg-white/10 p-6 backdrop-blur-sm">
+            <p className="font-display text-3xl font-semibold text-white">{t.precio}</p>
+            <p className="mt-1 text-sm text-white/75">{t.precioDetalle}</p>
+            <p className="mt-2 text-sm text-emerald-200">{t.precioAdicional}</p>
+          </div>
+
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a href="/property/cosmic-bungalo" className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-emerald-950 shadow-xl hover:bg-emerald-50">
               {lang === "es" ? "Ver y reservar" : "See & book"}

@@ -8,3 +8,7 @@ dist/
 .DS_Store
 coverage/
 backend/prisma/dist/
+
+# Material de trabajo del usuario (fotos, presentaciones, documentos de textos).
+# No debe subirse al repositorio.
+ImagenesSitio/

@@ -31,7 +31,7 @@ export const TERRITORIO = {
     huerta:
       "Cuenta además con una huerta de plantas aromáticas y especias, que conecta directamente el cultivo con la cocina y permite que nuestros visitantes conozcan, exploren y disfruten los productos desde su origen.",
     fauna:
-      "La diversidad del entorno favorece también la presencia de diferentes especies de fauna y flora, entre ellas abejas meliponas, pequeños habitantes que hacen parte del equilibrio natural del territorio.",
+      "El entorno es hogar de una gran variedad de aves y de especies como armadillos y zorros, además de una amplia diversidad de plantas y árboles que hacen de cada recorrido una oportunidad para observar y descubrir. También lo comparten las abejas meliponas, pequeñas habitantes que forman parte del equilibrio natural de la finca.",
     cierre: "En Tropical, la naturaleza no es un escenario: es parte de la experiencia.",
     frutales: ["guanábana", "mango", "papaya", "arazá", "guayaba", "guama", "pomelo", "tangelo", "limón", "piña", "pomarosa"],
     datos: [
@@ -50,7 +50,7 @@ export const TERRITORIO = {
     huerta:
       "The property also features a garden of aromatic plants and spices, creating a direct connection between cultivation and cuisine so visitors can discover, explore, and enjoy these products from their very source.",
     fauna:
-      "The diversity of the surroundings also supports a variety of plant and animal species, including stingless melipona bees, small inhabitants that play an important role in the natural balance of the territory.",
+      "The surroundings are home to a wide variety of birds and species such as armadillos and foxes, along with a remarkable diversity of plants and trees that turn every walk into an opportunity to observe and discover. Stingless bees also share the territory, small inhabitants that are part of the farm's natural balance.",
     cierre: "At Tropical Biohostel nature is not a backdrop: it is the backbone of the experience.",
     frutales: ["soursop", "mango", "papaya", "arazá", "guava", "guama", "grapefruit", "tangelo", "lemon", "pineapple", "rose apple"],
     datos: [
@@ -71,6 +71,8 @@ export const HOSPEDAJE = {
       "La propuesta se complementa con un comedor para 10 personas y una cocina abierta completamente equipada, concebidos como espacios para compartir, preparar alimentos y disfrutar sin prisa.",
     cuerpo3:
       "Además, Tropical cuenta con un bungalow —Cosmic Bungaló—, pensado como un espacio especial de descanso y contemplación, donde el confort se encuentra con la naturaleza.",
+    cuerpo4:
+      "Más que una habitación, es un punto de partida para vivir Tropical Biohostel: despertar entre sonidos de aves, caminar entre plantas y cultivos, disfrutar de una alimentación consciente, leer, escribir, pintar o simplemente dejar que el paisaje inspire nuevas ideas. También encontrarás espacios donde puedes trabajar o desarrollar proyectos personales en contacto con la naturaleza, haciendo de la tranquilidad y el entorno parte de tu experiencia.",
     cierre:
       "Despertar con los sonidos del campo, caminar entre los cultivos, observar el paisaje y dejar que el ritmo del lugar marque el día hacen parte de una estadía pensada para volver a lo esencial.",
   },
@@ -82,6 +84,8 @@ export const HOSPEDAJE = {
       "The experience is complemented by a dining area for 10 people and a fully equipped open kitchen, conceived as spaces for sharing, preparing food, and enjoying each moment without rushing.",
     cuerpo3:
       "Tropical also features a bungalow — Cosmic Bungalow — designed as a special space for rest and contemplation, where comfort meets nature.",
+    cuerpo4:
+      "More than a room, it is a starting point for living Tropical Biohostel: waking up to the sounds of birds, walking among plants and crops, enjoying conscious food, reading, writing, painting or simply letting the landscape inspire new ideas. You will also find spaces where you can work or develop personal projects in contact with nature, making the tranquility and the setting part of your experience.",
     cierre:
       "Waking up to the sounds of the countryside, walking among the crops, taking in the landscape, and letting the rhythm of the place shape your day are all part of a stay designed to bring you back to what truly matters.",
   },
@@ -94,6 +98,8 @@ export const GASTRONOMIA = {
       "Una de las grandes apuestas de Tropical es desarrollar una experiencia gastronómica conectada con el territorio. Nuestra propuesta de alimentación consciente busca rescatar el valor de los alimentos naturales, los productos locales y los ingredientes cultivados en la finca.",
     cuerpo2:
       "Algunos de nuestros frutos, aromáticas y productos son cultivados de manera orgánica y seleccionados cuidadosamente para llegar a la mesa conservando sus sabores, aromas, colores y texturas.",
+    cuerpo3:
+      "Comida sana, preparada pensando no solo en alimentar tu cuerpo, sino también en despertar tus sentidos. Frutas y otros productos cultivados de manera orgánica llegan a nuestra mesa para convertirse en preparaciones que resaltan sus sabores, aromas y texturas: una experiencia que también busca crear recuerdos a través del gusto y del olfato.",
     cierre:
       "Porque en Tropical comer no es solamente alimentarse. Es conocer el origen de lo que comemos, descubrir nuevos sabores y conectar con el territorio a través de los sentidos.",
   },
@@ -103,6 +109,8 @@ export const GASTRONOMIA = {
       "One of Tropical Biohostel's main commitments is a culinary experience deeply connected to the land. Our conscious approach to food highlights natural foods, local products, and ingredients grown on the farm.",
     cuerpo2:
       "Many of our fruits, herbs, and other products are organically grown and carefully selected to reach the table while preserving their natural flavors, aromas, colors, and textures.",
+    cuerpo3:
+      "Healthy food, prepared with more than nourishing your body in mind — with the aim of awakening your senses. Fruits and other organically grown products reach our table and become preparations that bring out their flavors, aromas and textures: an experience that also seeks to create memories through taste and smell.",
     cierre:
       "Because at Tropical, eating is about more than simply nourishing yourself. It is about discovering where our food comes from, experiencing new flavors, and connecting with the land through the senses.",
   },
@@ -146,6 +154,7 @@ export const RUTAS = {
         slug: "ruta-del-bosque-a-tu-taza",
         nombre: "Del bosque a tu taza",
         tagline: "Café orgánico · Proceso artesanal",
+        imagen: "/fotos/sitio/tropical-cafe.jpg",
         descripcion:
           "Una experiencia para descubrir el origen del café, participar en su transformación y disfrutar de sus aromas y sabores.",
         incluye: [
@@ -162,6 +171,7 @@ export const RUTAS = {
         slug: "ruta-respira-el-bosque",
         nombre: "Respira el bosque",
         tagline: "Yoga · Bienestar · Baño de bosque",
+        imagen: "/fotos/sitio/tropical-flores2.jpg",
         descripcion:
           "Una invitación a bajar el ritmo, respirar conscientemente y reconectar con la naturaleza a través del movimiento y los sentidos.",
         incluye: [
@@ -179,6 +189,7 @@ export const RUTAS = {
         slug: "ruta-cafe-y-raices-colombianas",
         nombre: "Café y raíces colombianas",
         tagline: "Cultura · Gastronomía · Baile tradicional",
+        imagen: "/fotos/sitio/tropical-cocina.jpg",
         descripcion:
           "Un encuentro con las tradiciones colombianas, los saberes campesinos, los sabores de nuestra cocina y la alegría de bailar.",
         incluye: [
@@ -257,6 +268,121 @@ export const RUTAS = {
   },
 };
 
+// Fical y el café — narrativa de la abuela (docs/Textos.docx).
+// Recoge el proceso real del café de la finca, paso a paso.
+export const FICAL = {
+  es: {
+    kicker: "Fical y el café",
+    titulo: "Fical y el café",
+    subtitulo:
+      "La historia de una abuela, una finca y un café que sigue creciendo entre los árboles.",
+    parrafos: [
+      "Mi abuela me contaba que en tierra de paches, frondosos bosques llenos de biodiversidad, guardaban en su corazón la planta de FIQUE. Los lejanos abuelos de mi abuela la utilizaban para crear la “cabuya” y con ella costales para empaques agrícolas.",
+      "El tiempo pasó, las familias llegaron y el “fique” se convirtió en FICAL, las fincas diversificaron sus cultivos y la de mis abuelos se convirtió en una gran extensión de café que crecía como crecían las plantas de fique en el bosque.",
+      "Con mi abuela recogimos el fruto maduro, lo secamos al sol y, cuando llegaba el momento, lo tostamos juntas para sentir su sabor y aroma a bosque, ese que con tanto cariño cuidábamos.",
+      "Hoy hago la misma experiencia con cada uno de nuestros huéspedes y viajeros, para recordarles que crecer, florecer y saber, toman tiempo.",
+      "En honor a la abuela, hoy siembro mi café en medio de los árboles de mi pequeño bosque tropical, recojo sus frutos, los seco al sol y lo tuesto en mi olla como lo hacía ella.",
+      "Hoy conservo esta tradición con cada uno de los visitantes que llegan a Tropical Biohostel, y al igual que la abuela, hoy comparto esta experiencia con el mundo.",
+    ],
+    cierre: "De una taza de café con la abuela, a una taza de café en Tropical Biohostel.",
+    proceso: [
+      {
+        paso: "01",
+        titulo: "La cosecha",
+        texto: "Recogemos el fruto maduro directamente de los cafetales, en medio de mi pequeño bosque tropical.",
+        imagen: "/fotos/sitio/tropical-cafe.jpg",
+      },
+      {
+        paso: "02",
+        titulo: "El secado al sol",
+        texto: "Lo secamos al sol, como lo hacía mi abuela, hasta que el fruto pierde la humedad y se convierte en pergamino.",
+        imagen: "/fotos/sitio/tropical-granos-cafe.jpg",
+      },
+      {
+        paso: "03",
+        titulo: "La despulpado",
+        texto: "Retiramos la pulpa seca y obtenemos el grano: el mismo que mi abuela guardaba en costales de cabuya.",
+        imagen: "/fotos/sitio/tropical-cafe2.jpg",
+      },
+      {
+        paso: "04",
+        titulo: "La tostión",
+        texto: "Lo tostamos en mi olla, como lo hacía ella, y aprendemos las diferencias entre los perfiles claro, medio y oscuro.",
+        imagen: "/fotos/sitio/tropical-cafe4.jpg",
+      },
+      {
+        paso: "05",
+        titulo: "La molienda y la taza",
+        texto: "Moliendo a mano, preparamos el café en casa: un aroma a bosque que se comparte con quien llega.",
+        imagen: "/fotos/sitio/tropical-cafe5.jpg",
+      },
+    ],
+    galeria: [
+      { src: "/fotos/sitio/tropical-gente.jpg", alt: "Procesando el café en la cocina de la finca" },
+      { src: "/fotos/sitio/tropical-gente2.jpg", alt: "Tamizando el café molido" },
+      { src: "/fotos/sitio/tropical-cafe3.jpg", alt: "Los granos en la olla, antes de la tostión" },
+      { src: "/fotos/sitio/tropical-cafe6.jpg", alt: "La paloma que aparece cuando secamos el café" },
+      { src: "/fotos/sitio/InShot_20260910_172043288.jpg", alt: "Del fruto a la taza" },
+      { src: "/fotos/sitio/Screenshot_20260909_093715_Instagram.jpg", alt: "La mesa de Tropical Biohostel" },
+    ],
+  },
+  en: {
+    kicker: "Fique and coffee",
+    titulo: "Fique and coffee",
+    subtitulo:
+      "The story of a grandmother, a farm, and a coffee that keeps growing among the trees.",
+    parrafos: [
+      "My grandmother used to tell me that in the land of the paches, in lush forests full of biodiversity, they kept the FIQUE plant close to their hearts. My grandmother's distant ancestors used it to make “cabuya” fibre, and with it the sacks for agricultural packaging.",
+      "Time passed, families arrived, and “fique” became FICAL. The farms diversified their crops, and my ancestors' farm became a great stretch of coffee that grew the way fique plants grew in the forest.",
+      "Together with my grandmother we gathered the ripe fruit, dried it in the sun, and when the time came, we roasted it together to feel its forest flavor and aroma — the one we cared for so deeply.",
+      "Today I share that same experience with every guest and traveler, to remind them that growing, flowering and knowing take time.",
+      "In honor of my grandmother, today I plant my coffee among the trees of my small tropical forest, I gather its fruit, dry it in the sun, and roast it in my pot the way she did.",
+      "Today I keep that tradition alive with everyone who arrives at Tropical Biohostel, and just as my grandmother did, today I share this experience with the world.",
+    ],
+    cierre: "From a cup of coffee with my grandmother, to a cup of coffee at Tropical Biohostel.",
+    proceso: [
+      {
+        paso: "01",
+        titulo: "The harvest",
+        texto: "We gather the ripe fruit straight from the coffee trees, in the middle of my small tropical forest.",
+        imagen: "/fotos/sitio/tropical-cafe.jpg",
+      },
+      {
+        paso: "02",
+        titulo: "Drying in the sun",
+        texto: "We dry it in the sun, as my grandmother did, until the fruit loses its moisture and turns into parchment.",
+        imagen: "/fotos/sitio/tropical-granos-cafe.jpg",
+      },
+      {
+        paso: "03",
+        titulo: "The hulling",
+        texto: "We remove the dry pulp and obtain the bean: the same one my grandmother stored in cabuya sacks.",
+        imagen: "/fotos/sitio/tropical-cafe2.jpg",
+      },
+      {
+        paso: "04",
+        titulo: "The roasting",
+        texto: "We roast it in my pot, as she did, and learn the differences between light, medium and dark profiles.",
+        imagen: "/fotos/sitio/tropical-cafe4.jpg",
+      },
+      {
+        paso: "05",
+        titulo: "Grinding and the cup",
+        texto: "Ground by hand, the coffee is brewed at home: a forest aroma to be shared with whoever arrives.",
+        imagen: "/fotos/sitio/tropical-cafe5.jpg",
+      },
+    ],
+    galeria: [
+      { src: "/fotos/sitio/tropical-gente.jpg", alt: "Processing the coffee in the farm kitchen" },
+      { src: "/fotos/sitio/tropical-gente2.jpg", alt: "Sifting the ground coffee" },
+      { src: "/fotos/sitio/tropical-cafe3.jpg", alt: "The beans in the pot, before roasting" },
+      { src: "/fotos/sitio/tropical-cafe6.jpg", alt: "The pigeon that shows up when we dry the coffee" },
+      { src: "/fotos/sitio/InShot_20260910_172043288.jpg", alt: "From the fruit to the cup" },
+      { src: "/fotos/sitio/Screenshot_20260909_093715_Instagram.jpg", alt: "The table at Tropical Biohostel" },
+    ],
+  },
+};
+
 export const BIENESTAR = {
   es: {
     titulo: "Bienestar y conexión",
@@ -299,6 +425,11 @@ export const COSMIC = {
     eslogan: "Un refugio donde la naturaleza, el arte y la energía del lugar se encuentran.",
     intro:
       "Bienvenida a Cosmic Bungaló, un espacio íntimo y especial de aproximadamente cinco metros cuadrados, diseñado para vivir una experiencia de conexión profunda con la naturaleza y contigo misma.",
+    habitacion:
+      "Dentro de este entorno se encuentra nuestro BUNGALOW, una habitación cómoda y acogedora para descansar y disfrutar de la naturaleza sin renunciar al confort. Es un lugar ideal para parejas o viajeros que buscan tranquilidad, inspiración y una experiencia diferente, rodeados de verde y lejos del ruido.",
+    precio: "$250.000 COP",
+    precioDetalle: "por noche para pareja",
+    precioAdicional: "Persona adicional: $80.000 COP por noche",
     arquitecturaTitulo: "Arquitectura sagrada y hexagonal",
     arquitectura:
       "Inspirado en principios de arquitectura sagrada y geometría hexagonal, este pequeño refugio ha sido construido artesanalmente con ladrillo prensado y materiales naturales de la finca. Cada detalle tiene una historia: mandalas, símbolos rúnicos, texturas, matices y acabados hechos a mano que crean una atmósfera cálida, auténtica y llena de personalidad. Sus pisos rústicos y sus paredes llenas de color y textura conservan ese carácter artesanal que hace que cada estancia se sienta única.",
@@ -330,6 +461,11 @@ export const COSMIC = {
     eslogan: "A shelter where nature, art, and the energy of the place meet.",
     intro:
       "Welcome to Cosmic Bungalow, an intimate and special space of about five square meters, designed for a deep connection with nature and yourself.",
+    habitacion:
+      "Within this setting you will find our BUNGALOW, a comfortable and welcoming room to rest and enjoy the nature without giving up comfort. It is an ideal place for couples or travelers looking for tranquility, inspiration and a different experience, surrounded by green and far from the noise.",
+    precio: "$250,000 COP",
+    precioDetalle: "per night for a couple",
+    precioAdicional: "Additional person: $80,000 COP per night",
     arquitecturaTitulo: "Sacred, hexagonal architecture",
     arquitectura:
       "Inspired by sacred architecture and hexagonal geometry, this small shelter was handcrafted with pressed brick and natural materials from the farm. Every detail tells a story: mandalas, runic symbols, textures, tones, and handmade finishes that create a warm, authentic atmosphere full of personality. Rustic floors and colorful textured walls keep the artisanal character that makes each stay unique.",

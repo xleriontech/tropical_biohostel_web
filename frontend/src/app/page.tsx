@@ -169,13 +169,19 @@ export default function HomePage() {
         <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">{TERRITORIO.es.intro}</p>
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="rounded-xl border bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-            <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase">Bosque nativo</div>
+            <div className="h-48 overflow-hidden rounded-xl">
+              <img src="/fotos/sitio/tropical-voluntariado.jpg" alt="Bosque nativo de la finca" loading="lazy" className="h-full w-full object-cover" />
+            </div>
           </div>
           <div className="rounded-xl border bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-            <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase">Café cultivado</div>
+            <div className="h-48 overflow-hidden rounded-xl">
+              <img src="/fotos/sitio/tropical-cafe.jpg" alt="Café cultivado, fruto y granos verdes" loading="lazy" className="h-full w-full object-cover" />
+            </div>
           </div>
           <div className="rounded-xl border bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-            <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase">Frutales diversos</div>
+            <div className="h-48 overflow-hidden rounded-xl">
+              <img src="/fotos/sitio/tropical-mandarinas.jpg" alt="Frutales diversos de la finca" loading="lazy" className="h-full w-full object-cover" />
+            </div>
           </div>
         </div>
         <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">{TERRITORIO.es.cultivos}</p>
@@ -215,13 +221,19 @@ export default function HomePage() {
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             <div className="rounded-xl border bg-white p-5 shadow-sm">
-              <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-t-xl">3 cabañas con baño privado</div>
+              <div className="h-48 overflow-hidden rounded-t-xl">
+                <img src="/fotos/BioHostel5.jpg" alt="Interior de las cabañas con baño privado" loading="lazy" className="h-full w-full object-cover" />
+              </div>
             </div>
             <div className="rounded-xl border bg-white p-5 shadow-sm">
-              <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-t-xl">Comedor para 10</div>
+              <div className="h-48 overflow-hidden rounded-t-xl">
+                <img src="/fotos/sitio/Screenshot_20260909_093715_Instagram.jpg" alt="Comedor para 10 personas" loading="lazy" className="h-full w-full object-cover" />
+              </div>
             </div>
             <div className="rounded-xl border bg-white p-5 shadow-sm">
-              <div className="h-48 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-t-xl">Cosmic Bungaló</div>
+              <div className="h-48 overflow-hidden rounded-t-xl">
+                <img src="/fotos/BioHostel2.jpg" alt="Pileta natural al aire libre del Cosmic Bungaló" loading="lazy" className="h-full w-full object-cover" />
+              </div>
             </div>
           </div>
         </div>
@@ -276,7 +288,9 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-4 pb-4">
         <div className="grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <div className="h-24 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-txl">Del territorio a la mesa</div>
+            <div className="h-24 overflow-hidden rounded-t-xl">
+              <img src="/fotos/sitio/tropical-cocina2.jpg" alt="Del territorio a la mesa" loading="lazy" className="h-full w-full object-cover" />
+            </div>
             <h3 className="mt-3 font-display text-xl font-semibold">{GASTRONOMIA.es.titulo}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{GASTRONOMIA.es.cuerpo1}</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{GASTRONOMIA.es.cuerpo2}</p>
@@ -285,7 +299,9 @@ export default function HomePage() {
             </a>
           </div>
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <div className="h-24 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-txl">Experiencias que conectan</div>
+            <div className="h-24 overflow-hidden rounded-t-xl">
+              <img src="/fotos/sitio/tropical-gente4.jpg" alt="Experiencias que conectan" loading="lazy" className="h-full w-full object-cover" />
+            </div>
             <h3 className="mt-3 font-display text-xl font-semibold">{EXPERIENCIAS.es.titulo}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{EXPERIENCIAS.es.cuerpo1}</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
@@ -300,7 +316,9 @@ export default function HomePage() {
             </a>
           </div>
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <div className="h-24 bg-gradient-to-br from-[#1E3D24] to-[#16264D] flex items-center justify-center text-white text-sm uppercase rounded-txl">Bienestar y conexión</div>
+            <div className="h-24 overflow-hidden rounded-t-xl">
+              <img src="/fotos/sitio/tropical-flores2.jpg" alt="Bienestar y conexión" loading="lazy" className="h-full w-full object-cover" />
+            </div>
             <h3 className="mt-3 font-display text-xl font-semibold">{BIENESTAR.es.titulo}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{BIENESTAR.es.cuerpo1}</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
