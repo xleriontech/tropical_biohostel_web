@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import RouteLoader from "@/components/RouteLoader";
@@ -6,6 +6,8 @@ import PublicChrome from "@/components/PublicChrome";
 import { SearchProvider } from "@/lib/SearchContext";
 import { ThemeProvider } from "@/lib/ThemeContext";
 import ClientWrapper from "@/components/ClientWrapper";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import InstallPrompt from "@/components/InstallPrompt";
 
 const inter = Inter({ subsets: ["latin"] });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-nido-sans" });
@@ -30,7 +32,41 @@ export const metadata: Metadata = {
     "tour café cacao",
     "gastronomía consciente",
   ],
-  icons: { icon: "/favicon.svg", apple: "/tropical-logo.png" },
+  manifest: "/manifest.webmanifest",
+  applicationName: "Tropical Biohostel",
+  appleWebApp: {
+    capable: true,
+    title: "Tropical Biohostel",
+    statusBarStyle: "default",
+  },
+  formatDetection: { telephone: false, address: false, email: false },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icons/apple-touch-icon-180.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: ["/icons/icon-192.png"],
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "apple-mobile-web-app-title": "Tropical Biohostel",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#007A33" },
+    { media: "(prefers-color-scheme: dark)", color: "#184E40" },
+  ],
 };
 
 export default function RootLayout({
@@ -48,6 +84,8 @@ export default function RootLayout({
               <PublicChrome slot="top" />
               <main>{children}</main>
               <PublicChrome slot="bottom" />
+              <ServiceWorkerRegister />
+              <InstallPrompt />
             </ClientWrapper>
           </SearchProvider>
         </ThemeProvider>

@@ -1,0 +1,78 @@
+{
+  "name": "Tropical Biohostel — Nocaima, Cundinamarca",
+  "short_name": "Tropical Biohostel",
+  "description": "Eco-hostel en Nocaima: cabañas con baño privado, Cosmic Bungaló, rutas del café, gastronomía del territorio y bienestar. Instala la app para reservar y consultar sin conexión.",
+  "lang": "es-CO",
+  "dir": "ltr",
+  "id": "/",
+  "start_url": "/?utm_source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait-primary",
+  "background_color": "#F5EFE0",
+  "theme_color": "#007A33",
+  "categories": ["travel", "lifestyle", "food", "tourism"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Rutas del café",
+      "short_name": "Rutas",
+      "description": "Las tres rutas de café de Tropical Biohostel",
+      "url": "/rutas",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Buscar alojamiento",
+      "short_name": "Buscar",
+      "description": "Buscador inteligente de alojamientos",
+      "url": "/busqueda-inteligente",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Menús y comidas",
+      "short_name": "Menús",
+      "description": "Carta, brunch y platos de la finca",
+      "url": "/comidas",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Experiencias",
+      "short_name": "Experiencias",
+      "description": "Caminatas, café, yoga y bienestar",
+      "url": "/experiencias",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

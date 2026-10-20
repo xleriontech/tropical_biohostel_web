@@ -123,6 +123,29 @@ Para cambiar de proveedor, solo activa una nueva API key en el panel admin.
 - Autenticación JWT via Supabase
 - CORS configurado
 
+## PWA (app instalable)
+
+El sitio es una **Progressive Web App**: se puede instalar desde el navegador (Chrome, Edge, Safari
+en iOS: *Compartir → Añadir a pantalla de inicio*) y funciona sin conexión.
+
+| Archivo | Función |
+|---|---|
+| `frontend/public/manifest.webmanifest` | Nombre, colores, iconos y accesos directos |
+| `frontend/public/sw.js` | Service worker (caché y modo offline) |
+| `frontend/public/offline.html` | Página offline estática (último recurso) |
+| `frontend/public/icons/` | Iconos 192, 512, maskable y apple-touch-icon |
+| `frontend/src/components/ServiceWorkerRegister.tsx` | Registro del service worker |
+| `frontend/src/components/InstallPrompt.tsx` | Aviso para instalar la app |
+| `frontend/src/app/offline/page.tsx` | Página `/offline` del sitio |
+
+**Estrategias de caché:** navegación *red primero* (respaldo en caché → portada → `/offline.html`),
+estáticos *caché primero*, API GET *red primero* con respaldo. Las escrituras (reservas, chat,
+panel admin) **nunca** se cachean.
+
+> **Al publicar cambios hay que subir la versión** en `frontend/public/sw.js`
+> (`const VERSION = "v4"` → `"v5"`). Si no, los dispositivos con la app instalada seguirán
+> sirviendo la versión anterior. El `activate` borra las cachés de versiones anteriores.
+
 ## Licencia
 
 Privado - Tropical Biohostel
