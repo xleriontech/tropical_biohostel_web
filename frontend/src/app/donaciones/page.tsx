@@ -66,8 +66,18 @@ export default function DonacionesPage() {
                     <img src={portada} alt={p.titulo} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
                   </div>
                 ) : (
-                  <div className="flex aspect-[16/9] items-center justify-center bg-gradient-to-br from-[#1E3D24] to-[#16264D]">
-                    <cat.Icon className="h-14 w-14 text-white/80" />
+                  <div className="aspect-[16/9] overflow-hidden bg-muted">
+                    <img
+                      src={
+                        p.categoria === "ARBOLES"
+                          ? "/fotos/sitio/tropical-gente4.jpg"
+                          : p.categoria === "CARBONO"
+                            ? "/fotos/sitio/tropical-flores2.jpg"
+                            : "/fotos/sitio/tropical-voluntariado.jpg"
+                      }
+                      alt={p.titulo}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                 )}
                 <div className="p-5">

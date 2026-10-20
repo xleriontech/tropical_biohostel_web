@@ -19,11 +19,11 @@ export const runtime = "edge";
 export const metadata: Metadata = {
   title: "Tropical Biohostel — Naturaleza que se vive | Nocaima",
   description:
-    "Tropical Biohostel en Nocaima: 3 cabañas con baño privado, Cosmic Bungaló de arquitectura sagrada hexagonal, gastronomía del territorio a la mesa, café, cacao, caminatas y bienestar (Yoga, Tai Chi, Chi Kung).",
+    "Tropical Biohostel en Nocaima: 3 cabañas con baño privado, Cosmic Bungalow de arquitectura sagrada hexagonal, gastronomía del territorio a la mesa, café, cacao, caminatas y bienestar (Yoga, Tai Chi, Chi Kung).",
   keywords: [
     "Tropical Biohostel",
     "Nocaima",
-    "Cosmic Bungaló",
+    "Cosmic Bungalow",
     "eco-hostel",
     "cabañas Nocaima",
     "yoga",

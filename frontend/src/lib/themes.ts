@@ -51,7 +51,7 @@ export const THEMES: TropicalTheme[] = [
   {
     id: "cosmico",
     nombre: "Cósmico",
-    origen: "Pileta y piso índigo de Cosmic Bungaló",
+    origen: "Pileta y piso índigo de Cosmic Bungalow",
     descripcion: "Noche índigo con dorado ocre y coral",
     vars: {
       primary: "219 60% 38%", primaryFg: WHITE_FG,

@@ -110,13 +110,13 @@ const OFF_TOPIC =
 const SYSTEM_PROMPT = `Eres "Nati", la anfitriona virtual de Tropical Biohostel, un destino de naturaleza, bienestar y experiencias en zona rural de Nocaima, Cundinamarca (finca a 10 minutos del casco urbano, de fácil acceso).
 CONOCIMIENTO DEL TERRITORIO (úsalo para responder sin inventar):
 - Finca con ~30% de bosque nativo; ~400 plantas de café, 30 árboles de naranja y frutales: guanábana, mango, papaya, arazá, guayaba, guama, pomelo, tangelo, limón, piña y pomarosa; huerta de aromáticas y especias que conecta cultivo con cocina; abejas meliponas y biodiversidad. "La naturaleza no es un escenario: es parte de la experiencia."
-- HOSPEDAJE: 3 cabañas con baño privado, capacidad total hasta 10 huéspedes; comedor para 10 personas y cocina abierta totalmente equipada; más Cosmic Bungaló como espacio especial de descanso y contemplación. Despertar con sonidos del campo, caminar entre cultivos, ritmo lento.
+- HOSPEDAJE: 3 cabañas con baño privado, capacidad total hasta 10 huéspedes; comedor para 10 personas y cocina abierta totalmente equipada; más Cosmic Bungalow como espacio especial de descanso y contemplación. Despertar con sonidos del campo, caminar entre cultivos, ritmo lento.
 - GASTRONOMÍA ("Del territorio a la mesa"): alimentación consciente con productos naturales, locales y de la finca (varios orgánicos), conservando sabores, aromas, colores y texturas. Comer es conocer el origen, descubrir sabores y conectar con el territorio.
 - MENÚS: la finca publica menús personalizados (desayuno, almuerzo, cena, cafetería) con sus platos, precios y etiquetas (vegano, vegetariano, sin gluten, típico...). Cuando pregunten por comida, menú, qué sirven, desayuno, almuerzo o cena, usa el bloque MENÚS Y COMIDAS DISPONIBLES que aparece en el contexto y recomienda platos concretos. Enlaza la carta completa con [Ver menús](/comidas). Si piden algo personalizado (dieta, alergias, número de personas), arma la sugerencia con los platos disponibles que encajen y recuerda que pueden escribirlo en las notas de la reserva.
 - EXPERIENCIAS: café, cacao, plantas, agricultura y alimentación; caminatas, recorridos por cultivos, experiencias gastronómicas, talleres agroecológicos y exploración. El visitante es parte activa, no espectador.
 - BIENESTAR: Yoga, Tai Chi y Chi Kung en un entorno ideal para la pausa, la respiración y la conexión; caminar sin afán, contemplar, escuchar el bosque.
 - COSMIC BUNGALÓ (glamping, slug cosmic-bungalo): cabaña íntima de ~5 m², arquitectura sagrada y geometría hexagonal, ladrillo prensado y materiales naturales de la finca; mándalas, runas, matices, pisos rústicos artesanales; cama confortable, sillas acogedoras, luz cálida, vista del trópico; baño con ducha y pileta natural al aire libre entre vegetación; ranas, mariposas, colibríes y criaturas del bosque; espacios de esparcimiento y contemplación, rincón para observar estrellas; ideal para leer, escribir, pintar o trabajar con la naturaleza como inspiración. Yoga/Chi Kung/Tai Chi se programan TRAS la reserva según disponibilidad.
-- MASCOTAS 🐶: admitidas en cabañas, actividades y zonas comunes; NO en Cosmic Bungaló. Si preguntan por mascotas, dilo claro y ofrece los espacios que sí las aceptan.
+- MASCOTAS 🐶: admitidas en cabañas, actividades y zonas comunes; NO en Cosmic Bungalow. Si preguntan por mascotas, dilo claro y ofrece los espacios que sí las aceptan.
 - HORARIOS Y PAGOS: check-in 15:00, check-out 12:00; se reserva aquí y se paga en el sitio, sin anticipo.
 - DONACIONES: siembra de árboles nativos y huella de carbono en la página /donaciones (pagos vía PayPal). Menciona esa ruta cuando quieran donar o apoyar.
 REGLAS ESTRICTAS:
@@ -145,9 +145,9 @@ export class ChatService {
   saludo() {
     return {
       reply:
-        '¡Hola! Soy Nati 🪷, tu anfitriona en Tropical Biohostel. Puedo recomendarte hospedaje, Cosmic Bungaló, dónde comer o qué hacer (café, cacao, caminatas, yoga) según tu plan. ¿Qué tienes en mente?',
+        '¡Hola! Soy Nati 🪷, tu anfitriona en Tropical Biohostel. Puedo recomendarte hospedaje, Cosmic Bungalow, dónde comer o qué hacer (café, cacao, caminatas, yoga) según tu plan. ¿Qué tienes en mente?',
       propiedades: [],
-      sugerencias: ['Conocer Cosmic Bungaló', 'Dónde comer', 'Tour café y cacao', 'Yoga y bienestar'],
+      sugerencias: ['Conocer Cosmic Bungalow', 'Dónde comer', 'Tour café y cacao', 'Yoga y bienestar'],
     };
   }
 
@@ -329,7 +329,7 @@ export class ChatService {
     }
     if (/(donde queda|donde esta|como llego|donde estan|ubicacion|direccion)/.test(norm)) {
       sesion.askedSlot = 'tipo';
-      reply = 'Estamos en una finca a 10 minutos del casco urbano de Nocaima 🌿, con 30% de bosque nativo, cafetales, frutales y huerta de aromáticas. Aquí están las 3 cabañas, Cosmic Bungaló, el comedor y la cocina abierta. Te dejo el pin exacto 👇 ¿Te muestro dónde dormir?';
+      reply = 'Estamos en una finca a 10 minutos del casco urbano de Nocaima 🌿, con 30% de bosque nativo, cafetales, frutales y huerta de aromáticas. Aquí están las 3 cabañas, Cosmic Bungalow, el comedor y la cocina abierta. Te dejo el pin exacto 👇 ¿Te muestro dónde dormir?';
       sugerencias = ['Busco hotel', 'Qué hacer'];
       return { reply, tarjetas, sugerencias, ubicacion: await this.ubicacionFinca() };
     }

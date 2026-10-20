@@ -376,7 +376,7 @@ export default function RagPage() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Ej: ¿qué incluye Cosmic Bungaló? ¿cuántas plantas de café hay?"
+            placeholder="Ej: ¿qué incluye Cosmic Bungalow? ¿cuántas plantas de café hay?"
             className="flex-1 rounded-xl border border-input px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           <button type="submit" className="flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">

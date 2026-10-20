@@ -105,20 +105,144 @@ async function asegurarRutasCafe() {
 }
 
 /**
+ * Reseñas reales publicadas en Google Maps (58 opiniones, 4.8/5) para
+ * Tropical Biohostel. Se siembran una sola vez: si ya existe una reseña del
+ * mismo autor y origen, no se duplica.
+ */
+const RESENAS_GOOGLE = [
+  {
+    autor: "Pablo Garcia Larriba",
+    calificacion: 5,
+    fuente: "google",
+    fecha: new Date("2026-02-20T12:00:00Z"),
+    comentario:
+      "Un lugar simplemente encantador. El hostel está en Nocaima, en un pueblito tranquilo y lleno de magia. Es muy sencillo, pero justamente ahí está su encanto: cabañas hermosas, rodeadas de naturaleza, donde se duerme delicioso. La comida es increíble, variada y de calidad; hecha con amor y sabor de hogar. Y lo mejor de todo, Nazareth y Rodrigo: anfitriones espectaculares, cálidos y con una energía que te hace sentir como en casa desde el primer momento. Volveríamos sin pensarlo. Súper recomendado.",
+    respuesta:
+      "Mil gracias por tan increíble visita. Lo más grato para nosotros es lograr tener un verdadero intercambio cultural y gastronómico.",
+  },
+  {
+    autor: "Sarai Serrano Sánchez",
+    calificacion: 5,
+    fuente: "google",
+    fecha: new Date("2026-02-18T12:00:00Z"),
+    comentario:
+      "Tropical Biohostel es un lugar mágico. Perfecto para conectarte con la naturaleza y el entorno y desconectar del ruido del día a día. Las cabañitas son súper lindas y acogedoras. Pero, sin duda, lo mejor de todo es el excelente trato de Nazareth y Rodrigo, son un amor de personas que te hacen sentir como en casa desde el minuto uno. La comida es otro punto excelente de la estancia, todo absolutamente delicioso y con productos de primera calidad. Volveríamos una y mil veces. Muchísimas gracias por la excelente acogida: nos llevamos para siempre un cachito de Nocaima con nosotros.",
+    respuesta:
+      "Saray, fue un verdadero honor. Para nosotros tu llegada es lo más grato, y más aún tu animosidad y energía: los espacios se hacen gracias a quienes los ocupan, y vosotros formáis parte de nuestro espacio por algunos días. Gracias.",
+  },
+  {
+    autor: "60martha",
+    calificacion: 4,
+    fuente: "tripadvisor",
+    fecha: new Date("2017-10-20T12:00:00Z"),
+    comentario:
+      "Es un lugar para conectar con la tierra, la naturaleza, sin las distracciones de la tecnología y la televisión. Extraordinario paisaje y la oportunidad de compartir la buena energía de su anfitrión, Rodrigo: es un lugar en el que se respira paz.",
+    respuesta: "",
+  },
+  {
+    autor: "Santiago Roa",
+    calificacion: 5,
+    fuente: "google",
+    fecha: new Date("2025-12-20T12:00:00Z"),
+    comentario:
+      "Una experiencia verdaderamente mágica. Llegué a Tropical Biohostel recomendado por unos amigos, pero nunca imaginé que este lugar fuera tan especial. Desde el primer día sentí una energía única: el cariño de los dos guardianes, Orejas y Snupi, te recibe como si volvieras a casa. La comida es espectacular y el ambiente es exactamente lo que buscaba: naturaleza pura, muchos pajaritos, un pozo hermoso y una quebrada cercana que arrulla a los visitantes, especialmente en invierno. Cada rincón tiene vida, calma y belleza. Agradezco profundamente a Nazareth y a don Rodrigo por el tiempo compartido, por las conversaciones y por las enseñanzas. Esta semana aquí ha sido una gran experiencia que definitivamente quiero repetir, esta vez con la intención de quedarme mucho más tiempo. Gracias por crear un lugar tan mágico.",
+    respuesta:
+      "Santiago, tu tiempo en la finca fue realmente increíble. Mil gracias por tu visita.",
+  },
+  {
+    autor: "Claudia Milena Hernandez Prada",
+    calificacion: 5,
+    fuente: "google",
+    fecha: new Date("2025-10-20T12:00:00Z"),
+    comentario:
+      "Es un lugar donde encuentras la vibración pura de la Madre Naturaleza, y te conectas con la sencillez de la vida de los seres que aquí habitan, restaurando la energía de tu corazón y tu biología. La atención de Nazareth y Rodrigo es maravillosa, además de su amabilidad y su deliciosa comida: nos comparten su sabiduría de la conexión con la vida. Gozamos además de una clase de Bioworkout con Rodrigo y recuperamos la felicidad en nuestras células.",
+    respuesta:
+      "Doña Claudia, cómo no recordar su visita y su gran corazón y generosidad con el espacio. Un gran abrazo para su hija y su esposo. Que Dios les bendiga y prospere por siempre.",
+  },
+];
+
+/** Siembra las reseñas de Google Maps (idempotente). */
+async function sembrarResenasGoogle() {
+  const propiedad = await prisma.propiedad.findUnique({ where: { slug: "tropical-biohostel" } });
+  if (!propiedad) return;
+
+  let nuevas = 0;
+  for (const r of RESENAS_GOOGLE) {
+    const existente = await prisma.review.findFirst({
+      where: { propiedadId: propiedad.id, autorNombre: r.autor, fuente: r.fuente },
+    });
+    if (existente) continue;
+    await prisma.review.create({
+      data: {
+        propiedadId: propiedad.id,
+        autorNombre: r.autor,
+        calificacion: r.calificacion,
+        comentario: r.comentario,
+        respuestaAnfitrion: r.respuesta || null,
+        fuente: r.fuente,
+        createdAt: r.fecha,
+      },
+    });
+    nuevas++;
+  }
+
+  // Calificación global y número de opiniones publicados en Google Maps
+  // (datos del perfil público: 4.8/5 con 58 opiniones).
+  const GOOGLE_RATING = 4.8;
+  const GOOGLE_OPINIONES = 58;
+
+  const total = await prisma.review.count({
+    where: { propiedadId: propiedad.id, fuente: { in: ["google", "tripadvisor"] } },
+  });
+  const promedio = await prisma.review.aggregate({
+    where: { propiedadId: propiedad.id, fuente: { in: ["google", "tripadvisor"] } },
+    _avg: { calificacion: true },
+  });
+  const rating = promedio._avg.calificacion ? Math.round(promedio._avg.calificacion * 10) / 10 : GOOGLE_RATING;
+
+  await prisma.propiedad.update({
+    where: { id: propiedad.id },
+    data: {
+      ratingExterno: rating,
+      resenasExternas: Math.max(propiedad.resenasExternas ?? 0, GOOGLE_OPINIONES),
+    },
+  });
+
+  console.log(
+    nuevas > 0
+      ? `   - ${nuevas} reseñas de Google Maps sembradas (${total} en total, media ${rating})`
+      : `   - reseñas de Google Maps ya estaban (${total} en total, media ${rating})`,
+  );
+}
+
+/**
  * Ajustes idempotentes sobre datos que ya existen en la base.
  *
  * Solo cambian valores que siguen en su valor por defecto: si alguien los editó
  * a mano desde el panel de administración, no se tocan.
  */
 async function ajustarBase() {
-  // Precio del Cosmic Bungaló: antes $120.000 → ahora $250.000 por pareja.
+  // Precio del Cosmic Bungalow: antes $120.000 → ahora $250.000 por pareja.
   const bung = await prisma.propiedad.findUnique({ where: { slug: "cosmic-bungalo" } });
   if (bung && bung.precioNoche === 120000) {
     await prisma.propiedad.update({
       where: { slug: "cosmic-bungalo" },
       data: { precioNoche: 250000 },
     });
-    console.log("   - precio del Cosmic Bungaló actualizado a $250.000");
+    console.log("   - precio del Cosmic Bungalow actualizado a $250.000");
+  }
+
+  // Ortografía del nombre: el documento de textos escribe "Bungalow" (sin tilde).
+  // El slug y la URL (cosmic-bungalo) no cambian.
+  if (bung && bung.nombre.includes("Bungaló")) {
+    await prisma.propiedad.update({
+      where: { slug: "cosmic-bungalo" },
+      data: {
+        nombre: bung.nombre.replace(/Bungaló/g, "Bungalow"),
+        descripcion: bung.descripcion?.replace(/Bungaló/g, "Bungalow") ?? null,
+      },
+    });
+    console.log('   - nombre actualizado a "Cosmic Bungalow"');
   }
 
   // Portadas de los proyectos de donación (solo si están vacías).
@@ -209,6 +333,7 @@ async function main() {
   // Siempre asegura las rutas del café (idempotente; no depende del seed principal)
   await asegurarRutasCafe();
   await ajustarBase();
+  await sembrarResenasGoogle();
 
   // Cada sección del seed es idempotente: si falta algo (p. ej. porque una
   // corrida anterior se interrumpió a mitad), se completa en la siguiente.
@@ -286,7 +411,7 @@ async function main() {
       tieneCocina: true,
       tieneParqueadero: true,
       tieneWifi: true,
-      admiteMascotas: true, // cabañas y zonas comunes sí; Cosmic Bungaló no
+      admiteMascotas: true, // cabañas y zonas comunes sí; Cosmic Bungalow no
       precioNoche: 150000,
       actividades: ["senderismo", "avistamiento", "yoga", "cafe", "cacao", "gastronomia", "bienestar"],
       horarioCheckIn: "15:00",
@@ -303,15 +428,15 @@ async function main() {
     },
   });
 
-  // 2) Cosmic Bungaló — refugio de arquitectura sagrada hexagonal
+  // 2) Cosmic Bungalow — refugio de arquitectura sagrada hexagonal
   await crearPropiedad({
     data: {
-      nombre: "Cosmic Bungaló",
+      nombre: "Cosmic Bungalow",
       slug: "cosmic-bungalo",
       tipo: "glamping",
       estado: "PUBLICADO",
       descripcion:
-        "Cosmic Bungaló: un refugio donde la naturaleza, el arte y la energía del lugar se encuentran. Cabaña íntima de aproximadamente cinco metros cuadrados, inspirada en arquitectura sagrada y geometría hexagonal, construida artesanalmente con ladrillo prensado y materiales naturales de la finca. Mándalas, símbolos rúnicos, matices, pisos rústicos y acabados hechos a mano. Cama confortable, sillas acogedoras, luz cálida y gran vista del trópico. Baño con ducha y pileta natural al aire libre entre vegetación. Flora y fauna presentes: ranas, mariposas, colibríes y criaturas del bosque. Espacios para el esparcimiento y la contemplación, rincón para observar estrellas, y para leer, escribir, pintar o trabajar con la naturaleza como inspiración. Tras tu reserva podrás programar según disponibilidad Yoga, Chi Kung y Tai Chi.",
+        "Cosmic Bungalow: un refugio donde la naturaleza, el arte y la energía del lugar se encuentran. Cabaña íntima de aproximadamente cinco metros cuadrados, inspirada en arquitectura sagrada y geometría hexagonal, construida artesanalmente con ladrillo prensado y materiales naturales de la finca. Mándalas, símbolos rúnicos, matices, pisos rústicos y acabados hechos a mano. Cama confortable, sillas acogedoras, luz cálida y gran vista del trópico. Baño con ducha y pileta natural al aire libre entre vegetación. Flora y fauna presentes: ranas, mariposas, colibríes y criaturas del bosque. Espacios para el esparcimiento y la contemplación, rincón para observar estrellas, y para leer, escribir, pintar o trabajar con la naturaleza como inspiración. Tras tu reserva podrás programar según disponibilidad Yoga, Chi Kung y Tai Chi.",
       ubicacion: "Finca Tropical Biohostel, zona rural a 10 minutos de Nocaima",
       ciudad: "Nocaima",
       telefono: "3118371264",
@@ -421,7 +546,7 @@ async function main() {
     },
   });
 
-  console.log("   - sitios base verificados (hostal + Cosmic Bungaló + 2 actividades + restaurante)");
+  console.log("   - sitios base verificados (hostal + Cosmic Bungalow + 2 actividades + restaurante)");
 
   // Donaciones iniciales (siembra y carbono) — idempotente por slug
   const proyectos = [

@@ -54,7 +54,7 @@ export default function TerritorioPage() {
       <div className="mt-8 flex flex-wrap gap-3">
         <a href="/experiencias" className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">Ver experiencias</a>
         <a href="/fical-y-el-cafe" className="rounded-full border border-input px-6 py-2.5 text-sm font-medium hover:bg-secondary">Fical y el café</a>
-        <a href="/cosmic-bungalo" className="rounded-full border border-input px-6 py-2.5 text-sm font-medium hover:bg-secondary">Conocer Cosmic Bungaló</a>
+        <a href="/cosmic-bungalo" className="rounded-full border border-input px-6 py-2.5 text-sm font-medium hover:bg-secondary">Conocer Cosmic Bungalow</a>
       </div>
     </div>
   );

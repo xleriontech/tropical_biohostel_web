@@ -7,6 +7,7 @@ import ParallaxCarousel from "@/components/ParallaxCarousel";
 import AdCarousel from "@/components/AdCarousel";
 import { StarRating, TipoIcon } from "@/components/icons";
 import { Brain, Search, Star, Leaf, Coffee, UtensilsCrossed, Flower2, MoonStar, BedDouble } from "lucide-react";
+import GoogleReviews from "@/components/GoogleReviews";
 import { TopRatedProperty } from "@/types";
 import { HERO, TERRITORIO, HOSPEDAJE, GASTRONOMIA, EXPERIENCIAS, BIENESTAR, CIERRE, COSMIC } from "@/lib/contenido";
 
@@ -118,7 +119,7 @@ export default function HomePage() {
             </div>
 
             <div className="mt-4 flex flex-wrap justify-center gap-2">
-              {["Yoga y bienestar", "Tour café y cacao", "Cosmic Bungaló", "Gastronomía de la finca"].map((tag) => (
+              {["Yoga y bienestar", "Tour café y cacao", "Cosmic Bungalow", "Gastronomía de la finca"].map((tag) => (
                 <button
                   key={tag}
                   onClick={() => {
@@ -232,7 +233,7 @@ export default function HomePage() {
             </div>
             <div className="rounded-xl border bg-white p-5 shadow-sm">
               <div className="h-48 overflow-hidden rounded-t-xl">
-                <img src="/fotos/BioHostel2.jpg" alt="Pileta natural al aire libre del Cosmic Bungaló" loading="lazy" className="h-full w-full object-cover" />
+                <img src="/fotos/BioHostel2.jpg" alt="Pileta natural al aire libre del Cosmic Bungalow" loading="lazy" className="h-full w-full object-cover" />
               </div>
             </div>
           </div>
@@ -241,8 +242,15 @@ export default function HomePage() {
 
       {/* Cosmic destacado */}
       <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="overflow-hidden rounded-2xl border bg-gradient-to-br from-[#16264D] via-[#1E3D24] to-[#7A2E14] text-white shadow-xl">
-          <div className="grid gap-0 md:grid-cols-2">
+        <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-[#16264D] via-[#1E3D24] to-[#7A2E14] text-white shadow-xl">
+          <img
+            src="/fotos/BioHostel2.jpg"
+            alt="Pileta natural al aire libre del Cosmic Bungalow"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover opacity-25"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#16264D]/80 via-[#1E3D24]/80 to-[#7A2E14]/80" />
+          <div className="relative grid gap-0 md:grid-cols-2">
             <div className="p-8 sm:p-10">
               <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300">Espacio especial</p>
               <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">{COSMIC.es.nombre}</h2>
@@ -258,7 +266,7 @@ export default function HomePage() {
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a href="/cosmic-bungalo" className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-emerald-950 hover:bg-emerald-50">
-                  Descubrir Cosmic Bungaló
+                  Descubrir Cosmic Bungalow
                 </a>
                 <a href="/property/cosmic-bungalo" className="rounded-full border border-white/40 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10">
                   Ver y reservar
@@ -334,6 +342,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Reseñas de Google Maps */}
+      <GoogleReviews />
 
       {/* Cierre */}
       <section className="mx-auto max-w-7xl px-4 py-16 text-center">

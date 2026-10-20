@@ -12,6 +12,12 @@ export default function CosmicBungaloPage() {
     <div>
       {/* Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#16264D] via-[#1E3D24] to-[#7A2E14] text-white">
+        <img
+          src="/fotos/BioHostel9.jpg"
+          alt="Interior del Cosmic Bungalow"
+          className="absolute inset-0 h-full w-full object-cover opacity-35"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#16264D]/80 via-[#1E3D24]/80 to-[#7A2E14]/80" />
         <div className="mx-auto max-w-5xl px-4 py-16 text-center sm:py-20">
           <div className="mb-4 flex justify-center gap-2">
             <button
@@ -138,7 +144,7 @@ export default function CosmicBungaloPage() {
         <p className="mx-auto mt-8 max-w-2xl text-center font-display text-xl italic leading-relaxed">{t.cierre}</p>
         <div className="mt-6 text-center">
           <a href="/property/cosmic-bungalo" className="inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
-            {lang === "es" ? "Reservar Cosmic Bungaló" : "Book Cosmic Bungalow"}
+            {lang === "es" ? "Reservar Cosmic Bungalow" : "Book Cosmic Bungalow"}
           </a>
         </div>
       </div>

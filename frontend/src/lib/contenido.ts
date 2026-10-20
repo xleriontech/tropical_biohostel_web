@@ -1,6 +1,6 @@
 // Fuente única de verdad — textos tomados de docs/Tropical_Biohostel.md,
 // docs/Tropical_Biohostel_Eng.md y docs/CosmicBugalo_Descripcion.md
-// Úsalo en home, secciones, Cosmic Bungaló y página /en.
+// Úsalo en home, secciones, Cosmic Bungalow y página /en.
 
 export const HERO = {
   es: {
@@ -9,7 +9,7 @@ export const HERO = {
     subtitulo:
       "Tropical Biohostel es un destino de naturaleza, bienestar y experiencias en zona rural de fácil acceso, donde el paisaje, la biodiversidad y la vida del campo son protagonistas.",
     ctaHospedaje: "Ver hospedaje",
-    ctaCosmic: "Conocer Cosmic Bungaló",
+    ctaCosmic: "Conocer Cosmic Bungalow",
   },
   en: {
     kicker: "Nocaima, Cundinamarca · 10 minutes from town",
@@ -70,7 +70,7 @@ export const HOSPEDAJE = {
     cuerpo2:
       "La propuesta se complementa con un comedor para 10 personas y una cocina abierta completamente equipada, concebidos como espacios para compartir, preparar alimentos y disfrutar sin prisa.",
     cuerpo3:
-      "Además, Tropical cuenta con un bungalow —Cosmic Bungaló—, pensado como un espacio especial de descanso y contemplación, donde el confort se encuentra con la naturaleza.",
+      "Además, Tropical cuenta con un bungalow —Cosmic Bungalow—, pensado como un espacio especial de descanso y contemplación, donde el confort se encuentra con la naturaleza.",
     cuerpo4:
       "Más que una habitación, es un punto de partida para vivir Tropical Biohostel: despertar entre sonidos de aves, caminar entre plantas y cultivos, disfrutar de una alimentación consciente, leer, escribir, pintar o simplemente dejar que el paisaje inspire nuevas ideas. También encontrarás espacios donde puedes trabajar o desarrollar proyectos personales en contacto con la naturaleza, haciendo de la tranquilidad y el entorno parte de tu experiencia.",
     cierre:
@@ -421,10 +421,10 @@ export const CIERRE = {
 
 export const COSMIC = {
   es: {
-    nombre: "Cosmic Bungaló",
+    nombre: "Cosmic Bungalow",
     eslogan: "Un refugio donde la naturaleza, el arte y la energía del lugar se encuentran.",
     intro:
-      "Bienvenida a Cosmic Bungaló, un espacio íntimo y especial de aproximadamente cinco metros cuadrados, diseñado para vivir una experiencia de conexión profunda con la naturaleza y contigo misma.",
+      "Bienvenida a Cosmic Bungalow, un espacio íntimo y especial de aproximadamente cinco metros cuadrados, diseñado para vivir una experiencia de conexión profunda con la naturaleza y contigo misma.",
     habitacion:
       "Dentro de este entorno se encuentra nuestro BUNGALOW, una habitación cómoda y acogedora para descansar y disfrutar de la naturaleza sin renunciar al confort. Es un lugar ideal para parejas o viajeros que buscan tranquilidad, inspiración y una experiencia diferente, rodeados de verde y lejos del ruido.",
     precio: "$250.000 COP",
@@ -446,7 +446,7 @@ export const COSMIC = {
     bienestar:
       "Una vez realizada tu reserva podrás conocer y programar, según disponibilidad, experiencias como yoga, Chi Kung y Tai Chi, ideales para complementar tus momentos de descanso, presencia y bienestar. Es un espacio de inmersión total, pensado para regalarte una pausa y recuperar el ritmo lento.",
     cierre:
-      "Aquí puedes venir a descansar, crear, contemplar o simplemente respirar. Deja que la naturaleza te cobije, que el silencio te encuentre y que tu imaginación vuelva a tener espacio. Cosmic Bungaló: un pequeño refugio, una gran experiencia.",
+      "Aquí puedes venir a descansar, crear, contemplar o simplemente respirar. Deja que la naturaleza te cobije, que el silencio te encuentre y que tu imaginación vuelva a tener espacio. Cosmic Bungalow: un pequeño refugio, una gran experiencia.",
     datos: [
       { valor: "~5 m²", etiqueta: "cabaña hexagonal" },
       { valor: "Sagrada", etiqueta: "geometría + mandalas y runas" },

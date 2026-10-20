@@ -8,7 +8,7 @@ import ThemePicker from "./ThemePicker";
 import SiteBrand from "./SiteBrand";
 
 const EXPLORAR_LINKS = [
-  { href: "/cosmic-bungalo", label: "Cosmic Bungaló", Icon: MoonStar },
+  { href: "/cosmic-bungalo", label: "Cosmic Bungalow", Icon: MoonStar },
   { href: "/territorio", label: "Territorio", Icon: Leaf },
   { href: "/gastronomia", label: "Gastronomía", Icon: UtensilsCrossed },
   { href: "/comidas", label: "Menús y Comidas", Icon: UtensilsCrossed },
@@ -91,7 +91,7 @@ export default function NavBar() {
                 Zemisqua
               </a>
               <a href="/cosmic-bungalo" className="nav-link text-sm font-semibold">
-                Cosmic Bungaló
+                Cosmic Bungalow
               </a>
               <a href="/categoria/hostales" className="nav-link text-sm">
                 Hospedaje
@@ -163,7 +163,7 @@ export default function NavBar() {
                 <Brain className="h-4 w-4" /> Zemisqua · Buscador ancestral
               </a>
               {[
-                { href: "/cosmic-bungalo", label: "Cosmic Bungaló" },
+                { href: "/cosmic-bungalo", label: "Cosmic Bungalow" },
                 { href: "/categoria/hostales", label: "Hospedaje" },
                 ...EXPLORAR_LINKS.filter(
                   (l) => l.href !== "/cosmic-bungalo" && l.href !== "/categoria/actividades"

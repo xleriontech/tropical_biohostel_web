@@ -15,11 +15,11 @@ interface ParallaxConfig {
 }
 
 const FALLBACK_IMAGES: ParallaxImage[] = [
-  { url: "/fotos/BioHostel10.jpg", alt: "Cosmic Bungaló — cama y mándala" },
+  { url: "/fotos/BioHostel10.jpg", alt: "Cosmic Bungalow — cama y mándala" },
   { url: "/fotos/BioHostel2.jpg", alt: "Pileta natural al aire libre" },
   { url: "/fotos/BioHostel9.jpg", alt: "Habitación con mándalas" },
   { url: "/fotos/BioHostel6.jpg", alt: "Rincón de descanso artesanal" },
-  { url: "/fotos/BioHostel5.jpg", alt: "Interior en bambú de Cosmic Bungaló" },
+  { url: "/fotos/BioHostel5.jpg", alt: "Interior en bambú de Cosmic Bungalow" },
 ];
 
 export default function ParallaxCarousel() {

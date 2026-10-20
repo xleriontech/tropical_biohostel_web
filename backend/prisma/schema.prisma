@@ -155,6 +155,10 @@ model Review {
   autorEmail  String?
   calificacion Int
   comentario  String?
+  /// Origen de la reseña: 'web' (formulario del sitio) | 'google' | 'tripadvisor'
+  fuente      String    @default("web")
+  /// Respuesta del anfitrión a la reseña (solo para reseñas traídas de Google)
+  respuestaAnfitrion String?
   createdAt   DateTime  @default(now())
 
   @@index([propiedadId])

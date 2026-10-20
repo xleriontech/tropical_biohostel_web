@@ -9,54 +9,62 @@ import { Home, Search } from "lucide-react";
 
 export const runtime = "edge";
 
-const CATEGORY_MAP: Record<string, { tipo: string; label: string; description: string; gradient: string }> = {
+const CATEGORY_MAP: Record<string, { tipo: string; label: string; description: string; gradient: string; imagen: string }> = {
   hoteles: {
     tipo: "hotel",
     label: "Hoteles",
     description: "Descubre los mejores hoteles aquí, con habitaciones cómodas y servicios de calidad para una estancia inolvidable.",
     gradient: "from-blue-600/90 to-blue-900/90",
+    imagen: "/fotos/sitio/tropical-voluntariado.jpg",
   },
   hostales: {
     tipo: "hostal",
     label: "Hostales",
     description: "Hostales acogedores con el mejor ambiente y precios accesibles para tu estadía.",
     gradient: "from-emerald-600/90 to-emerald-900/90",
+    imagen: "/fotos/BioHostel5.jpg",
   },
   glamping: {
     tipo: "glamping",
     label: "Glamping",
     description: "Vive una experiencia única en medio de la naturaleza con todas las comodidades del camping de lujo.",
     gradient: "from-amber-600/90 to-amber-900/90",
+    imagen: "/fotos/BioHostel10.jpg",
   },
   "centros-turisticos": {
     tipo: "centro_turistico",
     label: "Centros Turísticos",
     description: "Los mejores centros turísticos para disfrutar en familia o con amigos, con actividades para todos.",
     gradient: "from-teal-600/90 to-teal-900/90",
+    imagen: "/fotos/sitio/tropical-gente3.jpg",
   },
   restaurantes: {
     tipo: "restaurante",
     label: "Restaurantes",
     description: "Sabores de la casa: gastronomía típica y los mejores espacios para comer.",
     gradient: "from-red-600/90 to-red-900/90",
+    imagen: "/fotos/sitio/tropical-cocina.jpg",
   },
   bares: {
     tipo: "bar",
     label: "Bares",
     description: "Cócteles, cerveza artesanal y atardeceres con vista.",
     gradient: "from-purple-600/90 to-purple-900/90",
+    imagen: "/fotos/sitio/InShot_20260910_172043288.jpg",
   },
   fincas: {
     tipo: "finca",
     label: "Fincas",
     description: "Fincas campestres con alojamiento, huertas, café y experiencias rurales auténticas.",
     gradient: "from-lime-600/90 to-lime-900/90",
+    imagen: "/fotos/sitio/tropical-vegetal.jpg",
   },
   actividades: {
     tipo: "actividad",
     label: "Actividades y Tours",
     description: "Ecoturismo, avistamiento de aves, caminatas y tours guiados en la zona.",
     gradient: "from-cyan-600/90 to-cyan-900/90",
+    imagen: "/fotos/sitio/tropical-cafe.jpg",
   },
 };
 
@@ -128,8 +136,14 @@ export default function CategoryPage() {
   return (
     <div>
       {/* Hero Banner */}
-      <div className={`relative bg-gradient-to-br ${category.gradient} overflow-hidden`}>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjAgMjBtMC0yMGEyMCAyMCAwIDEgMCA0MCAwIDIwIDIwIDAgMSAwLTQwIDB6IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-30" />
+      <div className="relative overflow-hidden bg-[#1d1d1b]">
+        <img
+          src={category.imagen}
+          alt={category.label}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-80`} />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjAgMjBtMC0yMGEyMCAyMCAwIDEgMCA0MCAwIDIwIDIwIDAgMSAwLTQwIDB6IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20" />
         <div className="mx-auto max-w-7xl px-4 py-16 sm:py-24 relative">
           <nav className="mb-6 text-sm text-white/70">
             <a href="/" className="hover:text-white transition-colors">Inicio</a>

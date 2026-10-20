@@ -15,7 +15,7 @@
  * borra las cachés de versiones anteriores.
  */
 
-const VERSION = "v4";
+const VERSION = "v5";
 const CACHE_SHELL = `tb-shell-${VERSION}`;
 const CACHE_ESTATICOS = `tb-estaticos-${VERSION}`;
 const CACHE_PAGINAS = `tb-paginas-${VERSION}`;
@@ -149,17 +149,34 @@ async function navegacion(request) {
   return respaldo(request, respuesta);
 }
 
+/* Los recursos con hash en el nombre (/_next/static/…) no cambian nunca:
+   se sirven directo de la caché. El resto (fotos, iconos) puede cambiar, así
+   que se sirve al instante y se refresca por detrás (stale-while-revalidate):
+   la carga es rápida y la siguiente ya trae la versión nueva. */
 async function cachePrimero(request, nombreCache) {
   const cache = await caches.open(nombreCache);
   const guardada = await cache.match(request);
-  if (guardada) return guardada;
-  try {
-    const respuesta = await fetch(request);
-    if (respuesta && respuesta.ok) cache.put(request, respuesta.clone());
-    return respuesta;
-  } catch {
-    return Response.error();
+  const esInmutable = new URL(request.url).pathname.startsWith("/_next/static/");
+
+  if (esInmutable) {
+    if (guardada) return guardada;
+    try {
+      const respuesta = await fetch(request);
+      if (respuesta && respuesta.ok) cache.put(request, respuesta.clone());
+      return respuesta;
+    } catch {
+      return Response.error();
+    }
   }
+
+  const red = fetch(request)
+    .then((respuesta) => {
+      if (respuesta && respuesta.ok) cache.put(request, respuesta.clone());
+      return respuesta;
+    })
+    .catch(() => guardada || Response.error());
+
+  return guardada || red;
 }
 
 async function redPrimero(request, nombreCache) {
