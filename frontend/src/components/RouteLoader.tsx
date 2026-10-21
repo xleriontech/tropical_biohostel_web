@@ -74,7 +74,7 @@ export default function RouteLoader() {
         src="/favicon.svg"
         alt=""
         className="h-20 w-20 animate-pulse"
-        onError={(e) => { e.currentTarget.src = "/tropical-logo.png"; }}
+        onError={(e) => { e.currentTarget.src = "/icons/icon-192.png"; }}
       />
       <div className="h-1 w-48 overflow-hidden rounded-full bg-secondary">
         <div
