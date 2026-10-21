@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Coffee, Home, RefreshCw } from "lucide-react";
+import { ICONO } from "@/lib/brand";
 
 export const metadata = {
   title: "Sin conexión · Tropical Biohostel",
@@ -10,7 +11,7 @@ export default function OfflinePage() {
   return (
     <div className="mx-auto flex max-w-xl flex-col items-center px-4 py-20 text-center">
       <img
-        src="/icons/icon-192.png"
+        src={ICONO}
         alt=""
         width={92}
         height={92}

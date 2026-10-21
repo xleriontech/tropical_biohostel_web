@@ -15,25 +15,25 @@
   "categories": ["travel", "lifestyle", "food", "tourism"],
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/icons/icon-192.png?v=2",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/icons/icon-512.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-maskable-192.png",
+      "src": "/icons/icon-maskable-192.png?v=2",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/icons/icon-maskable-512.png",
+      "src": "/icons/icon-maskable-512.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -51,28 +51,28 @@
       "short_name": "Rutas",
       "description": "Las tres rutas de café de Tropical Biohostel",
       "url": "/rutas",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icons/icon-192.png?v=2", "sizes": "192x192" }]
     },
     {
       "name": "Buscar alojamiento",
       "short_name": "Buscar",
       "description": "Buscador inteligente de alojamientos",
       "url": "/busqueda-inteligente",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icons/icon-192.png?v=2", "sizes": "192x192" }]
     },
     {
       "name": "Menús y comidas",
       "short_name": "Menús",
       "description": "Carta, brunch y platos de la finca",
       "url": "/comidas",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icons/icon-192.png?v=2", "sizes": "192x192" }]
     },
     {
       "name": "Experiencias",
       "short_name": "Experiencias",
       "description": "Caminatas, café, yoga y bienestar",
       "url": "/experiencias",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icons/icon-192.png?v=2", "sizes": "192x192" }]
     }
   ]
 }

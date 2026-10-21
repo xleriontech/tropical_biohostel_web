@@ -26,11 +26,11 @@ const SHELL = [
   "/offline",
   "/offline.html",
   "/manifest.webmanifest",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
-  "/icons/icon-maskable-192.png",
-  "/icons/icon-maskable-512.png",
-  "/icons/apple-touch-icon-180.png",
+  "/icons/icon-192.png?v=2",
+  "/icons/icon-512.png?v=2",
+  "/icons/icon-maskable-192.png?v=2",
+  "/icons/icon-maskable-512.png?v=2",
+  "/icons/apple-touch-icon-180.png?v=2",
   "/favicon.svg",
   "/tropical-logo.svg",
   "/tropical-logo.png",
@@ -117,7 +117,7 @@ async function respaldo(request, respuestaAlternativa) {
         "<title>Sin conexión · Tropical Biohostel</title>" +
         "<body style='font-family:system-ui,sans-serif;background:#f5efe0;color:#2b2119;" +
         "text-align:center;padding:3rem 1.5rem'>" +
-        "<img src='/icons/icon-192.png' alt='' width='92' height='92' style='border-radius:16px'>" +
+        "<img src='/icons/icon-192.png?v=2' alt='' width='92' height='92' style='border-radius:16px'>" +
         "<h1 style='font-size:1.6rem'>Estás sin conexión</h1>" +
         "<p style='color:#6b5d4c'>Inténtalo de nuevo cuando vuelvas a tener internet.</p>" +
         "<a href='/' style='display:inline-block;margin-top:1rem;padding:.7rem 1.5rem;" +
@@ -245,6 +245,10 @@ self.addEventListener("fetch", (event) => {
   // Recursos de terceros (imágenes remotas de R2, Unsplash…) no se cachean:
   // quedan bajo el control de su propio CDN.
   if (url.origin !== self.location.origin) return;
+
+  // Los iconos de marca llevan ?v=N: si cambia la version, es otra URL y el
+  // navegador no sirve la copia vieja (que estaba cacheada como 'immutable').
+  if (url.pathname.startsWith("/icons/") && !url.searchParams.has("v")) return;
 
   if (esEstatico(url)) {
     event.respondWith(cachePrimero(request, CACHE_ESTATICOS));

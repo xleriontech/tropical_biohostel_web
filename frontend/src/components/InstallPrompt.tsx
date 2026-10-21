@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
+import { ICONO } from "@/lib/brand";
 
 const CLAVE = "tb-pwa-instalar-descartado";
 
@@ -59,7 +60,7 @@ export default function InstallPrompt() {
     <div className="pointer-events-none fixed inset-x-0 bottom-20 z-[95] flex justify-center px-4 md:bottom-6">
       <div className="pointer-events-auto flex w-full max-w-md items-center gap-3 rounded-2xl border bg-white p-3 shadow-xl">
         <img
-          src="/icons/icon-192.png"
+          src={ICONO}
           alt=""
           width={44}
           height={44}

@@ -15,8 +15,11 @@
 /icons/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Las fotos no llevan version en la URL (vienen de la base de datos), asi que
+# no pueden ser 'immutable': si se cambia una foto, el navegador tiene que
+# revalidarla o seguiria mostrando la anterior.
 /fotos/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600, must-revalidate
 
 /tropical/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600, must-revalidate
