@@ -15,7 +15,7 @@
  * borra las cachés de versiones anteriores.
  */
 
-const VERSION = "v6";
+const VERSION = "v7";
 const CACHE_SHELL = `tb-shell-${VERSION}`;
 const CACHE_ESTATICOS = `tb-estaticos-${VERSION}`;
 const CACHE_PAGINAS = `tb-paginas-${VERSION}`;
@@ -33,6 +33,12 @@ const SHELL = [
   "/icons/apple-touch-icon-180.png",
   "/favicon.svg",
   "/tropical-logo.svg",
+  "/tropical-logo.png",
+  // Piezas del logo animado del cargador
+  "/loader/loader-tropical.png",
+  "/loader/loader-bio.png",
+  "/loader/loader-hostel.png",
+  "/loader/loader-mandala.png",
 ];
 
 const esEstatico = (url) =>
