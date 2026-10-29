@@ -16,3 +16,6 @@ ImagenesSitio/
 
 # Credenciales de administracion: nunca versionar.
 CredencialesAdmin.txt
+
+# Copias que dejan los scripts de rotacion; contienen claves anteriores.
+.rotacion-backup/

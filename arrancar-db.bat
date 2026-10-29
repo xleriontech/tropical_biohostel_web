@@ -50,9 +50,13 @@ REM --- Redis autenticado (un contenedor viejo creado sin requirepass no lo gana
 REM     con "docker start": hay que recrearlo. Solo se pierde la cache) ---
 docker inspect tropical-redis-1 >nul 2>&1
 if errorlevel 1 goto redis_create
-docker inspect tropical-redis-1 2>nul | findstr /c:"--requirepass" >nul 2>&1
+REM "docker start" no cambia el requirepass con el que se creo el contenedor, asi
+REM que rotar REDIS_PASSWORD en .env no sirve de nada si no se recrea. Comparo la
+REM contrasena actual: si no esta en el inspect, el contenedor es viejo (o nunca
+REM tuvo autenticacion) y se recrea. Solo se pierde la cache.
+docker inspect tropical-redis-1 2>nul | findstr /c:"%REDIS_PASSWORD%" >nul 2>&1
 if errorlevel 1 (
-  echo  Recreando tropical-redis-1: se creo sin autenticacion.
+  echo  Recreando tropical-redis-1: su requirepass no es el de .env.
   docker rm -f tropical-redis-1 >nul 2>&1
   goto redis_create
 )
