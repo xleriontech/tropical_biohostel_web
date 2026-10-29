@@ -105,6 +105,99 @@ async function asegurarRutasCafe() {
 }
 
 /**
+ * Carta de la finca: la taxonomía que el propio proyecto declara
+ * (docs/Tropical_Biohostel.md §"Del territorio a la mesa" y la base de
+ * conocimiento de Nati: "desayuno, almuerzo, cena, cafetería").
+ *
+ * ⚠️  Aquí va la ESTRUCTURA, no la carta. No se inventan platos ni precios:
+ * los platos —con su precio en COP— los publica la finca desde admin/menus,
+ * y `precio: null` ya significa "incluido / a convenir" en el esquema.
+ * Mientras un menú no tenga platos, /comidas muestra
+ * "Pronto agregaremos los platos de este menú" y Nati no lo menciona.
+ *
+ * Las descripciones salen del documento de textos de Tropical; las fotos son
+ * las reales de frontend/public/fotos/sitio/. Los horarios se dejan vacíos a
+ * propósito: nadie los ha publicado todavía.
+ */
+type MenuSeed = {
+  slug: string;
+  titulo: string;
+  tipo: "DESAYUNO" | "ALMUERZO" | "CENA" | "MERIENDA" | "CAFETERIA" | "OTRO";
+  descripcion: string;
+  imagenUrl: string;
+  orden: number;
+};
+
+const MENUS_BASE: MenuSeed[] = [
+  {
+    slug: "desayuno",
+    titulo: "Desayuno",
+    tipo: "DESAYUNO",
+    descripcion:
+      "Alimentación consciente desde la mañana: productos naturales, locales y cultivados en la finca, servidos en el comedor sin prisa.",
+    imagenUrl: "/fotos/sitio/tropical-frutas.jpg",
+    orden: 1,
+  },
+  {
+    slug: "almuerzo",
+    titulo: "Almuerzo",
+    tipo: "ALMUERZO",
+    descripcion:
+      "Cocinado en la cocina abierta de Tropical con ingredientes de la huerta y de los cultivos de la finca, seleccionados conservando sus sabores, aromas, colores y texturas.",
+    imagenUrl: "/fotos/sitio/tropical-cocina.jpg",
+    orden: 2,
+  },
+  {
+    slug: "cena",
+    titulo: "Cena",
+    tipo: "CENA",
+    descripcion:
+      "La mesa de la noche, en el comedor de la finca, con el mismo criterio que el almuerzo: comer es conocer el origen de lo que comemos.",
+    imagenUrl: "/fotos/sitio/tropical-cocina2.jpg",
+    orden: 3,
+  },
+  {
+    slug: "cafeteria",
+    titulo: "Cafetería",
+    tipo: "CAFETERIA",
+    descripcion:
+      "Café de la finca —cerca de 400 plantas— y tostión artesanal propia con perfiles claro, medio y oscuro, además de los frutales de Tropical y sus aromáticas.",
+    imagenUrl: "/fotos/sitio/tropical-granos-cafe.jpg",
+    orden: 4,
+  },
+];
+
+/**
+ * Crea los menús que falten (idempotente por slug). Los ya existentes no se
+ * tocan: si la finca editó el título, la foto o la descripción desde el panel,
+ * el seed respeta esa versión.
+ */
+async function asegurarMenus() {
+  let nuevos = 0;
+  for (const m of MENUS_BASE) {
+    const existe = await prisma.comida.findUnique({ where: { slug: m.slug } });
+    if (existe) continue;
+    await prisma.comida.create({
+      data: {
+        slug: m.slug,
+        titulo: m.titulo,
+        tipo: m.tipo,
+        descripcion: m.descripcion,
+        imagenUrl: m.imagenUrl,
+        orden: m.orden,
+        activo: true,
+      },
+    });
+    nuevos++;
+  }
+  console.log(
+    nuevos > 0
+      ? `   - ${plural(nuevos, "menú base creado", "menús base creados")} (sin platos: la carta se publica desde admin)`
+      : "   - menús base ya presentes en la base de datos",
+  );
+}
+
+/**
  * Reseñas reales publicadas en Google Maps (58 opiniones, 4.8/5) para
  * Tropical Biohostel. Se siembran una sola vez: si ya existe una reseña del
  * mismo autor y origen, no se duplica.
@@ -224,7 +317,7 @@ async function sembrarResenasGoogle() {
 async function ajustarBase() {
   // Precio del Cosmic Bungalow: antes $120.000 → ahora $250.000 por pareja.
   const bung = await prisma.propiedad.findUnique({ where: { slug: "cosmic-bungalo" } });
-  if (bung && bung.precioNoche === 120000) {
+  if (bung && bung.precioNoche.toNumber() === 120000) {
     await prisma.propiedad.update({
       where: { slug: "cosmic-bungalo" },
       data: { precioNoche: 250000 },
@@ -332,6 +425,7 @@ async function crearPropiedad(args: { data: Prisma.PropiedadCreateInput }) {
 async function main() {
   // Siempre asegura las rutas del café (idempotente; no depende del seed principal)
   await asegurarRutasCafe();
+  await asegurarMenus();
   await ajustarBase();
   await sembrarResenasGoogle();
 
