@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
 import { RagService } from '../rag/rag.service';
 import { MenusService } from '../menus/menus.service';
+import { aNumero } from '../common/dinero';
 
 interface Turno {
   rol: 'usuario' | 'asistente';
@@ -431,8 +432,8 @@ export class ChatService {
           const m = elegidos[0];
           const platos = (m.platos || []).slice(0, 6);
           const lineas = platos.map((pl: any) => {
-            const precio =
-              typeof pl.precio === 'number' ? ` — $${Number(pl.precio).toLocaleString('es-CO')}` : '';
+            const n = aNumero(pl.precio);
+            const precio = n === null ? '' : ` — $${n.toLocaleString('es-CO')}`;
             return `• ${pl.nombre}${precio}`;
           });
           const etqs = [...new Set(
@@ -782,7 +783,8 @@ export class ChatService {
     if (!s) {
       return { reply: 'No encontré ese sitio 😕. ¿Me dices el nombre de otra forma?', tarjetas: [] as Tarjeta[], sugerencias: ['Ver todo'] };
     }
-    const precio = s.precioNoche ? `$${Number(s.precioNoche).toLocaleString('es-CO')}` : 'precio a convenir';
+    const precioNoche = s.precioNoche.toNumber();
+    const precio = precioNoche > 0 ? `$${precioNoche.toLocaleString('es-CO')}` : 'precio a convenir';
     let extraMascotas = '';
     if (/(mascota|perro|gato|pelud|\bpet\b)/.test(norm)) {
       extraMascotas = s.admiteMascotas
@@ -804,7 +806,7 @@ export class ChatService {
       reply: `¡${s.nombre}! ✨ ${this.recortar(s.descripcion, 220)} Cuesta ${precio}${s.ubicacion ? ` y queda en ${s.ubicacion}` : ''}.${extraMascotas} Tócalo abajo para ver fotos y reservar 👇`,
       tarjetas: [{
         slug: s.slug, nombre: s.nombre, tipo: s.tipo,
-        precio: s.precioNoche ? Number(s.precioNoche) : null,
+        precio: precioNoche > 0 ? precioNoche : null,
         imagen: s.images[0]?.url || null,
       }],
       sugerencias: ['Quiero reservar', 'Ver similares', 'Qué hacer cerca'],

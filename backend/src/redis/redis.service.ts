@@ -1,6 +1,7 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
+import { decimalesANumero } from '../common/dinero';
 
 @Injectable()
 export class RedisService implements OnModuleDestroy {
@@ -29,7 +30,9 @@ export class RedisService implements OnModuleDestroy {
 
   async set(key: string, value: unknown, ttlSeconds = 300): Promise<void> {
     if (!this.client) return;
-    await this.client.set(key, JSON.stringify(value), 'EX', ttlSeconds);
+    // Decimal.toJSON() serializa como string ("150000") y se aplica antes que el
+    // replacer de JSON.stringify; hay que normalizar el árbol antes de escribir.
+    await this.client.set(key, JSON.stringify(decimalesANumero(value)), 'EX', ttlSeconds);
   }
 
   async del(key: string): Promise<void> {

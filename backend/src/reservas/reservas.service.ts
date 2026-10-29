@@ -35,7 +35,7 @@ export class ReservasService {
     }
 
     const dias = Math.ceil((fechaSalida.getTime() - fechaLlegada.getTime()) / 86400000);
-    const total = dias * propiedad.precioNoche;
+    const total = propiedad.precioNoche.mul(dias);
 
     const reserva = await this.prisma.reserva.create({
       data: {
@@ -63,7 +63,7 @@ export class ReservasService {
       userId,
       tipo: 'success',
       titulo: 'Reserva confirmada',
-      mensaje: `Tu reserva en ${propiedad.nombre} del ${fechaLlegada.toLocaleDateString()} al ${fechaSalida.toLocaleDateString()} fue creada exitosamente. Total: $${total.toLocaleString()}`,
+      mensaje: `Tu reserva en ${propiedad.nombre} del ${fechaLlegada.toLocaleDateString()} al ${fechaSalida.toLocaleDateString()} fue creada exitosamente. Total: $${total.toNumber().toLocaleString('es-CO')}`,
     });
 
     return reserva;

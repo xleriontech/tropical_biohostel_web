@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -50,73 +50,73 @@ enum EstadoReserva {
 }
 
 model User {
-  id            String     @id @default(cuid())
-  email         String     @unique
-  nombre        String?
-  avatarUrl     String?
-  role          UserRole   @default(turista)
-  supabaseId    String     @unique
-  passwordHash  String?
-  propiedades   Propiedad[]
-  reservas      Reserva[]
+  id             String         @id @default(cuid())
+  email          String         @unique
+  nombre         String?
+  avatarUrl      String?
+  role           UserRole       @default(turista)
+  supabaseId     String         @unique
+  passwordHash   String?
+  propiedades    Propiedad[]
+  reservas       Reserva[]
   notificaciones Notificacion[]
-  bannedUntil   DateTime?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  bannedUntil    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 model Propiedad {
-  id                  String              @id @default(cuid())
-  nombre              String
-  tipo                TipoPropiedad
-  descripcion         String?
-  ubicacion           String?
-  coordenadas         Json?
-  telefono            String?
-  email               String?
-  whatsapp            String?
-  direccion           String?
-  ciudad              String?
-  departamento        String?
-  estrellas           Int                 @default(0)
-  horarioCheckIn      String?
-  horarioCheckOut     String?
-  reglamento          String?
+  id                   String                  @id @default(cuid())
+  nombre               String
+  tipo                 TipoPropiedad
+  descripcion          String?
+  ubicacion            String?
+  coordenadas          Json?
+  telefono             String?
+  email                String?
+  whatsapp             String?
+  direccion            String?
+  ciudad               String?
+  departamento         String?
+  estrellas            Int                     @default(0)
+  horarioCheckIn       String?
+  horarioCheckOut      String?
+  reglamento           String?
   politicasCancelacion String?
-  admiteMascotas      Boolean             @default(false)
-  seguroDisponible    Boolean             @default(false)
-  capacidadMaxima     Int
-  numeroHabitaciones  Int?
-  numeroBanos         Int?
-  tieneCocina         Boolean             @default(false)
-  tieneParqueadero    Boolean             @default(false)
-  tieneWifi           Boolean             @default(false)
-  precioNoche         Float
-  actividades         String[]
-  videos              String[]
-  servicioImagenes    String[]            @default([])
-  redesSociales       Json?
-  icalImportUrls    String[]            @default([])
-  icalToken         String?             @unique
-  lastIcalSyncAt    DateTime?
-  fuenteDatos       String?             // 'manual' | 'seed' | 'osm' | 'web'
-  ultimaVerificacion DateTime?
-  verificado        Boolean             @default(false)
-  horarioTexto      String?
-  ratingExterno     Float?
-  resenasExternas   Int?                @default(0)
-  estado              EstadoPropiedad     @default(BORRADOR)
-  slug                String              @unique
-  owner               User?               @relation(fields: [ownerId], references: [id])
-  ownerId             String?
-  images              PropiedadImage[]
-  certificados        Certificate[]
-  sponsoredListings   SponsoredListing[]
-  reviews             Review[]
-  reservas            Reserva[]
-  actualizaciones     RegistroActualizacion[]
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
+  admiteMascotas       Boolean                 @default(false)
+  seguroDisponible     Boolean                 @default(false)
+  capacidadMaxima      Int
+  numeroHabitaciones   Int?
+  numeroBanos          Int?
+  tieneCocina          Boolean                 @default(false)
+  tieneParqueadero     Boolean                 @default(false)
+  tieneWifi            Boolean                 @default(false)
+  precioNoche          Decimal                 @db.Decimal(12, 2)
+  actividades          String[]
+  videos               String[]
+  servicioImagenes     String[]                @default([])
+  redesSociales        Json?
+  icalImportUrls       String[]                @default([])
+  icalToken            String?                 @unique
+  lastIcalSyncAt       DateTime?
+  fuenteDatos          String? // 'manual' | 'seed' | 'osm' | 'web'
+  ultimaVerificacion   DateTime?
+  verificado           Boolean                 @default(false)
+  horarioTexto         String?
+  ratingExterno        Float?
+  resenasExternas      Int?                    @default(0)
+  estado               EstadoPropiedad         @default(BORRADOR)
+  slug                 String                  @unique
+  owner                User?                   @relation(fields: [ownerId], references: [id])
+  ownerId              String?
+  images               PropiedadImage[]
+  certificados         Certificate[]
+  sponsoredListings    SponsoredListing[]
+  reviews              Review[]
+  reservas             Reserva[]
+  actualizaciones      RegistroActualizacion[]
+  createdAt            DateTime                @default(now())
+  updatedAt            DateTime                @updatedAt
 
   @@index([tipo])
   @@index([admiteMascotas])
@@ -148,18 +148,18 @@ model Certificate {
 }
 
 model Review {
-  id          String    @id @default(cuid())
-  propiedad   Propiedad @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
-  propiedadId String
-  autorNombre String
-  autorEmail  String?
-  calificacion Int
-  comentario  String?
+  id                 String    @id @default(cuid())
+  propiedad          Propiedad @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  propiedadId        String
+  autorNombre        String
+  autorEmail         String?
+  calificacion       Int
+  comentario         String?
   /// Origen de la reseña: 'web' (formulario del sitio) | 'google' | 'tripadvisor'
-  fuente      String    @default("web")
+  fuente             String    @default("web")
   /// Respuesta del anfitrión a la reseña (solo para reseñas traídas de Google)
   respuestaAnfitrion String?
-  createdAt   DateTime  @default(now())
+  createdAt          DateTime  @default(now())
 
   @@index([propiedadId])
   @@index([calificacion])
@@ -190,15 +190,15 @@ model APIKey {
 }
 
 model Sponsor {
-  id                  String             @id @default(cuid())
-  nombre              String
-  logoUrl             String?
-  sitioWeb            String?
-  contacto            String?
-  anuncios            Advertisement[]
-  sponsoredListings   SponsoredListing[]
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
+  id                String             @id @default(cuid())
+  nombre            String
+  logoUrl           String?
+  sitioWeb          String?
+  contacto          String?
+  anuncios          Advertisement[]
+  sponsoredListings SponsoredListing[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 }
 
 model Advertisement {
@@ -212,7 +212,7 @@ model Advertisement {
   fechaInicio DateTime
   fechaFin    DateTime
   prioridad   Int           @default(0)
-  pagoTotal   Float         @default(0)
+  pagoTotal   Decimal       @default(0) @db.Decimal(12, 2)
   activo      Boolean       @default(true)
   impresiones Int           @default(0)
   clicks      Int           @default(0)
@@ -240,24 +240,24 @@ model SponsoredListing {
 }
 
 model Reserva {
-  id             String       @id @default(cuid())
+  id             String        @id @default(cuid())
   propiedadId    String
-  propiedad      Propiedad    @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  propiedad      Propiedad     @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
   userId         String?
-  user           User?        @relation(fields: [userId], references: [id])
+  user           User?         @relation(fields: [userId], references: [id])
   nombre         String
   email          String
   telefono       String
   identificacion String
   fechaLlegada   DateTime
   fechaSalida    DateTime
-  huespedes      Int          @default(1)
-  metodoPago     MetodoPago   @default(EFECTIVO)
+  huespedes      Int           @default(1)
+  metodoPago     MetodoPago    @default(EFECTIVO)
   estado         EstadoReserva @default(PENDIENTE)
-  total          Float?
+  total          Decimal?      @db.Decimal(12, 2)
   notas          String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@index([propiedadId])
   @@index([userId])
@@ -286,15 +286,15 @@ model SiteConfig {
 }
 
 model RegistroActualizacion {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  tipo      String   // 'verificacion' | 'cambio' | 'nuevo' | 'posible_cierre' | 'enriquecido'
-  municipio String   @default("")
-  titulo    String
-  detalle   Json?
-  estado    String   @default("pendiente") // pendiente | aplicado | descartado
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  tipo        String // 'verificacion' | 'cambio' | 'nuevo' | 'posible_cierre' | 'enriquecido'
+  municipio   String     @default("")
+  titulo      String
+  detalle     Json?
+  estado      String     @default("pendiente") // pendiente | aplicado | descartado
   propiedadId String?
-  propiedad  Propiedad? @relation(fields: [propiedadId], references: [id], onDelete: SetNull)
+  propiedad   Propiedad? @relation(fields: [propiedadId], references: [id], onDelete: SetNull)
 
   @@index([estado])
   @@index([createdAt])
@@ -305,29 +305,29 @@ model ClaveApi {
   clave       String   @unique // ej: google_places, google_maps
   nombre      String
   descripcion String?
-  webUrl      String?  // dónde generar la key
-  valor       String   // cifrado AES-256
+  webUrl      String? // dónde generar la key
+  valor       String // cifrado AES-256
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 // --- Leads del chat de Nati (CRM de interesados) ---
 model LeadChat {
-  id             String   @id @default(cuid())
-  sessionId      String   @unique
-  nombre         String?
-  email          String?
-  telefono       String?
-  ip             String?  // IP de origen (intranet/LAN) al momento de conversar
-  userAgent      String?  // dispositivo/navegador
-  mensajesTotal  Int      @default(0)
+  id              String   @id @default(cuid())
+  sessionId       String   @unique
+  nombre          String?
+  email           String?
+  telefono        String?
+  ip              String? // IP de origen (intranet/LAN) al momento de conversar
+  userAgent       String? // dispositivo/navegador
+  mensajesTotal   Int      @default(0)
   primeraPregunta String?
   ultimaPregunta  String?
-  prefs          Json?    // foto de preferencias: tipo, presupuesto, huéspedes, mascotas, actividad
-  temas          String[] @default([]) // intenciones detectadas: yoga, precios, ubicacion, reserva...
-  transcript     Json?    // últimas 30 intervenciones [{rol, texto}]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  prefs           Json? // foto de preferencias: tipo, presupuesto, huéspedes, mascotas, actividad
+  temas           String[] @default([]) // intenciones detectadas: yoga, precios, ubicacion, reserva...
+  transcript      Json? // últimas 30 intervenciones [{rol, texto}]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([updatedAt])
   @@index([nombre])
@@ -358,11 +358,11 @@ model ProyectoDonacion {
   slug        String                 @unique
   descripcion String
   categoria   CategoriaProyecto      @default(GENERAL)
-  meta        Float?                 // meta en la moneda del proyecto (null = sin meta)
+  meta        Decimal?               @db.Decimal(12, 2) // meta en la moneda del proyecto (null = sin meta)
   moneda      String                 @default("USD")
   imagenUrl   String?
-  media       Json?                  // [{tipo:"imagen"|"video", url}] galería del proyecto
-  paypalLink  String?                // link directo paypal.me (respaldo si no hay API)
+  media       Json? // [{tipo:"imagen"|"video", url}] galería del proyecto
+  paypalLink  String? // link directo paypal.me (respaldo si no hay API)
   estado      EstadoProyectoDonacion @default(ACTIVO)
   orden       Int                    @default(0)
   createdAt   DateTime               @default(now())
@@ -373,19 +373,19 @@ model ProyectoDonacion {
 }
 
 model Donacion {
-  id            String         @id @default(cuid())
-  proyecto      ProyectoDonacion @relation(fields: [proyectoId], references: [id], onDelete: Cascade)
-  proyectoId    String
-  monto         Float
-  moneda        String         @default("USD")
-  nombre        String?
-  email         String?
-  mensaje       String?
-  paypalOrderId String?        @unique
+  id              String           @id @default(cuid())
+  proyecto        ProyectoDonacion @relation(fields: [proyectoId], references: [id], onDelete: Cascade)
+  proyectoId      String
+  monto           Decimal          @db.Decimal(12, 2)
+  moneda          String           @default("USD")
+  nombre          String?
+  email           String?
+  mensaje         String?
+  paypalOrderId   String?          @unique
   paypalCaptureId String?
-  estado        EstadoDonacion @default(PENDIENTE)
-  esManual      Boolean        @default(false)
-  createdAt     DateTime       @default(now())
+  estado          EstadoDonacion   @default(PENDIENTE)
+  esManual        Boolean          @default(false)
+  createdAt       DateTime         @default(now())
 
   @@index([proyectoId])
   @@index([estado])
@@ -399,17 +399,17 @@ enum EstadoDocumento {
 }
 
 model Documento {
-  id          String          @id @default(cuid())
+  id          String           @id @default(cuid())
   titulo      String
-  fuente      String          @default("manual") // manual | docs | upload
-  tipo        String          @default("md")     // md | txt | html
-  estado      EstadoDocumento @default(PROCESANDO)
+  fuente      String           @default("manual") // manual | docs | upload
+  tipo        String           @default("md") // md | txt | html
+  estado      EstadoDocumento  @default(PROCESANDO)
   error       String?
-  contenido   String?         // texto fuente (para reindexar con otro modelo)
-  totalChunks Int             @default(0)
-  modeloEmb   String?         // modelo de embeddings usado (null = solo FTS)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  contenido   String? // texto fuente (para reindexar con otro modelo)
+  totalChunks Int              @default(0)
+  modeloEmb   String? // modelo de embeddings usado (null = solo FTS)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
   chunks      ChunkDocumento[]
 
   @@index([estado])
@@ -421,7 +421,7 @@ model ChunkDocumento {
   documentoId String
   orden       Int
   contenido   String
-  embedding   Float[]   // null = sin vector (solo búsqueda FTS)
+  embedding   Float[] // null = sin vector (solo búsqueda FTS)
   createdAt   DateTime  @default(now())
 
   @@index([documentoId])
@@ -444,8 +444,8 @@ model Comida {
   tipo        TipoComida @default(OTRO)
   descripcion String?
   imagenUrl   String?
-  videoUrl    String?    // URL de video (YouTube, Vimeo, o archivo subido)
-  horario     String?    // ej: "Todos los días 7:00 - 10:00"
+  videoUrl    String? // URL de video (YouTube, Vimeo, o archivo subido)
+  horario     String? // ej: "Todos los días 7:00 - 10:00"
   activo      Boolean    @default(true)
   orden       Int        @default(0)
   createdAt   DateTime   @default(now())
@@ -457,15 +457,15 @@ model Comida {
 }
 
 model Plato {
-  id          String  @id @default(cuid())
-  comida      Comida  @relation(fields: [comidaId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  comida      Comida   @relation(fields: [comidaId], references: [id], onDelete: Cascade)
   comidaId    String
   nombre      String
   descripcion String?
-  categoria   String?  // entrada | principal | postre | bebida | extra
-  precio      Float?   // null = incluido / a convenir
+  categoria   String? // entrada | principal | postre | bebida | extra
+  precio      Decimal? @db.Decimal(12, 2) // null = incluido / a convenir
   etiquetas   String[] @default([]) // vegetariano, vegano, sin-gluten, picante, tipico...
-  imagenUrl   String?  // URL de imagen del plato
+  imagenUrl   String? // URL de imagen del plato
   orden       Int      @default(0)
   createdAt   DateTime @default(now())
 

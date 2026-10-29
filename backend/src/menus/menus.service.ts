@@ -1,7 +1,9 @@
 import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { RagService } from '../rag/rag.service';
 import { UploadService } from '../upload/upload.service';
+import { aNumero } from '../common/dinero';
 
 export interface PlatoInput {
   nombre: string;
@@ -85,23 +87,26 @@ export class MenusService {
           nombre: string;
           descripcion: string | null;
           categoria: string | null;
-          precio: number | null;
+          precio: Prisma.Decimal | number | null;
           etiquetas: string[];
         }>;
       }>;
-      if (!menus.length) return '';
-      const partes = menus.map((m) => {
+      // Un menú todavía sin platos no informa nada: se omite para que el prompt
+      // de Nati no se llene de secciones vacías.
+      const conPlatos = menus.filter((m) => m.platos.length > 0);
+      if (!conPlatos.length) return '';
+      const partes = conPlatos.map((m) => {
         const platos = m.platos
           .map((p) => {
             const etq = p.etiquetas?.length ? ` [${p.etiquetas.join(', ')}]` : '';
             const cat = p.categoria ? `${p.categoria}: ` : '';
-            const precio =
-              typeof p.precio === 'number' ? ` — $${p.precio.toLocaleString('es-CO')}` : '';
+            const n = aNumero(p.precio);
+            const precio = n === null ? '' : ` — $${n.toLocaleString('es-CO')}`;
             return `- ${cat}${p.nombre}${etq}${precio}${p.descripcion ? ` (${p.descripcion})` : ''}`;
           })
           .join('\n');
         const horario = m.horario ? ` · ${m.horario}` : '';
-        return `### ${m.tipo} — ${m.titulo}${horario}\n${m.descripcion ? m.descripcion + '\n' : ''}${platos || '(sin platos registrados)'}`;
+        return `### ${m.tipo} — ${m.titulo}${horario}\n${m.descripcion ? m.descripcion + '\n' : ''}${platos}`;
       });
       const bloque = `MENÚS Y COMIDAS DISPONIBLES (en /comidas):\n\n${partes.join('\n\n')}`;
       return bloque.slice(0, maxCaracteres);
@@ -315,7 +320,7 @@ export class MenusService {
       nombre: string;
       descripcion: string | null;
       categoria: string | null;
-      precio: number | null;
+      precio: Prisma.Decimal | number | null;
       etiquetas: string[];
     }>;
   }): string {
@@ -329,7 +334,8 @@ export class MenusService {
       '',
       ...c.platos.map((p) => {
         const etq = p.etiquetas?.length ? ` _(${p.etiquetas.join(', ')})_` : '';
-        const precio = typeof p.precio === 'number' ? ` — $${p.precio.toLocaleString('es-CO')}` : '';
+        const n = aNumero(p.precio);
+        const precio = n === null ? '' : ` — $${n.toLocaleString('es-CO')}`;
         const cat = p.categoria ? `**${p.categoria}:** ` : '';
         const desc = p.descripcion ? ` — ${p.descripcion}` : '';
         return `- ${cat}${p.nombre}${etq}${precio}${desc}`;

@@ -61,10 +61,10 @@ export class NotificacionesService {
       mensaje,
     });
     const whatsappLink = propiedad.whatsapp
-      ? `https://wa.me/${propiedad.whatsapp}?text=${encodeURIComponent(`📋 *Nueva reserva en ${propiedad.nombre}*\n👤 ${reserva.nombre}\n📧 ${reserva.email}\n📞 ${reserva.telefono}\n🆔 ${reserva.identificacion}\n📅 Llegada: ${reserva.fechaLlegada.toLocaleDateString()}\n📅 Salida: ${reserva.fechaSalida.toLocaleDateString()}\n👥 ${reserva.huespedes} huésped(es)\n💳 Pago: ${reserva.metodoPago}\n💰 Total: $${reserva.total?.toLocaleString()}`)}`
+      ? `https://wa.me/${propiedad.whatsapp}?text=${encodeURIComponent(`📋 *Nueva reserva en ${propiedad.nombre}*\n👤 ${reserva.nombre}\n📧 ${reserva.email}\n📞 ${reserva.telefono}\n🆔 ${reserva.identificacion}\n📅 Llegada: ${reserva.fechaLlegada.toLocaleDateString()}\n📅 Salida: ${reserva.fechaSalida.toLocaleDateString()}\n👥 ${reserva.huespedes} huésped(es)\n💳 Pago: ${reserva.metodoPago}\n💰 Total: $${reserva.total?.toNumber().toLocaleString('es-CO')}`)}`
       : null;
     const emailLink = propiedad.email
-      ? `mailto:${propiedad.email}?subject=${encodeURIComponent(`Nueva reserva - ${propiedad.nombre}`)}&body=${encodeURIComponent(`Nueva reserva en ${propiedad.nombre}:\n\nNombre: ${reserva.nombre}\nEmail: ${reserva.email}\nTeléfono: ${reserva.telefono}\nIdentificación: ${reserva.identificacion}\nLlegada: ${reserva.fechaLlegada.toLocaleDateString()}\nSalida: ${reserva.fechaSalida.toLocaleDateString()}\nHuéspedes: ${reserva.huespedes}\nPago: ${reserva.metodoPago}\nTotal: $${reserva.total?.toLocaleString()}`)}`
+      ? `mailto:${propiedad.email}?subject=${encodeURIComponent(`Nueva reserva - ${propiedad.nombre}`)}&body=${encodeURIComponent(`Nueva reserva en ${propiedad.nombre}:\n\nNombre: ${reserva.nombre}\nEmail: ${reserva.email}\nTeléfono: ${reserva.telefono}\nIdentificación: ${reserva.identificacion}\nLlegada: ${reserva.fechaLlegada.toLocaleDateString()}\nSalida: ${reserva.fechaSalida.toLocaleDateString()}\nHuéspedes: ${reserva.huespedes}\nPago: ${reserva.metodoPago}\nTotal: $${reserva.total?.toNumber().toLocaleString('es-CO')}`)}`
       : null;
     if (whatsappLink) {
       await this.create({
