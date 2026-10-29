@@ -1,5 +1,8 @@
 const net = require('net');
-const socket = net.createConnection({ host: '127.0.0.1', port: 5432 }, () => {
+// El Postgres del proyecto es el contenedor tropical-pg: el host publica PG_PORT
+// (5434 por defecto), no 5432.
+const port = Number(process.env.PG_PORT || 5434);
+const socket = net.createConnection({ host: '127.0.0.1', port }, () => {
   const user = 'turismo_user\0';
   const db = 'turismo_db\0';
   const body = Buffer.concat([

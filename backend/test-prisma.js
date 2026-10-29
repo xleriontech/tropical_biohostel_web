@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 async function test() {
-  const url = 'postgresql://turismo_user:***REMOVIDO-EN-PURGA***@127.0.0.1:5432/turismo_db';
+  const { readFileSync } = require('fs');
+  const url = (readFileSync(__dirname + '/.env', 'utf8').match(/^DATABASE_URL=(.+)$/m) || [])[1];
   const p = new PrismaClient({
     datasources: { db: { url } },
     log: ['query', 'error', 'warn'],

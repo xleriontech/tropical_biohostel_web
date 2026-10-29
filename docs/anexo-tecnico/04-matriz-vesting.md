@@ -71,7 +71,7 @@ principal, con un motor transaccional confiable y trazable.
 | F1.3 | Panel operativo (Admin/Staff) | CRUD de propiedades, unidades, calendario, reservas y roles; UAT firmado por operación | Acta UAT + video/demo + release tag |
 | F1.4 | Checkout directo y correos transaccionales | Flujo completo en ES/EN; conversión medida; correo de confirmación con código de reserva | E2E en producción + métricas de embudo |
 | F1.5 | Sincronización iCal (Airbnb/Booking) | Importación/exportación sin traslapes; alerta ante conflicto | Log de sync + prueba con calendario real |
-| F1.6 | RNT, privacidad y consentimiento | RNT visible; aviso de privacidad; consentimiento registrado en 100% de reservas | Capturas + consulta a `ConsentRecord` |
+| F1.6 | RNT, privacidad y registro de huéspedes | RNT visible; aviso de privacidad; consentimiento registrado en 100% de reservas; TRA/SIAT y SIRE capturados desde el panel sin pasos manuales adicionales | Capturas + consulta a `ConsentRecord` + evidencia de un reporte real |
 | F1.7 | CI/CD, observabilidad y backups | Deploy a staging en cada merge; rollback < 10 min; logs, métricas y trazas; backup diario probado | Pipeline + dashboard + prueba de restore |
 | F1.8 | Calidad y seguridad | Cobertura ≥ 70% en módulos de reserva/precio; 0 vulnerabilidades críticas/altas en SAST/DAST | Reporte de cobertura + escaneo |
 
@@ -372,9 +372,15 @@ Para el módulo DIAN, la referencia vigente que debe validar el contador/PTE es:
 Esta resolución y sus modificaciones son la base técnica del modelo `Invoice`
 (CUFE/CUDE, XML/PDF, validación previa y proveedor tecnológico). Su fundamento
 legal está en el Estatuto Tributario (arts. 616-1 y 617) y en la Ley 527 de 1999
-para mensajes de datos y firma electrónica. La referencia se verificó en octubre
-de 2026; la implementación debe fijar la versión del anexo técnico aplicable al
-momento del despliegue.
+para mensajes de datos y firma electrónica.
+
+**Notas de vigencia registradas en el normograma de la DIAN:** un inciso fue
+modificado por el artículo 1 de la Resolución 119 de 2024; se adicionaron
+parágrafos por el artículo 1 de la Resolución 189 de 2024 y por el artículo 1 de
+la Resolución 202 de 2025; y sus disposiciones quedaron compiladas como artículo
+1.5.1.1.2.1 de la Resolución 227 de 2025. La implementación debe fijar la versión
+del anexo técnico exigible en el momento del despliegue, no la que estaba en
+papel cuando se firmó este anexo. La referencia se verificó en octubre de 2026.
 
 ### 7.3 Alcance del anexo
 
@@ -396,6 +402,22 @@ momento del despliegue.
 - **RNT (Ley 300 de 1996, art. 61, modificado por la Ley 1101 de 2006 y la
   Ley 1558 de 2012).** Mantener el Registro Nacional de Turismo vigente y
   visible; su vencimiento es un riesgo operativo y reputacional.
+- **Registro de huéspedes (TRA).** La Resolución 700 de 2021 (MinCIT, Diario
+  Oficial No. 51.736 del 15 de julio de 2021), modificada por la Resolución 409
+  de 2022, implementa la Tarjeta de Registro de Alojamiento y su captura en el
+  SIAT, con acceso estadístico del DANE y retención según las reglas del Archivo
+  General de la Nación. Los datos ya viajan en `Booking` (`guestDocumentType`,
+  `guestDocumentNumber`); falta el artefacto de reporte y su evidencia. Excluye
+  las estancias por hora (CIIU 5530).
+- **Reporte de extranjeros (SIRE).** Quien aloje o hospede extranjeros debe
+  reportarlos a Migración Colombia por el SIRE, conforme al Decreto 1067 de 2015
+  (Decreto Único Reglamentario del Sector Relaciones Exteriores); la inscripción
+  del prestador se tramita ante esa entidad. Validar con el abogado el artículo
+  exacto y la periodicidad del reporte antes de fijar el alcance del módulo.
+- **Habeas data financiero (Ley 1266 de 2008).** Regula el manejo de información
+  en centrales de riesgo y los tiempos de permanencia de los datos reportados a
+  esas entidades; no sustituye la Ley 1581 de 2012 ni fija la retención del
+  registro de huéspedes. Aplica solo si la sociedad reporta hábitos de pago.
 - **Protección al consumidor (Ley 1480 de 2011).** Información veraz, precios
   claros, condiciones de cancelación y reversión del pago; revisar con abogado.
 - **Seguridad de pagos.** No almacenar datos de tarjeta; usar checkout alojado o
@@ -418,6 +440,10 @@ oficial o al repositorio normativo institucional:
 | Ley 300 de 1996 (turismo, art. 61) | [Gestor Normativo — Función Pública](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=8634) |
 | Ley 1101 de 2006 (modifica Ley 300) | [Compilación DIAN](https://normograma.dian.gov.co/dian/compilacion/docs/ley_1101_2006.htm) |
 | Ley 1480 de 2011 (Estatuto del Consumidor) | [Gestor Normativo — Función Pública](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=44306) |
+| Modificaciones a la Res. 000165 de 2023 (Res. 119/2024, 189/2024, 202/2025) y su compilación en la Res. 227 de 2025 | [Normograma DIAN — texto con notas de vigencia](https://normograma.dian.gov.co/dian/compilacion/docs/resolucion_dian_0165_2023.htm) |
+| Resolución 700 de 2021 (TRA) y Resolución 409 de 2022 | [MinCIT — normatividad](https://www.mincit.gov.co/normatividad/resoluciones/2021/resolucion-700-del-15-de-julio-de-2021-por-la-cual) · [Sisjur Bogotá](https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=115199) |
+| SIRE — reporte de extranjeros (Decreto 1067 de 2015) | [Migración Colombia — Registro de Extranjeros SIRE](https://www.migracioncolombia.gov.co/tramites-y-servicios/aplicativos/registro-sire) |
+| Ley 1266 de 2008 (habeas data financiero) | [Gestor Normativo — Función Pública](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=34488) |
 
 Las citas de leyes se mantienen sin fecha ni número de Diario Oficial en el
 cuerpo del anexo; la identificación completa se consulta en estas fuentes. Si el

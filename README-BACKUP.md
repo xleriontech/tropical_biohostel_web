@@ -9,10 +9,13 @@ Realiza un `pg_dump` diario de la base de datos PostgreSQL que corre en Docker
 ### Requisitos previos
 
 - Docker Desktop ejecutado
-- Contenedor de PostgreSQL levantado (`docker compose up -d`)
+- Contenedor de PostgreSQL levantado (`arrancar-db.bat` o `docker compose up -d`)
+- `TURISMO_PG_PASSWORD` definida en el `.env` de la raíz del proyecto. Se genera
+  sola con `node bin\credenciales.js`, que `instalar.bat` ya ejecuta.
 - El nombre del contenedor debe coincidir con `CONTAINER_NAME` en el script
-  (por defecto: `turistico-postgres`). Si tu contenedor se llama distinto, edita
-  la primera línea de `backup-db.bat`.
+  (por defecto: `tropical-pg`, el nombre que crea `arrancar-db.bat`). Si levantas
+  la base con `docker compose up -d`, el contenedor se llama
+  `tropicalbiohostel_proyecto-postgres-1` y hay que ajustar esa línea.
 
 ### Ejecutar manualmente
 
@@ -39,7 +42,7 @@ La tarea generará un archivo `.sql` cada día en la carpeta `backups/`.
 ### Restaurar un respaldo
 
 ```cmd
-docker exec -i turistico-postgres psql -U turismo_user -d turismo_db < backups\turismo_db_YYYYMMDD_HHMMSS.sql
+docker exec -i tropical-pg psql -U turismo_user -d turismo_db < backups\turismo_db_YYYYMMDD_HHMMSS.sql
 ```
 
 ### Alternativa: migrar a Neon o Supabase

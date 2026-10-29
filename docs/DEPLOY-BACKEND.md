@@ -82,3 +82,38 @@ node prisma/dist/seed.js
 Ese archivo contiene credenciales reales (AWS, Resend, Groq, OpenAI, Deepseek, OpenRouter) y está
 versionado en git. **No debería seguir ahí**: hay que sacarlo del seguimiento
 (`git rm --cached CredencialesAdmin.txt`), añadirlo a `.gitignore` y **rotar todas las claves**.
+
+## Claves de entorno que no van en el repositorio
+
+Tres familias de secretos, tres orígenes distintos. Ninguno se copia ya de
+`.env.example` con valores reales:
+
+| Variable | Dónde vive | Quién la genera |
+| --- | --- | --- |
+| `TURISMO_PG_PASSWORD`, `REDIS_PASSWORD` | `.env` (raíz, sin versionar) | `node bin/credenciales.js` |
+| `AI_MASTER_KEY` | `.env` de cada entorno | `openssl rand -base64 48` |
+| LLM, R2, Google, pasarelas | panel de Railway / `ClaveApi` cifrada | el proveedor |
+
+`arrancar-db.bat` publica Postgres y Redis solo en `127.0.0.1` y exige
+autenticación en Redis. Si un contenedor `tropical-redis-1` ya existía sin
+`--requirepass`, el script lo recrea: en Redis únicamente hay caché y sesiones
+de Nati, no datos de negocio.
+
+### Cambiar `AI_MASTER_KEY`
+
+Cifra las API keys de los proveedores guardadas en la base
+(`backend/src/ai/ai.service.ts`, AES-256-CBC). No es una variable que se pueda
+rotar a mitad de camino:
+
+1. Cifrar de nuevo las filas de `APIKey` y `ClaveApi` con la clave **anterior**.
+2. Cambiar la clave del entorno.
+3. Re-cifrar con la nueva.
+
+Sin el paso 1, `decrypt()` falla y la app se queda sin proveedor de IA.
+`decrypt()` devuelve el texto tal cual cuando no trae el formato `iv:hex`, así
+que conviene auditar si hay filas ya en claro antes de tocar nada.
+
+En el entorno local hay dos valores distintos conviviendo: la raíz `.env` tiene
+una clave de 33 caracteres y `backend/.env` una de 55. Como el backend arranca
+desde `backend/`, la que usa la aplicación es la de 55; la otra solo la leerían
+las herramientas ejecutadas desde la raíz. Unificarlas es parte de la rotación.

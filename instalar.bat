@@ -53,6 +53,12 @@ if not exist "frontend\node_modules" (
 
 echo.
 echo  [5/7] Arrancando base de datos y cache...
+REM Genera TURISMO_PG_PASSWORD y REDIS_PASSWORD en .env y alinea las URIs.
+call node "%~dp0bin\credenciales.js"
+if errorlevel 1 (
+  echo  ERROR: no se pudieron preparar las credenciales locales.
+  exit /b 1
+)
 call "%~dp0arrancar-db.bat"
 
 echo.

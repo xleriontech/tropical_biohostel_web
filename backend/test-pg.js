@@ -1,11 +1,15 @@
 const { Client } = require('pg');
+const { readFileSync } = require('fs');
+const { URL } = require('url');
 async function test() {
+  const env = readFileSync(require.resolve('path').join(__dirname, '.env'), 'utf8');
+  const url = new URL((env.match(/^DATABASE_URL=(.+)$/m) || [])[1]);
   const c = new Client({
-    host: '127.0.0.1',
-    port: 5432,
-    user: 'turismo_user',
-    password: '***REMOVIDO-EN-PURGA***',
-    database: 'turismo_db',
+    host: url.hostname,
+    port: Number(url.port || 5432),
+    user: decodeURIComponent(url.username),
+    password: decodeURIComponent(url.password),
+    database: url.pathname.slice(1),
   });
   await c.connect();
   const r = await c.query('SELECT 1 as alive');

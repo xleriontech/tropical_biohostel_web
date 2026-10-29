@@ -49,13 +49,13 @@ if (Test-Path $backEnv) {
   }
 }
 $lineas = @(
-  "DATABASE_URL=postgresql://turismo_user:***REMOVIDO-EN-PURGA***@localhost:$($cfg.PG_PORT)/turismo_db",
+  "DATABASE_URL=postgresql://turismo_user:POR_DEFINIR@localhost:$($cfg.PG_PORT)/turismo_db",
   "REDIS_URL=redis://localhost:$($cfg.REDIS_PORT)",
   "SUPABASE_URL=https://your-project.supabase.co",
   "SUPABASE_ANON_KEY=your-anon-key",
   "SUPABASE_SERVICE_ROLE_KEY=your-service-role-key",
   "SUPABASE_JWT_SECRET=your-jwt-secret",
-  "AI_MASTER_KEY=***REMOVIDO-EN-PURGA***",
+  "AI_MASTER_KEY=REEMPLAZAR",
   "GEMINI_API_KEY=",
   "R2_ACCOUNT_ID=",
   "R2_ACCESS_KEY_ID=",
@@ -78,4 +78,6 @@ $final | Set-Content $backEnv -Encoding Ascii
   "NEXT_PUBLIC_API_URL=http://localhost:$($cfg.BACK_PORT)/api"
 ) | Set-Content (Join-Path $Dir 'frontend\.env.local') -Encoding Ascii
 
+# Las contraseñas y la master key las escribe bin/credenciales.js: nunca este script.
+& node (Join-Path $Dir 'bin\credenciales.js')
 Write-Host 'Archivos .env generados.'
