@@ -1,0 +1,674 @@
+// ============================================================================
+// BioHostel OS — Anexo Técnico 1/4
+// Esquema de datos multi-tenant (PostgreSQL 16 + Prisma)
+//
+// Decisiones de arquitectura:
+// 1. Multi-tenancy "shared database, shared schema" con tenantId obligatorio en
+//    toda tabla de negocio. El aislamiento se refuerza con Row Level Security
+//    (RLS) en PostgreSQL y un tenant context por transacción (app.tenant_id).
+//    Un query sin tenantId es un defecto de seguridad, no una optimización.
+// 2. Dinero en Decimal(12,2) COP. Nunca Float: la facturación DIAN y la
+//    conciliación de pagos exigen aritmética exacta.
+// 3. Anti-overbooking: además del chequeo de aplicación, la migración SQL debe
+//    crear una EXCLUDE CONSTRAINT con btree_gist sobre InventoryHold:
+//      ALTER TABLE "InventoryHold" ADD CONSTRAINT no_overlap
+//      EXCLUDE USING gist (
+//        "unitId" WITH =,
+//        daterange("checkIn", "checkOut", '[)') WITH &&
+//      ) WHERE (status IN ('HELD','CONFIRMED'));
+//    Prisma no expresa exclusion constraints; viven en la migración SQL.
+// 4. Facturación electrónica: se guardan datos fiscales, CUFE/CUDE, estado
+//    DIAN y referencias a XML/PDF. Las claves técnicas y el certificado digital
+//    NUNCA se guardan en la base: solo la referencia al secreto (SecretRef).
+// 5. Auditoría: AuditLog es append-only y encadenado por hash (prevHash/hash).
+//    La aplicación no expone UPDATE/DELETE sobre esta tabla; el rol de aplicación
+//    solo tiene INSERT/SELECT y un trigger verifica la cadena.
+// 6. Este esquema es aditivo al modelo actual (Reserva/Propiedad). La migración
+//    de datos mapea Reserva -> Booking y Propiedad -> Property sin romper el
+//    frontend existente durante la transición.
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums de dominio
+// ---------------------------------------------------------------------------
+
+enum TenantStatus {
+  ONBOARDING
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum TenantPlan {
+  FOUNDER
+  GROWTH
+  PRO
+  ENTERPRISE
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+  GUEST
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+  NO_SHOW
+  EXPIRED
+}
+
+enum BookingChannel {
+  DIRECT
+  OTA
+  PHONE
+  WALK_IN
+  PARTNER
+}
+
+enum HoldStatus {
+  HELD
+  CONFIRMED
+  RELEASED
+  EXPIRED
+}
+
+enum PaymentProvider {
+  WOMPI
+  NEQUI
+  CASH
+  BANK_TRANSFER
+  OTA_COLLECT
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  PAID
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  VOIDED
+}
+
+enum InvoiceType {
+  INVOICE
+  CREDIT_NOTE
+}
+
+enum InvoiceStatus {
+  DRAFT
+  QUEUED
+  SENT
+  ACCEPTED
+  REJECTED
+  VOIDED
+}
+
+enum AiIntent {
+  INFO
+  BOOKING_CREATE
+  BOOKING_MODIFY
+  BOOKING_CANCEL
+  PAYMENT
+  COMPLAINT
+  HANDOFF
+  OTHER
+}
+
+enum AiOutcome {
+  RESOLVED
+  ESCALATED
+  ABANDONED
+  FAILED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  CONSENT_GRANTED
+  CONSENT_REVOKED
+  PAYMENT_EVENT
+  INVOICE_EVENT
+  BOOKING_EVENT
+  AI_HANDOFF
+}
+
+enum OutboxStatus {
+  PENDING
+  PROCESSING
+  PROCESSED
+  FAILED
+}
+
+// ---------------------------------------------------------------------------
+// Tenant: raíz de aislamiento y configuración fiscal/operativa
+// ---------------------------------------------------------------------------
+
+model Tenant {
+  id        String       @id @default(cuid())
+  slug      String       @unique // subdominio: finca.biohostel.os
+  legalName String
+  tradeName String?
+  nit       String       @unique
+  rnt       String? // RNT: Ley 300 de 1996, art. 61 (mod. Ley 1101 de 2006 y Ley 1558 de 2012)
+  rntExpiresAt DateTime? @db.Date
+
+  email     String
+  phone     String?
+  address   String?
+  city      String  @default("Nocaima")
+  department String @default("Cundinamarca")
+  country   String  @default("CO")
+  timezone  String  @default("America/Bogota")
+  locale    String  @default("es-CO")
+  currency  String  @default("COP")
+
+  status TenantStatus @default(ONBOARDING)
+  plan   TenantPlan   @default(FOUNDER)
+
+  // --- Configuración DIAN (software propio o proveedor tecnológico) ---
+  dianSoftwareId           String?
+  dianSoftwarePinSecretRef String? // ref. a Secrets Manager; nunca el PIN en claro
+  dianCertificateSecretRef String? // ref. al certificado .p12 y su passphrase
+  dianTestMode             Boolean @default(true)
+  invoicePrefix            String  @default("FE")
+  invoiceNextConsecutive   Int     @default(1) // se incrementa con SELECT ... FOR UPDATE
+
+  // --- Políticas inyectadas al agente IA y al motor de reservas ---
+  checkInTime        String  @default("15:00")
+  checkOutTime       String  @default("12:00")
+  paymentPolicy      Json? // anticipo, métodos habilitados, moneda, TTL de hold
+  cancellationPolicy Json? // ventanas, penalidades, no-show
+  petsPolicy         Json? // permitido, unidades excluidas, condiciones
+  settings           Json? // feature flags, branding, integraciones
+
+  users          User[]
+  properties     Property[]
+  inventoryUnits InventoryUnit[]
+  inventoryHolds InventoryHold[]
+  bookings       Booking[]
+  payments       Payment[]
+  invoices       Invoice[]
+  aiMetrics      AIMetric[]
+  auditLogs      AuditLog[]
+  consents       ConsentRecord[]
+  webhookEvents  WebhookEvent[]
+  outboxEvents   OutboxEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([plan])
+}
+
+// ---------------------------------------------------------------------------
+// User: Admin (dueño del tenant), Staff (operación) y Guest (huésped)
+// ---------------------------------------------------------------------------
+
+model User {
+  id              String    @id @default(cuid())
+  tenantId        String
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  email           String
+  emailVerifiedAt DateTime?
+  passwordHash    String?
+  supabaseId      String? // identidad federada; opcional para staff local
+  fullName        String?
+  phone           String?
+  role            UserRole @default(GUEST)
+  locale          String   @default("es-CO")
+  isActive        Boolean  @default(true)
+  lastLoginAt     DateTime?
+
+  bookings        Booking[]       @relation("GuestBookings")
+  invoicesCreated Invoice[]       @relation("InvoiceCreatedBy")
+  auditLogs       AuditLog[]
+  consents        ConsentRecord[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, email])
+  @@unique([tenantId, supabaseId])
+  @@index([tenantId, role])
+  @@index([tenantId, isActive])
+}
+
+// ---------------------------------------------------------------------------
+// Property / InventoryUnit: catálogo e inventario bloqueable
+// ---------------------------------------------------------------------------
+
+model Property {
+  id          String  @id @default(cuid())
+  tenantId    String
+  tenant      Tenant  @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  slug        String
+  name        String
+  type        String // cabin | glamping | room | activity (catálogo por tenant)
+  description String?
+  rnt         String? // RNT del establecimiento, si aplica
+  capacity    Int
+  basePrice   Decimal @db.Decimal(12, 2)
+  currency    String  @default("COP")
+
+  checkInTime  String?
+  checkOutTime String?
+  petPolicy    Json? // { allowed, excludedUnitIds, notes }
+  amenities    Json?
+  isActive     Boolean @default(true)
+
+  units    InventoryUnit[]
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, isActive])
+  @@index([tenantId, type])
+}
+
+model InventoryUnit {
+  id         String   @id @default(cuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+
+  name       String // "Cabaña 1", "Cosmic Bungalow"
+  capacity   Int     @default(2)
+  basePrice  Decimal? @db.Decimal(12, 2)
+  isActive   Boolean @default(true)
+
+  holds    InventoryHold[]
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, propertyId, name])
+  @@index([tenantId, propertyId, isActive])
+}
+
+model InventoryHold {
+  id        String        @id @default(cuid())
+  tenantId  String
+  tenant    Tenant        @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  unitId    String
+  unit      InventoryUnit @relation(fields: [unitId], references: [id], onDelete: Restrict)
+  bookingId String?
+  booking   Booking?      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  checkIn   DateTime   @db.Date
+  checkOut  DateTime   @db.Date
+  status    HoldStatus @default(HELD)
+  expiresAt DateTime // TTL del hold (15 min por defecto)
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, unitId, status, expiresAt])
+  @@index([tenantId, bookingId])
+  @@index([tenantId, expiresAt, status]) // barrido de holds vencidos
+}
+
+// ---------------------------------------------------------------------------
+// Booking: reserva directa con desglose financiero y atribución de canal
+// ---------------------------------------------------------------------------
+
+model Booking {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  code     String // código humano: TBH-2026-000123
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  unitId   String?
+  unit     InventoryUnit? @relation(fields: [unitId], references: [id], onDelete: SetNull)
+
+  guestUserId String?
+  guestUser   User?   @relation("GuestBookings", fields: [guestUserId], references: [id], onDelete: SetNull)
+
+  status  BookingStatus  @default(PENDING_PAYMENT)
+  channel BookingChannel @default(DIRECT)
+  otaName String? // Booking.com, Airbnb, etc. cuando channel = OTA
+
+  checkIn  DateTime @db.Date
+  checkOut DateTime @db.Date
+  nights   Int
+  guests   Int
+
+  // Datos del huésped (PII mínima; el documento se solicita solo si la política lo exige)
+  guestFirstName     String
+  guestLastName      String
+  guestEmail         String
+  guestPhone         String
+  guestDocumentType  String? // CC | CE | PA | NIT
+  guestDocumentNumber String?
+
+  // Desglose financiero en COP
+  currency      String  @default("COP")
+  subtotal      Decimal @db.Decimal(12, 2)
+  taxes         Decimal @db.Decimal(12, 2) @default(0)
+  fees          Decimal @db.Decimal(12, 2) @default(0)
+  discount      Decimal @db.Decimal(12, 2) @default(0)
+  total         Decimal @db.Decimal(12, 2)
+  otaCommission Decimal @db.Decimal(12, 2) @default(0) // 0 en canal directo
+  netRevenue    Decimal @db.Decimal(12, 2) // total - otaCommission
+
+  paymentMethod PaymentProvider?
+  holdExpiresAt DateTime?
+  confirmedAt   DateTime?
+  cancelledAt   DateTime?
+  cancelReason  String?
+
+  notes        String?
+  addons       Json? // [{ sku, name, qty, unitPrice, total }]
+  sourceMetadata Json? // utm, referrer, device, locale
+  aiSessionId  String? // correlación con AIMetric
+
+  idempotencyKey String // Idempotency-Key del cliente; única por tenant
+
+  payments  Payment[]
+  invoice   Invoice?
+  holds     InventoryHold[]
+  aiMetrics AIMetric[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, code])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, status, checkIn])
+  @@index([tenantId, propertyId, checkIn, checkOut])
+  @@index([tenantId, guestEmail])
+  @@index([tenantId, channel, createdAt])
+  @@index([tenantId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Payment: intención y conciliación con Wompi / Nequi / caja
+// ---------------------------------------------------------------------------
+
+model Payment {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  bookingId String
+  booking  Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+
+  provider PaymentProvider
+  status   PaymentStatus   @default(PENDING)
+  amount   Decimal         @db.Decimal(12, 2)
+  currency String          @default("COP")
+
+  providerRef    String? // transaction id de Wompi / payment id de Nequi
+  providerStatus String?
+  checkoutUrl    String?
+  paidAt         DateTime?
+  failureReason  String?
+  rawPayload     Json? // payload crudo para conciliación y disputas
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, provider, providerRef])
+  @@index([tenantId, bookingId, status])
+  @@index([tenantId, provider, status, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Invoice: documento fiscal electrónico (DIAN)
+// ---------------------------------------------------------------------------
+
+model Invoice {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  bookingId String?  @unique
+  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+
+  type   InvoiceType   @default(INVOICE)
+  status InvoiceStatus @default(DRAFT)
+
+  prefix      String
+  consecutive Int
+  number      String // {prefix}-{consecutive}, p. ej. FE-000123
+  cufe        String? @unique @db.VarChar(96) // CUFE (factura) / CUDE (nota crédito)
+
+  // Tipo de documento DIAN: 01 factura electrónica, 91 nota crédito
+  dianDocumentType String  @default("01")
+  dianEnvironment  String  @default("2") // 1 producción, 2 habilitación/pruebas
+
+  issueDate      DateTime  @default(now())
+  validationDate DateTime?
+  paymentDueDate DateTime? @db.Date
+  currency       String    @default("COP")
+  currencyRate   Decimal?  @db.Decimal(12, 6) // si la moneda difiere de COP
+
+  // Emisor
+  issuerNit             String
+  issuerName            String
+  issuerRegime          String? // Responsable de IVA / No responsable
+  issuerAddress         String?
+  issuerCityCode        String? // código DANE del municipio
+  issuerDepartmentCode  String?
+
+  // Adquiriente
+  customerDocumentType   String // CC | CE | PA | NIT
+  customerDocumentNumber String
+  customerName           String
+  customerEmail          String?
+  customerAddress        String?
+  customerCityCode       String? // código DANE del municipio
+  customerDepartmentCode String?
+
+  // Detalle fiscal: [{ description, quantity, unitPrice, taxRate, taxAmount, total }]
+  lineItems Json
+  subtotal  Decimal @db.Decimal(12, 2)
+  taxTotal  Decimal @db.Decimal(12, 2)
+  total     Decimal @db.Decimal(12, 2)
+
+  paymentMethodCode     String? // código DIAN del medio de pago (efectivo, tarjeta, etc.)
+  dianResolutionNumber  String?
+  dianSoftwareId        String?
+  xmlUrl                String?
+  pdfUrl                String?
+  qrCode                String? // URL/representación del QR fiscal
+
+  responseCode    String? // código de respuesta DIAN / PTE
+  responseMessage String?
+  rejectedReason  String?
+  notes           String?
+
+  createdById String?
+  createdBy   User?   @relation("InvoiceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, prefix, consecutive])
+  @@index([tenantId, number])
+  @@index([tenantId, status, issueDate])
+  @@index([tenantId, customerDocumentNumber])
+  @@index([tenantId, type, status])
+}
+
+// ---------------------------------------------------------------------------
+// AIMetric: auditoría del ahorro y del ingreso atribuible al agente
+// ---------------------------------------------------------------------------
+
+model AIMetric {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  bookingId String?
+  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  sessionId    String
+  messageId    String?
+  intent       AiIntent  @default(OTHER)
+  outcome      AiOutcome @default(RESOLVED)
+  language     String    @default("es")
+  model        String // gpt-4.1-mini | gemini-2.0-flash | llama-3.1-70b
+  provider     String // openai | google | local
+  promptVersion String
+  inputTokens  Int       @default(0)
+  outputTokens Int       @default(0)
+  costUsd      Decimal   @db.Decimal(10, 6) @default(0)
+  latencyMs    Int
+
+  confidence   Decimal? @db.Decimal(4, 3) // 0.000 - 1.000
+  escalated    Boolean  @default(false)
+  handoffReason String?
+  convertedToBooking Boolean @default(false)
+
+  // Ahorro auditable: minutos de atención humana evitados y su costo
+  savedMinutes Decimal  @db.Decimal(8, 2)  @default(0)
+  savedCostCop Decimal  @db.Decimal(12, 2) @default(0)
+  bookingValueCop Decimal? @db.Decimal(12, 2) // ingreso atribuible a la conversación
+
+  ragSources Json? // [{ documentId, title, score }] para explicabilidad
+  safetyFlags Json? // prompt injection, PII, tema sensible
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, intent, outcome])
+  @@index([tenantId, sessionId])
+  @@index([tenantId, bookingId])
+  @@index([tenantId, convertedToBooking, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Compliance: auditoría inmutable y consentimiento (Ley 1581 de 2012)
+// ---------------------------------------------------------------------------
+
+model AuditLog {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  actorType String // USER | SYSTEM | AI | WEBHOOK
+  actorId   String?
+  userId    String?
+  user      User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  action   AuditAction
+  entity   String
+  entityId String
+
+  before Json?
+  after  Json?
+  ip     String?
+  userAgent String?
+  requestId String?
+
+  // Cadena de integridad: hash = SHA-256(prevHash + payload canónico)
+  prevHash String?
+  hash     String
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, entity, entityId])
+  @@index([tenantId, createdAt])
+  @@index([tenantId, action, createdAt])
+  @@index([tenantId, actorType, createdAt])
+}
+
+model ConsentRecord {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  userId    String?
+  user      User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  guestEmail String
+
+  purpose       String // BOOKING | MARKETING | ANALYTICS | AI_TRAINING
+  policyVersion String
+  granted       Boolean
+  grantedAt     DateTime @default(now())
+  revokedAt     DateTime?
+  ip            String?
+  userAgent     String?
+  evidence      Json? // snapshot del formulario, texto mostrado, versión de política
+
+  @@index([tenantId, guestEmail, purpose])
+  @@index([tenantId, grantedAt])
+}
+
+// ---------------------------------------------------------------------------
+// WebhookEvent: idempotencia y trazabilidad de eventos externos
+// ---------------------------------------------------------------------------
+
+model WebhookEvent {
+  id       String  @id @default(cuid())
+  tenantId String?
+  tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+
+  provider String // wompi | nequi | dian_pte
+  eventId  String
+  eventType String
+  payload  Json
+
+  signatureValid Boolean   @default(false)
+  status         String    @default("RECEIVED") // RECEIVED | PROCESSED | IGNORED | FAILED
+  error          String?
+  processedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([provider, eventId])
+  @@index([tenantId, status])
+  @@index([provider, status, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// OutboxEvent: publicación confiable de eventos de dominio
+// La transacción de reserva escribe el evento en la misma transacción; un
+// worker lo publica (factura, correo, webhook) con reintentos e idempotencia.
+// ---------------------------------------------------------------------------
+
+model OutboxEvent {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  aggregateType String // Booking | Payment | Invoice
+  aggregateId   String
+  eventType     String // invoice.issue | payment.confirmed | email.confirmation
+  payload       Json
+
+  status      OutboxStatus @default(PENDING)
+  attempts    Int          @default(0)
+  availableAt DateTime     @default(now())
+  processedAt DateTime?
+  lastError   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, status, availableAt])
+  @@index([tenantId, aggregateType, aggregateId])
+}

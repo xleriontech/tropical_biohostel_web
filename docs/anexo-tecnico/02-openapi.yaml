@@ -1,0 +1,1141 @@
+openapi: 3.1.0
+info:
+  title: BioHostel OS — API de Reservas Directas
+  version: 1.0.0
+  summary: Motor transaccional de reservas, pagos y facturación electrónica.
+  description: |
+    Contrato público del motor de ingresos directos de BioHostel OS.
+
+    **Multi-tenancy.** El tenant se resuelve por subdominio (`finca.biohostel.os`)
+    y se declara explícitamente con `X-Tenant-Slug`. Si el token JWT trae un
+    claim `tenant_id`, debe coincidir con el tenant resuelto; de lo contrario se
+    responde `403 TENANT_MISMATCH`. Ningún recurso se consulta sin `tenantId`.
+
+    **Dinero.** Todos los montos están en la moneda del tenant (COP por defecto)
+    y se expresan como número decimal con dos cifras. El servidor calcula el
+    precio; el cliente nunca envía precios ni totales.
+
+    **Idempotencia.** `POST /api/v1/bookings` exige `Idempotency-Key`. Una
+    repetición con el mismo cuerpo devuelve la misma reserva con
+    `Idempotent-Replayed: true`; una repetición con cuerpo distinto responde
+    `409 IDEMPOTENCY_CONFLICT`.
+
+    **Transacción atómica (reserva + inventario).**
+    1. Se valida tenant, consentimiento, fechas, capacidad y política de mascotas.
+    2. Se abre una transacción `SERIALIZABLE`.
+    3. Se inserta `InventoryHold`; una `EXCLUDE CONSTRAINT` de PostgreSQL impide
+       el traslape de rangos `[checkIn, checkOut)` para la misma unidad.
+    4. Se calcula el precio desde la base de datos y se crea `Booking` en estado
+       `PENDING_PAYMENT`.
+    5. Se escribe `AuditLog` y un evento de outbox, y se confirma la transacción.
+    6. Fuera de la transacción se crea la intención de pago (Wompi/Nequi) y se
+       devuelve `checkoutUrl`. Si el proveedor falla, se libera el hold y la
+       reserva pasa a `EXPIRED`.
+
+    El hold expira por defecto a los 15 minutos. Un job idempotente libera holds
+    vencidos; la base de datos es la fuente de verdad, Redis solo acelera.
+
+    **Pagos y facturación.** Los webhooks se validan con firma HMAC y se
+    registran en `WebhookEvent` antes de procesarse (idempotencia por `eventId`).
+    La reserva se confirma cuando el pago queda `PAID`. La factura electrónica se
+    emite mediante el proveedor tecnológico autorizado (PTE) o software propio
+    habilitado; el estado DIAN se actualiza por webhook. Una factura rechazada no
+    cancela la reserva: genera una alerta operativa y reintento controlado.
+  contact:
+    name: Tropical Biohostel — Arquitectura
+    email: tecnologia@tropicalbiohostel.com
+  license:
+    name: Propietario — BioHostel OS
+servers:
+  - url: https://api.biohostel.os
+    description: Producción
+  - url: http://localhost:3003
+    description: Desarrollo local
+tags:
+  - name: Bookings
+    description: Reserva directa, disponibilidad y estado.
+  - name: Payments
+    description: Webhooks de pasarelas locales (Wompi, Nequi).
+  - name: Invoicing
+    description: Webhooks del proveedor tecnológico DIAN.
+  - name: Webhooks
+    description: Eventos salientes hacia el ERP/contador del tenant.
+
+paths:
+  /api/v1/bookings:
+    post:
+      tags: [Bookings]
+      operationId: createBooking
+      summary: Crear reserva directa con bloqueo atómico de inventario
+      description: |
+        Crea una reserva y bloquea el inventario en una sola transacción. El
+        resultado puede requerir pago en línea (`PAYMENT_REQUIRED`) o quedar
+        confirmado contra pago en sitio (`CONFIRMED`), según la política del
+        tenant.
+
+        **Reglas de negocio aplicadas en servidor:**
+        - `checkOut` debe ser posterior a `checkIn`; ambas fechas futuras.
+        - `guests` no puede exceder la capacidad de la unidad/propiedad.
+        - Mascotas: permitidas en cabañas y zonas comunes; prohibidas en
+          Cosmic Bungalow. Un conflicto responde `422 PET_POLICY_VIOLATION`.
+        - El consentimiento de datos es obligatorio (`guest.consent.accepted=true`)
+          y se registra en `ConsentRecord` con versión de política, IP y user-agent.
+        - El precio se recalcula siempre en servidor; se ignoran precios enviados
+          por el cliente.
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: '#/components/parameters/TenantSlug'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+            examples:
+              cabanaConMascota:
+                summary: Cabaña para 2 personas con mascota y tour de café
+                value:
+                  propertyId: prop_cabana
+                  unitId: unit_cabana_1
+                  checkIn: '2026-12-12'
+                  checkOut: '2026-12-15'
+                  guests: 2
+                  guest:
+                    firstName: María
+                    lastName: Gómez
+                    email: maria@example.com
+                    phone: '+573001234567'
+                    document:
+                      type: CC
+                      number: '1020304050'
+                    consent:
+                      accepted: true
+                      policyVersion: '2026-10-01'
+                      marketingOptIn: false
+                  pets:
+                    hasPets: true
+                    count: 1
+                    notes: Perro pequeño, raza criolla
+                  addons:
+                    - sku: TOUR-CAFE
+                      quantity: 2
+                  payment:
+                    method: WOMPI_CARD
+                    returnUrl: https://tropicalbiohostel.com/reserva/gracias
+                  source:
+                    utmSource: instagram
+                    utmMedium: social
+                    utmCampaign: diciembre-2026
+                    locale: es-CO
+                  notes: Llegamos hacia las 6 p.m.
+              cosmicSinMascota:
+                summary: Cosmic Bungalow para pareja, sin mascotas
+                value:
+                  propertyId: prop_cosmic
+                  unitId: unit_cosmic
+                  checkIn: '2026-11-20'
+                  checkOut: '2026-11-22'
+                  guests: 2
+                  guest:
+                    firstName: John
+                    lastName: Smith
+                    email: john@example.com
+                    phone: '+14155550123'
+                    consent:
+                      accepted: true
+                      policyVersion: '2026-10-01'
+                      marketingOptIn: true
+                  pets:
+                    hasPets: false
+                    count: 0
+                  payment:
+                    method: NEQUI
+                    returnUrl: https://tropicalbiohostel.com/en/booking/thank-you
+                  source:
+                    locale: en-US
+      responses:
+        '201':
+          description: Reserva creada y hold de inventario activo.
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+            Idempotent-Replayed:
+              $ref: '#/components/headers/IdempotentReplayed'
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/RateLimitLimit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/RateLimitRemaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/RateLimitReset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+              examples:
+                pagoRequerido:
+                  summary: Reserva pendiente de pago en línea
+                  value:
+                    id: bkg_01J9Z8K2Q7
+                    code: TBH-2026-000123
+                    status: PENDING_PAYMENT
+                    channel: DIRECT
+                    property:
+                      id: prop_cabana
+                      slug: cabana
+                      name: Cabaña 1
+                    unit:
+                      id: unit_cabana_1
+                      name: Cabaña 1
+                    checkIn: '2026-12-12'
+                    checkOut: '2026-12-15'
+                    nights: 3
+                    guests: 2
+                    pricing:
+                      currency: COP
+                      subtotal: 900000
+                      taxes: 0
+                      fees: 0
+                      discount: 0
+                      total: 900000
+                      otaCommission: 0
+                      netRevenue: 900000
+                    hold:
+                      expiresAt: '2026-10-28T15:15:00-05:00'
+                    payment:
+                      provider: WOMPI
+                      status: PENDING
+                      reference: bkg_01J9Z8K2Q7
+                      checkoutUrl: https://checkout.wompi.co/p/?id=...
+                    invoice:
+                      status: QUEUED
+                      number: null
+                      cufe: null
+                    nextAction: PAYMENT_REQUIRED
+                    createdAt: '2026-10-28T15:00:00-05:00'
+                pagoEnSitio:
+                  summary: Reserva confirmada con pago en efectivo
+                  value:
+                    id: bkg_01J9Z9A1R3
+                    code: TBH-2026-000124
+                    status: CONFIRMED
+                    channel: DIRECT
+                    property:
+                      id: prop_cabana
+                      slug: cabana
+                      name: Cabaña 1
+                    unit:
+                      id: unit_cabana_1
+                      name: Cabaña 1
+                    checkIn: '2026-12-20'
+                    checkOut: '2026-12-23'
+                    nights: 3
+                    guests: 2
+                    pricing:
+                      currency: COP
+                      subtotal: 900000
+                      taxes: 0
+                      fees: 0
+                      discount: 0
+                      total: 900000
+                      otaCommission: 0
+                      netRevenue: 900000
+                    hold:
+                      expiresAt: null
+                    payment:
+                      provider: CASH
+                      status: PENDING
+                      reference: null
+                      checkoutUrl: null
+                    invoice:
+                      status: QUEUED
+                      number: null
+                      cufe: null
+                    nextAction: AWAIT_CASH_PAYMENT
+                    createdAt: '2026-10-28T15:10:00-05:00'
+        '200':
+          description: Reintento idempotente; se devuelve la reserva ya creada.
+          headers:
+            Idempotent-Replayed:
+              $ref: '#/components/headers/IdempotentReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: |
+            Conflicto de inventario o de idempotencia. El código distingue la
+            causa para que el cliente decida si reintenta con otras fechas o si
+            recupera la reserva existente.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/RateLimitLimit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/RateLimitRemaining'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                inventarioOcupado:
+                  summary: Fechas ya ocupadas
+                  value:
+                    error:
+                      code: INVENTORY_UNAVAILABLE
+                      message: Las fechas seleccionadas ya no están disponibles.
+                      details:
+                        - field: checkIn
+                          issue: overlaps_existing_hold
+                        - field: checkOut
+                          issue: overlaps_existing_hold
+                      requestId: req_01J9Z8K2Q7
+                      timestamp: '2026-10-28T15:00:00-05:00'
+                idempotenciaConflicto:
+                  summary: Misma Idempotency-Key con cuerpo distinto
+                  value:
+                    error:
+                      code: IDEMPOTENCY_CONFLICT
+                      message: La Idempotency-Key ya fue usada con otra solicitud.
+                      details: []
+                      requestId: req_01J9Z8K2Q8
+                      timestamp: '2026-10-28T15:00:05-05:00'
+        '422':
+          description: Regla de negocio incumplida (mascotas, capacidad, política de pago).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                mascotaEnCosmic:
+                  summary: Mascota en Cosmic Bungalow
+                  value:
+                    error:
+                      code: PET_POLICY_VIOLATION
+                      message: Cosmic Bungalow no admite mascotas. Te ofrecemos una cabaña que sí las acepta.
+                      details:
+                        - field: pets.hasPets
+                          issue: not_allowed_for_unit
+                        - field: unitId
+                          issue: unit_cosmic
+                      requestId: req_01J9Z8K2Q9
+                      timestamp: '2026-10-28T15:00:10-05:00'
+                capacidadExcedida:
+                  summary: Huéspedes por encima de la capacidad
+                  value:
+                    error:
+                      code: CAPACITY_EXCEEDED
+                      message: La unidad seleccionada admite máximo 2 huéspedes.
+                      details:
+                        - field: guests
+                          issue: max_2
+                      requestId: req_01J9Z8K2QA
+                      timestamp: '2026-10-28T15:00:15-05:00'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/bookings/{bookingId}:
+    get:
+      tags: [Bookings]
+      operationId: getBooking
+      summary: Consultar estado de una reserva
+      description: |
+        Endpoint de polling para el frontend después del checkout. Solo devuelve
+        reservas del tenant resuelto. Un huésped solo puede ver su propia reserva;
+        Admin y Staff pueden ver las del tenant.
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: '#/components/parameters/TenantSlug'
+        - $ref: '#/components/parameters/BookingId'
+        - $ref: '#/components/parameters/RequestId'
+      responses:
+        '200':
+          description: Estado actual de la reserva.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /api/v1/webhooks/payments/{provider}:
+    post:
+      tags: [Payments]
+      operationId: receivePaymentWebhook
+      summary: Webhook de pasarela de pago (Wompi / Nequi)
+      description: |
+        Recibe eventos de pago. El backend:
+        1. Valida la firma HMAC y la ventana de replay (5 minutos).
+        2. Inserta el evento en `WebhookEvent` con `eventId` único.
+        3. Si ya existe, responde `200` con `duplicate: true` (no se reprocesa).
+        4. Actualiza `Payment`, confirma la reserva y encola la emisión de factura.
+        5. Responde rápido; el procesamiento pesado va a la cola.
+
+        El header de firma varía por proveedor: Wompi usa `X-Event-Checksum`;
+        Nequi usa el esquema acordado en su contrato. El API Gateway normaliza
+        ambos a `X-Webhook-Signature` antes de llegar al servicio.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Provider'
+        - $ref: '#/components/parameters/WebhookSignature'
+        - $ref: '#/components/parameters/WebhookTimestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentWebhookEvent'
+            examples:
+              pagoAprobado:
+                summary: Pago aprobado en Wompi
+                value:
+                  id: evt_wompi_01J9Z8K2Q7
+                  type: payment.paid
+                  occurredAt: '2026-10-28T15:04:12-05:00'
+                  data:
+                    provider: WOMPI
+                    providerRef: 12345-1698523456-12345
+                    bookingCode: TBH-2026-000123
+                    amount: 900000
+                    currency: COP
+                    status: PAID
+      responses:
+        '200':
+          description: Evento recibido (procesado o duplicado).
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [received]
+                properties:
+                  received:
+                    type: boolean
+                  duplicate:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          description: Firma inválida o fuera de la ventana de replay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/webhooks/invoices/{provider}:
+    post:
+      tags: [Invoicing]
+      operationId: receiveInvoiceWebhook
+      summary: Webhook del proveedor tecnológico DIAN (PTE)
+      description: |
+        Recibe el resultado de validación de la factura electrónica. DIAN no
+        envía webhooks directamente: lo hace el proveedor tecnológico autorizado
+        (PTE) o el middleware de facturación propio habilitado. El evento
+        actualiza `Invoice.status`, `responseCode`, `responseMessage`, `cufe`,
+        `xmlUrl` y `pdfUrl`, y deja traza en `AuditLog`.
+
+        Si la factura es rechazada, la reserva se mantiene confirmada y se crea
+        una alerta operativa. Nunca se cancela automáticamente un huésped por un
+        rechazo fiscal.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Provider'
+        - $ref: '#/components/parameters/WebhookSignature'
+        - $ref: '#/components/parameters/WebhookTimestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceStatusEvent'
+            examples:
+              facturaAceptada:
+                summary: Factura aceptada por DIAN
+                value:
+                  eventId: evt_dian_01J9Z9A1R3
+                  occurredAt: '2026-10-28T15:05:30-05:00'
+                  tenantSlug: tropical-biohostel
+                  invoiceId: inv_01J9Z9A1R3
+                  number: FE-000123
+                  cufe: 3f2a9c1e8b7d6a5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f
+                  status: ACCEPTED
+                  responseCode: '00'
+                  responseMessage: Procesado correctamente
+                  xmlUrl: https://storage.biohostel.os/invoices/FE-000123.xml
+                  pdfUrl: https://storage.biohostel.os/invoices/FE-000123.pdf
+      responses:
+        '200':
+          description: Evento de facturación recibido.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [received]
+                properties:
+                  received:
+                    type: boolean
+                  duplicate:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          description: Firma inválida o fuera de la ventana de replay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+webhooks:
+  invoiceStatusChanged:
+    post:
+      summary: Evento saliente al ERP/contador del tenant
+      description: |
+        BioHostel OS notifica al endpoint registrado por el tenant cuando una
+        factura cambia de estado. Se firma con HMAC-SHA256 y se reintenta con
+        backoff exponencial (máx. 24 h). El receptor debe ser idempotente por
+        `eventId`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceStatusEvent'
+      responses:
+        '200':
+          description: Evento aceptado por el ERP/contador.
+        '410':
+          description: Endpoint dado de baja; BioHostel OS deja de reintentar.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT emitido por Supabase Auth. Claims requeridos: `sub`, `tenant_id`,
+        `role` (`ADMIN`, `STAFF` o `GUEST`). El `tenant_id` debe coincidir con
+        `X-Tenant-Slug`.
+
+  parameters:
+    TenantSlug:
+      name: X-Tenant-Slug
+      in: header
+      required: true
+      description: Slug del tenant (subdominio). Ej. `tropical-biohostel`.
+      schema:
+        type: string
+        pattern: '^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$'
+        examples: [tropical-biohostel]
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: |
+        UUID v4 generado por el cliente. Reintentos con la misma clave y el mismo
+        cuerpo devuelven la misma reserva. Caducidad recomendada: 24 h.
+      schema:
+        type: string
+        format: uuid
+        examples: [4b1d3f7a-9c2e-4a8b-8f1e-2d6c5a9b0e13]
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      required: false
+      description: Idioma de la respuesta y de los correos transaccionales.
+      schema:
+        type: string
+        enum: [es-CO, en-US]
+        default: es-CO
+    RequestId:
+      name: X-Request-Id
+      in: header
+      required: false
+      description: ID de correlación para trazas y logs de auditoría.
+      schema:
+        type: string
+        maxLength: 128
+    BookingId:
+      name: bookingId
+      in: path
+      required: true
+      schema:
+        type: string
+        examples: [bkg_01J9Z8K2Q7]
+    Provider:
+      name: provider
+      in: path
+      required: true
+      description: Proveedor de pago o proveedor tecnológico DIAN.
+      schema:
+        type: string
+        enum: [wompi, nequi, dian_pte]
+    WebhookSignature:
+      name: X-Webhook-Signature
+      in: header
+      required: true
+      description: |
+        HMAC-SHA256 hexadecimal sobre `{timestamp}.{rawBody}`. El gateway
+        normaliza aquí la firma específica del proveedor.
+      schema:
+        type: string
+        pattern: '^[a-f0-9]{64}$'
+    WebhookTimestamp:
+      name: X-Webhook-Timestamp
+      in: header
+      required: true
+      description: Unix timestamp en segundos. Rechaza eventos con más de 5 minutos de antigüedad.
+      schema:
+        type: integer
+        format: int64
+
+  headers:
+    Location:
+      description: URL de la reserva creada.
+      schema:
+        type: string
+        format: uri
+    IdempotentReplayed:
+      description: '`true` cuando la respuesta proviene de una repetición idempotente.'
+      schema:
+        type: boolean
+    RateLimitLimit:
+      description: Límite de solicitudes por ventana.
+      schema:
+        type: integer
+    RateLimitRemaining:
+      description: Solicitudes restantes en la ventana actual.
+      schema:
+        type: integer
+    RateLimitReset:
+      description: Segundos hasta el reinicio de la ventana.
+      schema:
+        type: integer
+
+  responses:
+    ValidationError:
+      description: Cuerpo o parámetros inválidos.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            fechaInvalida:
+              value:
+                error:
+                  code: VALIDATION_ERROR
+                  message: La fecha de salida debe ser posterior a la de llegada.
+                  details:
+                    - field: checkOut
+                      issue: must_be_after_checkIn
+                  requestId: req_01J9Z8K2Q7
+                  timestamp: '2026-10-28T15:00:00-05:00'
+    Unauthorized:
+      description: Token ausente, expirado o inválido.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: El usuario no pertenece al tenant o no tiene el rol requerido.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            tenantMismatch:
+              value:
+                error:
+                  code: TENANT_MISMATCH
+                  message: El token no corresponde al tenant solicitado.
+                  details: []
+                  requestId: req_01J9Z8K2Q7
+                  timestamp: '2026-10-28T15:00:00-05:00'
+    NotFound:
+      description: Recurso no encontrado en el tenant.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    RateLimited:
+      description: Demasiadas solicitudes.
+      headers:
+        Retry-After:
+          description: Segundos para reintentar.
+          schema:
+            type: integer
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Error no controlado. El `requestId` permite correlacionar la traza.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    CreateBookingRequest:
+      type: object
+      additionalProperties: false
+      required: [propertyId, checkIn, checkOut, guests, guest, payment]
+      properties:
+        propertyId:
+          type: string
+          minLength: 1
+          examples: [prop_cabana]
+        unitId:
+          type: string
+          description: Si se omite, el servidor asigna la primera unidad disponible.
+          examples: [unit_cabana_1]
+        checkIn:
+          type: string
+          format: date
+          description: Fecha de llegada (YYYY-MM-DD). Debe ser hoy o futura.
+        checkOut:
+          type: string
+          format: date
+          description: Fecha de salida (YYYY-MM-DD). Debe ser posterior a checkIn.
+        guests:
+          type: integer
+          minimum: 1
+          maximum: 20
+        guest:
+          $ref: '#/components/schemas/GuestInput'
+        pets:
+          $ref: '#/components/schemas/PetsInput'
+        addons:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/AddonSelection'
+        payment:
+          $ref: '#/components/schemas/PaymentSelection'
+        source:
+          $ref: '#/components/schemas/SourceAttribution'
+        notes:
+          type: string
+          maxLength: 1000
+        couponCode:
+          type: string
+          maxLength: 40
+
+    GuestInput:
+      type: object
+      additionalProperties: false
+      required: [firstName, lastName, email, phone, consent]
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 80
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 80
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          pattern: '^\+?[1-9]\d{7,14}$'
+          examples: ['+573001234567']
+        document:
+          $ref: '#/components/schemas/DocumentInput'
+        consent:
+          $ref: '#/components/schemas/ConsentInput'
+
+    DocumentInput:
+      type: object
+      additionalProperties: false
+      required: [type, number]
+      properties:
+        type:
+          type: string
+          enum: [CC, CE, PA, NIT]
+        number:
+          type: string
+          minLength: 5
+          maxLength: 20
+          pattern: '^[A-Za-z0-9-]+$'
+
+    ConsentInput:
+      type: object
+      additionalProperties: false
+      required: [accepted, policyVersion]
+      properties:
+        accepted:
+          type: boolean
+          enum: [true]
+          description: Debe ser `true`; el backend registra el consentimiento.
+        policyVersion:
+          type: string
+          description: Versión de la política de tratamiento de datos mostrada.
+          examples: ['2026-10-01']
+        marketingOptIn:
+          type: boolean
+          default: false
+          description: Consentimiento separado para marketing; no condiciona la reserva.
+
+    PetsInput:
+      type: object
+      additionalProperties: false
+      required: [hasPets]
+      properties:
+        hasPets:
+          type: boolean
+        count:
+          type: integer
+          minimum: 0
+          maximum: 5
+          default: 0
+        notes:
+          type: string
+          maxLength: 300
+
+    AddonSelection:
+      type: object
+      additionalProperties: false
+      required: [sku, quantity]
+      properties:
+        sku:
+          type: string
+          examples: [TOUR-CAFE]
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 20
+
+    PaymentSelection:
+      type: object
+      additionalProperties: false
+      required: [method]
+      properties:
+        method:
+          type: string
+          enum: [WOMPI_CARD, NEQUI, CASH, BANK_TRANSFER]
+        returnUrl:
+          type: string
+          format: uri
+          pattern: '^https://'
+          description: Requerido para WOMPI_CARD y NEQUI; URL de retorno tras el checkout.
+        payerEmail:
+          type: string
+          format: email
+          description: Opcional; si se omite se usa el email del huésped.
+
+    SourceAttribution:
+      type: object
+      additionalProperties: false
+      properties:
+        utmSource:
+          type: string
+          maxLength: 100
+        utmMedium:
+          type: string
+          maxLength: 100
+        utmCampaign:
+          type: string
+          maxLength: 100
+        referrer:
+          type: string
+          format: uri
+          maxLength: 500
+        locale:
+          type: string
+          enum: [es-CO, en-US]
+        device:
+          type: string
+          enum: [mobile, desktop, tablet]
+
+    BookingResponse:
+      type: object
+      required: [id, code, status, property, checkIn, checkOut, nights, guests, pricing, nextAction]
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+          examples: [TBH-2026-000123]
+        status:
+          type: string
+          enum: [PENDING_PAYMENT, CONFIRMED, CHECKED_IN, CHECKED_OUT, CANCELLED, NO_SHOW, EXPIRED]
+        channel:
+          type: string
+          enum: [DIRECT, OTA, PHONE, WALK_IN, PARTNER]
+        property:
+          $ref: '#/components/schemas/PropertySummary'
+        unit:
+          $ref: '#/components/schemas/UnitSummary'
+        checkIn:
+          type: string
+          format: date
+        checkOut:
+          type: string
+          format: date
+        nights:
+          type: integer
+          minimum: 1
+        guests:
+          type: integer
+          minimum: 1
+        pricing:
+          $ref: '#/components/schemas/PricingBreakdown'
+        hold:
+          $ref: '#/components/schemas/HoldSummary'
+        payment:
+          $ref: '#/components/schemas/PaymentSummary'
+        invoice:
+          $ref: '#/components/schemas/InvoiceSummary'
+        nextAction:
+          type: string
+          enum: [PAYMENT_REQUIRED, AWAIT_CASH_PAYMENT, CONFIRMED, NONE]
+        createdAt:
+          type: string
+          format: date-time
+
+    PropertySummary:
+      type: object
+      required: [id, slug, name]
+      properties:
+        id:
+          type: string
+        slug:
+          type: string
+        name:
+          type: string
+
+    UnitSummary:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    PricingBreakdown:
+      type: object
+      required: [currency, subtotal, taxes, fees, discount, total, otaCommission, netRevenue]
+      properties:
+        currency:
+          type: string
+          pattern: '^[A-Z]{3}$'
+          default: COP
+        subtotal:
+          type: number
+          format: double
+          multipleOf: 0.01
+        taxes:
+          type: number
+          format: double
+          multipleOf: 0.01
+        fees:
+          type: number
+          format: double
+          multipleOf: 0.01
+        discount:
+          type: number
+          format: double
+          multipleOf: 0.01
+        total:
+          type: number
+          format: double
+          multipleOf: 0.01
+        otaCommission:
+          type: number
+          format: double
+          multipleOf: 0.01
+          description: Comisión de OTA; 0 en reservas directas.
+        netRevenue:
+          type: number
+          format: double
+          multipleOf: 0.01
+          description: total - otaCommission.
+
+    HoldSummary:
+      type: object
+      properties:
+        expiresAt:
+          type: [string, 'null']
+          format: date-time
+          description: '`null` cuando la reserva ya está confirmada y el hold se convirtió en bloqueo firme.'
+
+    PaymentSummary:
+      type: object
+      properties:
+        provider:
+          type: string
+          enum: [WOMPI, NEQUI, CASH, BANK_TRANSFER, OTA_COLLECT]
+        status:
+          type: string
+          enum: [PENDING, AUTHORIZED, PAID, FAILED, REFUNDED, PARTIALLY_REFUNDED, VOIDED]
+        reference:
+          type: [string, 'null']
+          description: ID de transacción del proveedor o código interno.
+        checkoutUrl:
+          type: [string, 'null']
+          format: uri
+          description: URL de pago para WOMPI_CARD y NEQUI.
+
+    InvoiceSummary:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [DRAFT, QUEUED, SENT, ACCEPTED, REJECTED, VOIDED]
+        number:
+          type: [string, 'null']
+        cufe:
+          type: [string, 'null']
+          maxLength: 96
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, requestId, timestamp]
+          properties:
+            code:
+              type: string
+              enum:
+                - VALIDATION_ERROR
+                - UNAUTHORIZED
+                - FORBIDDEN
+                - TENANT_MISMATCH
+                - PROPERTY_NOT_FOUND
+                - INVENTORY_UNAVAILABLE
+                - IDEMPOTENCY_CONFLICT
+                - PET_POLICY_VIOLATION
+                - CAPACITY_EXCEEDED
+                - INVALID_DATE_RANGE
+                - PAYMENT_PROVIDER_ERROR
+                - INVOICE_PROVIDER_ERROR
+                - RATE_LIMITED
+                - INTERNAL_ERROR
+            message:
+              type: string
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  issue:
+                    type: string
+            requestId:
+              type: string
+            timestamp:
+              type: string
+              format: date-time
+
+    PaymentWebhookEvent:
+      type: object
+      additionalProperties: true
+      required: [id, type, occurredAt, data]
+      properties:
+        id:
+          type: string
+          description: ID único del evento en el proveedor.
+        type:
+          type: string
+          enum: [payment.paid, payment.failed, payment.refunded, payment.partially_refunded]
+        occurredAt:
+          type: string
+          format: date-time
+        data:
+          type: object
+          required: [provider, providerRef, bookingCode, amount, currency, status]
+          properties:
+            provider:
+              type: string
+              enum: [WOMPI, NEQUI]
+            providerRef:
+              type: string
+            bookingCode:
+              type: string
+            amount:
+              type: number
+              format: double
+              multipleOf: 0.01
+            currency:
+              type: string
+              pattern: '^[A-Z]{3}$'
+            status:
+              type: string
+              enum: [PAID, FAILED, REFUNDED, PARTIALLY_REFUNDED]
+            raw:
+              type: object
+              additionalProperties: true
+              description: Payload original del proveedor para conciliación.
+
+    InvoiceStatusEvent:
+      type: object
+      additionalProperties: false
+      required: [eventId, occurredAt, invoiceId, number, status]
+      properties:
+        eventId:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time
+        tenantSlug:
+          type: string
+        invoiceId:
+          type: string
+        number:
+          type: string
+          examples: [FE-000123]
+        cufe:
+          type: string
+          maxLength: 96
+        status:
+          type: string
+          enum: [SENT, ACCEPTED, REJECTED, VOIDED]
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        xmlUrl:
+          type: string
+          format: uri
+        pdfUrl:
+          type: string
+          format: uri
