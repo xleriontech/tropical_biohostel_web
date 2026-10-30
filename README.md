@@ -143,6 +143,51 @@ inglés de cada sección) y una **galería real de la finca** en `frontend/publi
 > La carpeta `ImagenesSitio/` es material de trabajo del usuario y **no se sube al repositorio**
 > (está en `.gitignore`). Las fotos que el sitio usa viven en `frontend/public/fotos/sitio/`.
 
+## Manejo de Imagen Tropical Biohostel
+
+El **Manual de Identidad Visual v1.0 (Octubre 2026)** está en
+[`docs/Manual-de-Imagen-Tropical-Biohostel.html`](docs/Manual-de-Imagen-Tropical-Biohostel.html):
+un HTML autocontenido —se abre directo en el navegador, sin build— con sidebar, muestras de
+color copiables al portapapeles y mockups de aplicación. Usa Tailwind y las tipografías desde CDN,
+así que necesita internet la primera vez.
+
+| § | Sección | Qué fija |
+|---|---|---|
+| 01–02 | Inicio · Filosofía | Manifiesto, promesa ("Donde el café comienza y el ruido termina"), arquetipos Creador + Explorador, los 5 pilares (Raíz, Calma, Comunidad, Autenticidad, Regeneración) |
+| 03 | Logotipo | Isotipo en SVG: círculo (comunidad) + montaña (geografía) + hoja de café (origen); versión clara, versión sobre fondo bosque y 4 versiones reducidas, con area de respeto y tamaños mínimos |
+| 04 | Paleta Cromática | 8 colores con HEX y RGB, uso permitido y proporción 60/30/10 |
+| 05 | Tipografía | Familia por rol y jerarquía web |
+| 06 | Fotografía | Luz natural cálida y profundidad sutil; reglas de postproducción y qué nunca fotografiar |
+| 07 | Iconografía | Set de 10 iconos de línea, trazo 1.5 px sobre retícula 24×24 |
+| 08 | Elementos Gráficos | Patrones (hojas, topografía, papel) y texturas (madera, lino, barro, musgo) |
+| 09 | Tono de Voz | Vocabulario permitido y prohibido, ejemplos de publicación y hashtags oficiales |
+| 10 | Aplicaciones | Tarjeta, sobre, factura, posts e historias, taza, bolsa de café, libreta |
+| 11 | Do's & Don'ts | Usos correctos y errores frecuentes de marca |
+| 12 | Gobernanza | Custodios, ciclo de revisión y archivos de entrega |
+
+**Paleta** (variables CSS del manual, reutilizables en el sitio). La proporción de uso es
+**60 % neutros / 30 % primarios / 10 % secundarios**:
+
+| Token | HEX | Nombre · Uso del manual |
+|---|---|---|
+| `--bosque` | `#1F3D2B` | Bosque Profundo — color principal, títulos, acentos fuertes |
+| `--cafe` | `#6B4423` | Cáscara de Café — acento cálido, detalles, iconografía |
+| `--sol` | `#E8A94A` | Sol de Nocaima — CTAs, highlights, energía |
+| `--hoja` | `#8FB573` | Hoja Nueva — ilustraciones, elementos orgánicos |
+| `--tierra` | `#3E2F23` | Tierra Húmeda — textos secundarios, fondos cálidos |
+| `--crema` | `#F5EFE0` | Crema de Leche — fondos principales |
+| `--piedra` | `#D4C9B0` | Piedra de Río — separadores, bordes |
+| `--carbon` | `#2A241E` | Carbón Suave — texto principal |
+
+**Tipografía:** `Fraunces` (display, serif) para títulos, `Inter` para texto y botones,
+`Caveat` (manuscrita) para notas de la finca y frases de marca. Jerarquía web: H1 64/600,
+H2 48/400, H3 32/400 en Fraunces; Body 18/400, Caption 14/400, Button 16/500 en Inter.
+
+**Gobernanza:** toda desviación del manual la aprueban por escrito los dos custodios (socio
+tecnológico + operadores); revisión mayor anual en octubre, menores cada 6 meses. El pie del
+manual lo marca *"Documento confidencial · Uso interno y de partners autorizados"* — como el
+repositorio es público, publicar este archivo queda a criterio de Miguel.
+
 ## PWA (app instalable)
 
 El sitio es una **Progressive Web App**: se puede instalar desde el navegador (Chrome, Edge, Safari

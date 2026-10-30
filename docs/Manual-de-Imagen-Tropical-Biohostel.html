@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Identidad Visual — Tropical Biohostel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-600-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-300-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-500-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-600-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/caveat@latest/latin-400-normal.css">
+<style>
+  :root {
+    --bosque: #1F3D2B;
+    --cafe: #6B4423;
+    --sol: #E8A94A;
+    --hoja: #8FB573;
+    --tierra: #3E2F23;
+    --crema: #F5EFE0;
+    --piedra: #D4C9B0;
+    --carbon: #2A241E;
+  }
+  * { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--crema);
+    color: var(--carbon);
+  }
+  .font-display { font-family: 'Fraunces', serif; }
+  .font-hand { font-family: 'Caveat', cursive; }
+  .text-bosque { color: var(--bosque); }
+  .text-cafe { color: var(--cafe); }
+  .text-sol { color: var(--sol); }
+  .text-hoja { color: var(--hoja); }
+  .text-tierra { color: var(--tierra); }
+  .text-crema { color: var(--crema); }
+  .text-piedra { color: var(--piedra); }
+  .text-carbon { color: var(--carbon); }
+  .bg-bosque { background-color: var(--bosque); }
+  .bg-cafe { background-color: var(--cafe); }
+  .bg-sol { background-color: var(--sol); }
+  .bg-hoja { background-color: var(--hoja); }
+  .bg-tierra { background-color: var(--tierra); }
+  .bg-crema { background-color: var(--crema); }
+  .bg-piedra { background-color: var(--piedra); }
+  .bg-carbon { background-color: var(--carbon); }
+  .border-bosque { border-color: var(--bosque); }
+  .border-cafe { border-color: var(--cafe); }
+
+  /* Sidebar */
+  .sidebar {
+    background: var(--bosque);
+    color: var(--crema);
+    position: fixed;
+    top: 0; left: 0;
+    width: 280px;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 50;
+    transition: transform 0.3s ease;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--cafe); border-radius: 2px; }
+  .sidebar a {
+    display: block;
+    padding: 12px 24px;
+    color: var(--crema);
+    opacity: 0.7;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    font-size: 14px;
+  }
+  .sidebar a:hover, .sidebar a.active {
+    opacity: 1;
+    border-left-color: var(--sol);
+    background: rgba(232, 169, 74, 0.08);
+  }
+  .main-content {
+    margin-left: 280px;
+  }
+  @media (max-width: 1024px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; }
+  }
+
+  /* Sections */
+  section {
+    padding: 100px 60px;
+    border-bottom: 1px solid var(--piedra);
+    min-height: 100vh;
+  }
+  @media (max-width: 768px) {
+    section { padding: 60px 24px; }
+  }
+  .section-number {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    color: var(--cafe);
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    color: var(--bosque);
+    margin: 16px 0 32px;
+    font-weight: 400;
+  }
+
+  /* Color swatches */
+  .swatch {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    position: relative;
+  }
+  .swatch:hover { transform: translateY(-4px); }
+  .swatch-color {
+    height: 180px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: box-shadow 0.3s ease;
+  }
+  .swatch:hover .swatch-color { box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+  .copied-toast {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--carbon);
+    color: var(--crema);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .swatch.copied .copied-toast { opacity: 1; }
+
+  /* Typography showcase */
+  .type-sample {
+    padding: 40px;
+    border: 1px solid var(--piedra);
+    border-radius: 12px;
+    background: var(--crema);
+    margin-bottom: 24px;
+    transition: all 0.3s;
+  }
+  .type-sample:hover {
+    border-color: var(--cafe);
+    background: white;
+  }
+
+  /* Logo showcase */
+  .logo-card {
+    border-radius: 16px;
+    padding: 60px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    transition: transform 0.3s;
+  }
+  .logo-card:hover { transform: scale(1.02); }
+
+  /* Photo grid */
+  .photo-tile {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.4s;
+  }
+  .photo-tile:hover { transform: scale(0.98); }
+  .photo-tile .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(42,36,30,0.85), transparent 60%);
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .photo-tile:hover .overlay { opacity: 1; }
+
+  /* Do/Don't cards */
+  .do-card, .dont-card {
+    border-radius: 12px;
+    padding: 24px;
+    height: 100%;
+  }
+  .do-card { background: rgba(143, 181, 115, 0.15); border: 1px solid var(--hoja); }
+  .dont-card { background: rgba(232, 169, 74, 0.12); border: 1px solid var(--sol); }
+
+  /* Animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Mobile menu */
+  .menu-toggle {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 60;
+    background: var(--bosque);
+    color: var(--crema);
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  @media (max-width: 1024px) {
+    .menu-toggle { display: flex; }
+  }
+
+  /* Pattern backgrounds */
+  .pattern-leaves {
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(143,181,115,0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(107,68,35,0.1) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(232,169,74,0.08) 0%, transparent 50%);
+  }
+  .pattern-topo {
+    background-image:
+      repeating-radial-gradient(circle at 0 0, transparent 0, rgba(107,68,35,0.04) 40px),
+      repeating-radial-gradient(circle at 100% 100%, transparent 0, rgba(31,61,43,0.04) 40px);
+    background-size: 80px 80px;
+  }
+
+  /* Voice examples */
+  .voice-card {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    border-left: 4px solid var(--sol);
+    transition: all 0.3s;
+  }
+  .voice-card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  }
+
+  /* Application mockups */
+  .mockup {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    transition: transform 0.4s;
+  }
+  .mockup:hover { transform: translateY(-8px); }
+
+  /* Icon grid */
+  .icon-item {
+    padding: 24px;
+    border: 1px solid var(--piedra);
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s;
+    background: white;
+  }
+  .icon-item:hover {
+    border-color: var(--bosque);
+    background: var(--crema);
+    transform: translateY(-4px);
+  }
+
+  /* Hero section */
+  .hero-bg {
+    background: linear-gradient(135deg, var(--bosque) 0%, var(--tierra) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(143,181,115,0.2) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(232,169,74,0.15) 0%, transparent 50%);
+  }
+
+  /* Value cards */
+  .value-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    border-top: 3px solid var(--sol);
+    transition: all 0.3s;
+  }
+  .value-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: fixed;
+    top: 0; left: 280px; right: 0;
+    height: 3px;
+    background: var(--piedra);
+    z-index: 40;
+  }
+  .scroll-indicator-bar {
+    height: 100%;
+    background: var(--sol);
+    width: 0%;
+    transition: width 0.1s;
+  }
+  @media (max-width: 1024px) {
+    .scroll-indicator { left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Mobile menu toggle -->
+<div class="menu-toggle" onclick="toggleSidebar()">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <line x1="3" y1="12" x2="21" y2="12"/>
+    <line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</div>
+
+<!-- Scroll progress -->
+<div class="scroll-indicator">
+  <div class="scroll-indicator-bar" id="scrollBar"></div>
+</div>
+
+<!-- Sidebar Navigation -->
+<nav class="sidebar" id="sidebar">
+  <div class="p-8 border-b border-white/10">
+    <div class="flex items-center gap-3 mb-4">
+      <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="none" stroke="#E8A94A" stroke-width="1.5"/>
+        <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#F5EFE0" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+        <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+      </svg>
+      <div>
+        <div class="font-display text-xl leading-tight">Tropical<br>Biohostel</div>
+        <div class="text-xs opacity-60 mt-1">Manual de Marca v1.0</div>
+      </div>
+    </div>
+  </div>
+  <div class="py-4">
+    <div class="px-6 py-2 text-xs tracking-widest opacity-50 uppercase">Contenido</div>
+    <a href="#inicio" class="active">01 · Inicio</a>
+    <a href="#filosofia">02 · Filosofía</a>
+    <a href="#logotipo">03 · Logotipo</a>
+    <a href="#paleta">04 · Paleta Cromática</a>
+    <a href="#tipografia">05 · Tipografía</a>
+    <a href="#fotografia">06 · Fotografía</a>
+    <a href="#iconografia">07 · Iconografía</a>
+    <a href="#elementos">08 · Elementos Gráficos</a>
+    <a href="#voz">09 · Tono de Voz</a>
+    <a href="#aplicaciones">10 · Aplicaciones</a>
+    <a href="#dos-donts">11 · Do's & Don'ts</a>
+    <a href="#gobernanza">12 · Gobernanza</a>
+  </div>
+  <div class="p-6 mt-4 mx-4 rounded-lg" style="background: rgba(232,169,74,0.1);">
+    <div class="font-hand text-2xl text-sol mb-2">"Donde el café comienza y el ruido termina"</div>
+    <div class="text-xs opacity-60">Promesa de marca</div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+
+  <!-- HERO / INICIO -->
+  <section id="inicio" class="hero-bg text-crema flex flex-col justify-center items-center text-center relative" style="min-height: 100vh;">
+    <div class="relative z-10 max-w-4xl px-6">
+      <div class="mb-8 flex justify-center">
+        <svg width="120" height="120" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="none" stroke="#E8A94A" stroke-width="1.5"/>
+          <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#F5EFE0" stroke-width="2" stroke-linecap="round"/>
+          <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+          <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+        </svg>
+      </div>
+      <div class="section-number text-sol mb-4">Manual de Identidad Visual</div>
+      <h1 class="font-display text-6xl md:text-8xl font-light leading-none mb-6">
+        Tropical<br>
+        <span class="italic">Biohostel</span>
+      </h1>
+      <p class="font-hand text-3xl text-sol mb-8">Nocaima · Cundinamarca · Colombia</p>
+      <p class="text-lg opacity-80 max-w-2xl mx-auto leading-relaxed">
+        Un refugio donde el tiempo se detiene. Entre montañas, senderos llenos de vida, 
+        fogatas que abrazan el alma y conversaciones que sanan.
+      </p>
+      <div class="mt-12 flex flex-wrap justify-center gap-8 text-sm opacity-70">
+        <div><span class="text-sol font-semibold">v1.0</span> · Octubre 2026</div>
+        <div><span class="text-sol font-semibold">12</span> secciones</div>
+        <div><span class="text-sol font-semibold">3</span> tipografías</div>
+        <div><span class="text-sol font-semibold">8</span> colores</div>
+      </div>
+    </div>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-crema opacity-60 animate-bounce">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 5v14M19 12l-7 7-7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- FILOSOFÍA -->
+  <section id="filosofia" class="pattern-leaves">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">02 · Filosofía de Marca</div>
+      <h2 class="section-title reveal">El alma<br>de la marca</h2>
+      
+      <div class="grid md:grid-cols-2 gap-12 mt-12">
+        <div class="reveal">
+          <div class="text-cafe text-sm tracking-widest uppercase mb-4">Manifiesto</div>
+          <blockquote class="font-display text-3xl leading-snug text-bosque italic">
+            "Tropical Biohostel es un refugio donde el tiempo se detiene. Aquí no vendemos camas: 
+            ofrecemos reconexión con lo esencial."
+          </blockquote>
+        </div>
+        <div class="reveal">
+          <div class="text-cafe text-sm tracking-widest uppercase mb-4">Promesa</div>
+          <div class="font-hand text-5xl text-bosque leading-tight">
+            "Donde el café comienza<br>y el ruido termina."
+          </div>
+          <div class="mt-8 pt-8 border-t border-piedra">
+            <div class="text-cafe text-sm tracking-widest uppercase mb-2">Arquetipo</div>
+            <div class="font-display text-2xl text-bosque">El Creador + El Explorador</div>
+            <p class="text-carbon/70 mt-2">Artesanía del café + aventura consciente del bosque.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-20">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-8 reveal">Los 5 Pilares de Valor</div>
+        <div class="grid md:grid-cols-5 gap-4">
+          <div class="value-card reveal">
+            <div class="text-4xl mb-3">🌱</div>
+            <h3 class="font-display text-2xl text-bosque mb-2">Raíz</h3>
+            <p class="text-sm text-carbon/70">Conexión con la tierra, la finca, el café de origen.</p>
+          </div>
+          <div class="value-card reveal">
+            <div class="text-4xl mb-3">🕊️</div>
+            <h3 class="font-display text-2xl text-bosque mb-2">Calma</h3>
+            <p class="text-sm text-carbon/70">Desconexión digital, ritmo lento, silencio consciente.</p>
+          </div>
+          <div class="value-card reveal">
+            <div class="text-4xl mb-3">🔥</div>
+            <h3 class="font-display text-2xl text-bosque mb-2">Comunidad</h3>
+            <p class="text-sm text-carbon/70">Encuentro genuino entre huéspedes y naturaleza.</p>
+          </div>
+          <div class="value-card reveal">
+            <div class="text-4xl mb-3">🌿</div>
+            <h3 class="font-display text-2xl text-bosque mb-2">Autenticidad</h3>
+            <p class="text-sm text-carbon/70">Sin artificios, sin sobreproducción, real y tangible.</p>
+          </div>
+          <div class="value-card reveal">
+            <div class="text-4xl mb-3">♻️</div>
+            <h3 class="font-display text-2xl text-bosque mb-2">Regeneración</h3>
+            <p class="text-sm text-carbon/70">Prácticas sostenibles, huella positiva, aprendizaje.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGOTIPO -->
+  <section id="logotipo">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">03 · Logotipo</div>
+      <h2 class="section-title reveal">El símbolo<br>de la marca</h2>
+      <p class="text-lg text-carbon/70 max-w-2xl reveal">
+        El logotipo une tres elementos en una sola marca: la hoja de café (origen), 
+        la montaña (geografía) y el círculo (comunidad y sostenibilidad).
+      </p>
+
+      <!-- Logo principal grande -->
+      <div class="mt-16 grid md:grid-cols-2 gap-6">
+        <div class="logo-card bg-crema reveal" style="border: 1px solid var(--piedra);">
+          <div class="text-center">
+            <svg width="140" height="140" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-6">
+              <circle cx="50" cy="50" r="48" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+              <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#1F3D2B" stroke-width="2" stroke-linecap="round"/>
+              <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+              <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+            </svg>
+            <div class="font-display text-3xl text-bosque tracking-wide">TROPICAL</div>
+            <div class="font-display text-3xl text-bosque italic tracking-wide">Biohostel</div>
+            <div class="text-xs tracking-[0.3em] text-cafe mt-2">N O C A I M A</div>
+          </div>
+        </div>
+        <div class="logo-card bg-bosque reveal">
+          <div class="text-center">
+            <svg width="140" height="140" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-6">
+              <circle cx="50" cy="50" r="48" fill="none" stroke="#E8A94A" stroke-width="1.5"/>
+              <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#F5EFE0" stroke-width="2" stroke-linecap="round"/>
+              <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+              <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+            </svg>
+            <div class="font-display text-3xl text-crema tracking-wide">TROPICAL</div>
+            <div class="font-display text-3xl text-crema italic tracking-wide">Biohostel</div>
+            <div class="text-xs tracking-[0.3em] text-sol mt-2">N O C A I M A</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Versiones -->
+      <div class="mt-12">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6 reveal">Versiones del logotipo</div>
+        <div class="grid md:grid-cols-4 gap-4">
+          <div class="logo-card bg-crema reveal" style="border: 1px solid var(--piedra); min-height: 200px;">
+            <div class="text-center">
+              <div class="font-display text-xl text-bosque">TROPICAL</div>
+              <div class="font-display text-xl text-bosque italic">Biohostel</div>
+              <div class="text-[10px] tracking-[0.3em] text-cafe mt-1">NOCaima</div>
+            </div>
+          </div>
+          <div class="logo-card bg-crema reveal" style="border: 1px solid var(--piedra); min-height: 200px;">
+            <div class="text-center">
+              <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+                <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#1F3D2B" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+                <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+              </svg>
+              <div class="font-display text-sm text-bosque">TROPICAL Biohostel</div>
+            </div>
+          </div>
+          <div class="logo-card bg-crema reveal" style="border: 1px solid var(--piedra); min-height: 200px;">
+            <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="48" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+              <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#1F3D2B" stroke-width="2" stroke-linecap="round"/>
+              <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+              <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+            </svg>
+          </div>
+          <div class="logo-card bg-carbon reveal" style="min-height: 200px;">
+            <div class="text-center">
+              <div class="font-display text-xl text-crema">TROPICAL</div>
+              <div class="font-display text-xl text-crema italic">Biohostel</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Área de respeto -->
+      <div class="mt-16 grid md:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <div class="text-cafe text-sm tracking-widest uppercase mb-4">Área de Respeto</div>
+          <h3 class="font-display text-3xl text-bosque mb-4">Espacio vital del símbolo</h3>
+          <p class="text-carbon/70 leading-relaxed">
+            El espacio mínimo alrededor del logotipo equivale a la altura de la letra "T" 
+            de "Tropical". Ningún elemento gráfico o texto puede invadir este espacio.
+          </p>
+          <div class="mt-6 flex gap-8 text-sm">
+            <div>
+              <div class="text-cafe">Tamaño mínimo impreso</div>
+              <div class="font-display text-2xl text-bosque">20 mm</div>
+            </div>
+            <div>
+              <div class="text-cafe">Tamaño mínimo digital</div>
+              <div class="font-display text-2xl text-bosque">80 px</div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="bg-crema p-16 rounded-lg relative" style="border: 1px dashed var(--cafe);">
+            <div class="absolute top-4 left-4 text-[10px] text-cafe">↕ = altura "T"</div>
+            <div class="absolute top-4 right-4 text-[10px] text-cafe">↕ = altura "T"</div>
+            <div class="absolute bottom-4 left-4 text-[10px] text-cafe">↕ = altura "T"</div>
+            <div class="absolute bottom-4 right-4 text-[10px] text-cafe">↕ = altura "T"</div>
+            <div class="text-center">
+              <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-4">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+                <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#1F3D2B" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+                <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+              </svg>
+              <div class="font-display text-2xl text-bosque">TROPICAL <span class="italic">Biohostel</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PALETA -->
+  <section id="paleta" class="pattern-topo">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">04 · Paleta Cromática</div>
+      <h2 class="section-title reveal">Los colores<br>del territorio</h2>
+      <p class="text-lg text-carbon/70 max-w-2xl reveal mb-12">
+        Haz clic en cualquier color para copiar su código HEX. La proporción recomendada 
+        es 60% neutros / 30% primarios / 10% secundarios.
+      </p>
+
+      <!-- Primarios -->
+      <div class="mb-16">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6 reveal">Colores Primarios · Identidad Nuclear</div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="swatch reveal" onclick="copyColor(this, '#1F3D2B')">
+            <div class="swatch-color" style="background: #1F3D2B;"></div>
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="font-display text-xl text-bosque">Bosque Profundo</div>
+                <div class="text-xs text-carbon/60 mt-1">Color principal · Títulos · Acentos fuertes</div>
+              </div>
+              <div class="text-right text-xs font-mono">
+                <div>#1F3D2B</div>
+                <div class="text-carbon/50">RGB 31, 61, 43</div>
+              </div>
+            </div>
+            <div class="copied-toast">¡Copiado!</div>
+          </div>
+          <div class="swatch reveal" onclick="copyColor(this, '#6B4423')">
+            <div class="swatch-color" style="background: #6B4423;"></div>
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="font-display text-xl text-cafe">Cáscara de Café</div>
+                <div class="text-xs text-carbon/60 mt-1">Acento cálido · Detalles · Iconografía</div>
+              </div>
+              <div class="text-right text-xs font-mono">
+                <div>#6B4423</div>
+                <div class="text-carbon/50">RGB 107, 68, 35</div>
+              </div>
+            </div>
+            <div class="copied-toast">¡Copiado!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secundarios -->
+      <div class="mb-16">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6 reveal">Colores Secundarios · Expresión y Emoción</div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="swatch reveal" onclick="copyColor(this, '#E8A94A')">
+            <div class="swatch-color" style="background: #E8A94A;"></div>
+            <div class="font-display text-lg text-bosque">Sol de Nocaima</div>
+            <div class="text-xs text-carbon/60 mt-1">CTAs · Highlights · Energía</div>
+            <div class="text-xs font-mono mt-2">#E8A94A</div>
+            <div class="copied-toast">¡Copiado!</div>
+          </div>
+          <div class="swatch reveal" onclick="copyColor(this, '#8FB573')">
+            <div class="swatch-color" style="background: #8FB573;"></div>
+            <div class="font-display text-lg text-bosque">Hoja Nueva</div>
+            <div class="text-xs text-carbon/60 mt-1">Ilustraciones · Elementos orgánicos</div>
+            <div class="text-xs font-mono mt-2">#8FB573</div>
+            <div class="copied-toast">¡Copiado!</div>
+          </div>
+          <div class="swatch reveal" onclick="copyColor(this, '#3E2F23')">
+            <div class="swatch-color" style="background: #3E2F23;"></div>
+            <div class="font-display text-lg text-bosque">Tierra Húmeda</div>
+            <div class="text-xs text-carbon/60 mt-1">Textos secundarios · Fondos cálidos</div>
+            <div class="text-xs font-mono mt-2">#3E2F23</div>
+            <div class="copied-toast">¡Copiado!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Neutros -->
+      <div>
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6 reveal">Neutros · Estructura y Respiro</div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="swatch reveal" onclick="copyColor(this, '#F5EFE0')">
+            <div class="swatch-color" style="background: #F5EFE0; border: 1px solid var(--piedra);"></div>
+            <div class="font-display text-lg text-bosque">Crema de Leche</div>
+            <div class="text-xs text-carbon/60 mt-1">Fondos principales</div>
+            <div class="text-xs font-mono mt-2">#F5EFE0</div>
+            <div class="copied-toast">¡Copiado!</div>
+          </div>
+          <div class="swatch reveal" onclick="copyColor(this, '#D4C9B0')">
+            <div class="swatch-color" style="background: #D4C9B0;"></div>
+            <div class="font-display text-lg text-bosque">Piedra de Río</div>
+            <div class="text-xs text-carbon/60 mt-1">Separadores · Bordes</div>
+            <div class="text-xs font-mono mt-2">#D4C9B0</div>
+            <div class="copied-toast">¡Copiado!</div>
+          </div>
+          <div class="swatch reveal" onclick="copyColor(this, '#2A241E')">
+            <div class="swatch-color" style="background: #2A241E;"></div>
+            <div class="font-display text-lg text-bosque">Carbón Suave</div>
+            <div class="text-xs text-carbon/60 mt-1">Texto principal</div>
+            <div class="text-xs font-mono mt-2">#2A241E</div>
+            <div class="copied-toast">¡Copiado!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proporción -->
+      <div class="mt-16 reveal">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6">Proporción recomendada en piezas</div>
+        <div class="flex rounded-xl overflow-hidden h-24 shadow-lg">
+          <div class="bg-crema flex items-center justify-center" style="width: 60%; border-right: 2px solid var(--piedra);">
+            <span class="font-display text-bosque">60% Neutros</span>
+          </div>
+          <div class="bg-bosque flex items-center justify-center text-crema" style="width: 30%; border-right: 2px solid var(--piedra);">
+            <span class="font-display">30%</span>
+          </div>
+          <div class="bg-sol flex items-center justify-center" style="width: 10%;">
+            <span class="font-display text-xs text-bosque">10%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIPOGRAFÍA -->
+  <section id="tipografia">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">05 · Tipografía</div>
+      <h2 class="section-title reveal">La voz<br>escrita</h2>
+      <p class="text-lg text-carbon/70 max-w-2xl reveal mb-12">
+        Tres familias tipográficas que, combinadas, expresan la calidez artesanal, 
+        la claridad contemporánea y el toque humano de la marca.
+      </p>
+
+      <!-- Fraunces -->
+      <div class="type-sample reveal">
+        <div class="flex justify-between items-start mb-6 flex-wrap gap-4">
+          <div>
+            <div class="text-cafe text-xs tracking-widest uppercase">Principal · Titulares</div>
+            <div class="font-display text-3xl text-bosque mt-2">Fraunces</div>
+          </div>
+          <div class="text-right text-sm text-carbon/60">
+            <div>Serif moderna · Orgánica</div>
+            <div>Pesos: 300, 400, 600, 900</div>
+          </div>
+        </div>
+        <div class="font-display text-6xl text-bosque leading-none mb-4">Aa Bb Cc Dd Ee</div>
+        <div class="font-display text-4xl text-bosque leading-tight mb-4">
+          Donde el café comienza
+        </div>
+        <div class="font-display text-2xl text-bosque italic leading-relaxed">
+          y el ruido termina — un refugio entre montañas
+        </div>
+      </div>
+
+      <!-- Inter -->
+      <div class="type-sample reveal">
+        <div class="flex justify-between items-start mb-6 flex-wrap gap-4">
+          <div>
+            <div class="text-cafe text-xs tracking-widest uppercase">Secundaria · Cuerpo y UI</div>
+            <div class="text-3xl text-bosque mt-2">Inter</div>
+          </div>
+          <div class="text-right text-sm text-carbon/60">
+            <div>Sans-serif humanista</div>
+            <div>Pesos: 400, 500, 600</div>
+          </div>
+        </div>
+        <div class="text-6xl text-bosque leading-none mb-4">Aa Bb Cc Dd Ee</div>
+        <p class="text-lg leading-relaxed text-carbon/80 mb-4">
+          Tropical Biohostel es un refugio donde el tiempo se detiene. Entre montañas, senderos 
+          llenos de vida, fogatas que abrazan el alma y conversaciones que sanan. Aquí la naturaleza 
+          no se observa: se habita.
+        </p>
+        <button class="px-6 py-3 bg-bosque text-crema rounded-lg font-medium">Reservar experiencia</button>
+      </div>
+
+      <!-- Caveat -->
+      <div class="type-sample reveal">
+        <div class="flex justify-between items-start mb-6 flex-wrap gap-4">
+          <div>
+            <div class="text-cafe text-xs tracking-widest uppercase">Terciaria · Acentos manuscritos</div>
+            <div class="font-hand text-4xl text-bosque mt-2">Caveat</div>
+          </div>
+          <div class="text-right text-sm text-carbon/60">
+            <div>Manuscrita orgánica</div>
+            <div>Uso limitado: citas, firmas</div>
+          </div>
+        </div>
+        <div class="font-hand text-6xl text-bosque leading-tight">
+          "La vida se siente<br>mejor en el bosque"
+        </div>
+        <div class="mt-6 text-sm text-carbon/60">
+          ⚠️ Máximo 2 líneas por pieza. Nunca para cuerpo de texto.
+        </div>
+      </div>
+
+      <!-- Jerarquía -->
+      <div class="mt-16">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6 reveal">Jerarquía Tipográfica (Web)</div>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm reveal">
+          <table class="w-full text-left">
+            <thead class="bg-bosque text-crema">
+              <tr>
+                <th class="px-6 py-4 text-sm">Elemento</th>
+                <th class="px-6 py-4 text-sm">Fuente</th>
+                <th class="px-6 py-4 text-sm">Tamaño</th>
+                <th class="px-6 py-4 text-sm">Peso</th>
+                <th class="px-6 py-4 text-sm hidden md:table-cell">Ejemplo</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-piedra">
+              <tr>
+                <td class="px-6 py-4 text-sm">H1</td>
+                <td class="px-6 py-4 text-sm">Fraunces</td>
+                <td class="px-6 py-4 text-sm">64 px</td>
+                <td class="px-6 py-4 text-sm">600</td>
+                <td class="px-6 py-4 font-display text-2xl text-bosque hidden md:table-cell">Refugio</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-sm">H2</td>
+                <td class="px-6 py-4 text-sm">Fraunces</td>
+                <td class="px-6 py-4 text-sm">48 px</td>
+                <td class="px-6 py-4 text-sm">400</td>
+                <td class="px-6 py-4 font-display text-xl text-bosque hidden md:table-cell">Territorio</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-sm">H3</td>
+                <td class="px-6 py-4 text-sm">Fraunces</td>
+                <td class="px-6 py-4 text-sm">32 px</td>
+                <td class="px-6 py-4 text-sm">400</td>
+                <td class="px-6 py-4 font-display text-lg text-bosque hidden md:table-cell">Experiencia</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-sm">Body</td>
+                <td class="px-6 py-4 text-sm">Inter</td>
+                <td class="px-6 py-4 text-sm">18 px</td>
+                <td class="px-6 py-4 text-sm">400</td>
+                <td class="px-6 py-4 text-sm hidden md:table-cell">Texto principal</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-sm">Caption</td>
+                <td class="px-6 py-4 text-sm">Inter</td>
+                <td class="px-6 py-4 text-sm">14 px</td>
+                <td class="px-6 py-4 text-sm">400</td>
+                <td class="px-6 py-4 text-xs hidden md:table-cell">Texto pequeño</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-sm">Button</td>
+                <td class="px-6 py-4 text-sm">Inter</td>
+                <td class="px-6 py-4 text-sm">16 px</td>
+                <td class="px-6 py-4 text-sm">500</td>
+                <td class="px-6 py-4 hidden md:table-cell"><span class="px-4 py-2 bg-bosque text-crema rounded text-sm">Reservar</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOTOGRAFÍA -->
+  <section id="fotografia" class="bg-carbon text-crema">
+    <div class="max-w-6xl">
+      <div class="section-number text-sol reveal">06 · Fotografía</div>
+      <h2 class="font-display text-5xl md:text-7xl leading-none mb-8 reveal" style="color: var(--crema);">
+        La luz<br>del territorio
+      </h2>
+      <p class="text-lg opacity-80 max-w-2xl reveal mb-12">
+        Luz natural, temperatura cálida, profundidad sutil. Nunca flash directo, 
+        nunca HDR agresivo, nunca colores neón.
+      </p>
+
+      <!-- Photo grid simulada con gradientes -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12">
+        <div class="photo-tile reveal" style="background: linear-gradient(135deg, #1F3D2B 0%, #3E2F23 50%, #6B4423 100%);">
+          <div class="w-full h-full flex items-center justify-center p-6">
+            <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" opacity="0.6">
+              <path d="M 20 80 L 50 30 L 80 80 Z" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+              <path d="M 30 80 L 50 50 L 70 80" fill="none" stroke="#F5EFE0" stroke-width="1.5"/>
+              <circle cx="50" cy="25" r="8" fill="#E8A94A"/>
+            </svg>
+          </div>
+          <div class="overlay">
+            <div>
+              <div class="font-display text-xl text-crema">Paisaje</div>
+              <div class="text-xs opacity-70">Montañas de Nocaima</div>
+            </div>
+          </div>
+        </div>
+        <div class="photo-tile reveal" style="background: linear-gradient(135deg, #6B4423 0%, #3E2F23 100%);">
+          <div class="w-full h-full flex items-center justify-center p-6">
+            <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" opacity="0.7">
+              <ellipse cx="50" cy="70" rx="30" ry="8" fill="#F5EFE0" opacity="0.3"/>
+              <path d="M 40 70 Q 40 40 50 30 Q 60 40 60 70" fill="#F5EFE0" opacity="0.4"/>
+              <path d="M 50 30 Q 45 15 50 10 Q 55 15 50 30" fill="#8FB573"/>
+            </svg>
+          </div>
+          <div class="overlay">
+            <div>
+              <div class="font-display text-xl text-crema">Rituales</div>
+              <div class="text-xs opacity-70">Preparación de café</div>
+            </div>
+          </div>
+        </div>
+        <div class="photo-tile reveal" style="background: linear-gradient(135deg, #E8A94A 0%, #6B4423 100%);">
+          <div class="w-full h-full flex items-center justify-center p-6">
+            <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" opacity="0.7">
+              <path d="M 30 80 Q 35 50 50 40 Q 65 50 70 80" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+              <circle cx="50" cy="30" r="15" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+              <path d="M 45 30 L 50 20 L 55 30" fill="#F5EFE0"/>
+            </svg>
+          </div>
+          <div class="overlay">
+            <div>
+              <div class="font-display text-xl text-crema">Comunidad</div>
+              <div class="text-xs opacity-70">Fogata y conversación</div>
+            </div>
+          </div>
+        </div>
+        <div class="photo-tile reveal" style="background: linear-gradient(135deg, #8FB573 0%, #1F3D2B 100%);">
+          <div class="w-full h-full flex items-center justify-center p-6">
+            <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" opacity="0.7">
+              <path d="M 30 70 Q 40 50 50 40 Q 60 50 70 70" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+              <circle cx="50" cy="40" r="12" fill="#F5EFE0" opacity="0.3"/>
+              <path d="M 45 35 Q 50 25 55 35" fill="none" stroke="#F5EFE0" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="overlay">
+            <div>
+              <div class="font-display text-xl text-crema">Detalle Botánico</div>
+              <div class="text-xs opacity-70">Frutos y hojas</div>
+            </div>
+          </div>
+        </div>
+        <div class="photo-tile reveal" style="background: linear-gradient(135deg, #3E2F23 0%, #1F3D2B 100%);">
+          <div class="w-full h-full flex items-center justify-center p-6">
+            <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" opacity="0.7">
+              <rect x="25" y="40" width="50" height="40" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+              <path d="M 20 40 L 50 20 L 80 40" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+              <rect x="42" y="55" width="16" height="25" fill="none" stroke="#F5EFE0" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="overlay">
+            <div>
+              <div class="font-display text-xl text-crema">Arquitectura</div>
+              <div class="text-xs opacity-70">Cabañas orgánicas</div>
+            </div>
+          </div>
+        </div>
+        <div class="photo-tile reveal" style="background: linear-gradient(135deg, #2A241E 0%, #E8A94A 100%);">
+          <div class="w-full h-full flex items-center justify-center p-6">
+            <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" opacity="0.7">
+              <circle cx="50" cy="50" r="30" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+              <path d="M 50 25 L 50 75 M 25 50 L 75 50" stroke="#F5EFE0" stroke-width="1" opacity="0.5"/>
+              <circle cx="50" cy="50" r="5" fill="#F5EFE0"/>
+            </svg>
+          </div>
+          <div class="overlay">
+            <div>
+              <div class="font-display text-xl text-crema">Gastronomía</div>
+              <div class="text-xs opacity-70">Sabores del territorio</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reglas -->
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="reveal">
+          <div class="text-sol text-sm tracking-widest uppercase mb-4">Tratamiento Post-producción</div>
+          <ul class="space-y-3 text-crema/80">
+            <li class="flex gap-3"><span class="text-sol">→</span> Contraste medio (no HDR agresivo)</li>
+            <li class="flex gap-3"><span class="text-sol">→</span> Saturación reducida 10-15%</li>
+            <li class="flex gap-3"><span class="text-sol">→</span> Balance de blancos cálido (5500-6000K)</li>
+            <li class="flex gap-3"><span class="text-sol">→</span> Viñeteo sutil opcional</li>
+            <li class="flex gap-3"><span class="text-sol">→</span> Profundidad con bokeh suave</li>
+          </ul>
+        </div>
+        <div class="reveal">
+          <div class="text-sol text-sm tracking-widest uppercase mb-4">Nunca fotografiar</div>
+          <ul class="space-y-3 text-crema/80">
+            <li class="flex gap-3"><span class="text-red-400">✕</span> Basura o cables visibles</li>
+            <li class="flex gap-3"><span class="text-red-400">✕</span> Plásticos de un solo uso</li>
+            <li class="flex gap-3"><span class="text-red-400">✕</span> Poses artificiales mirando a cámara</li>
+            <li class="flex gap-3"><span class="text-red-400">✕</span> Filtros Instagram genéricos</li>
+            <li class="flex gap-3"><span class="text-red-400">✕</span> Colores neón o HDR extremo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ICONOGRAFÍA -->
+  <section id="iconografia">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">07 · Iconografía</div>
+      <h2 class="section-title reveal">Símbolos<br>del territorio</h2>
+      <p class="text-lg text-carbon/70 max-w-2xl reveal mb-12">
+        Línea continua de 1.5px, terminaciones redondeadas, grid 24x24px. 
+        Todos los iconos deben pertenecer al mismo set.
+      </p>
+
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <path d="M 24 40 Q 20 25 24 12 Q 28 25 24 40" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M 24 12 Q 18 18 16 24" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M 24 12 Q 30 18 32 24" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Hoja de café</div>
+        </div>
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <path d="M 8 36 L 18 20 L 26 28 L 36 14 L 42 36" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="36" cy="10" r="4" fill="none" stroke="#E8A94A" stroke-width="1.5"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Montaña con sol</div>
+        </div>
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <path d="M 10 36 L 24 18 L 38 36 Z" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linejoin="round"/>
+            <rect x="20" y="28" width="8" height="8" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Cabaña</div>
+        </div>
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <path d="M 14 32 Q 14 22 24 22 Q 34 22 34 32" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+            <path d="M 34 26 Q 40 26 40 30 Q 40 34 34 34" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+            <path d="M 20 18 Q 20 12 22 10" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M 26 18 Q 26 12 28 10" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Taza de café</div>
+        </div>
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <path d="M 18 36 Q 16 28 24 20 Q 32 28 30 36" fill="none" stroke="#E8A94A" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M 22 36 Q 21 30 24 26 Q 27 30 26 36" fill="none" stroke="#E8A94A" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="38" x2="34" y2="38" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Fogata</div>
+        </div>
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <path d="M 10 20 Q 24 30 38 20" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="10" y1="20" x2="10" y2="34" stroke="#1F3D2B" stroke-width="1.5"/>
+            <line x1="38" y1="20" x2="38" y2="34" stroke="#1F3D2B" stroke-width="1.5"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Hamaca</div>
+        </div>
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <path d="M 8 36 Q 16 28 24 32 Q 32 36 40 28" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="16" cy="22" r="2" fill="#8FB573"/>
+            <circle cx="32" cy="18" r="2" fill="#8FB573"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Sendero</div>
+        </div>
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <path d="M 24 10 Q 16 22 16 30 Q 16 38 24 38 Q 32 38 32 30 Q 32 22 24 10" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Gota de agua</div>
+        </div>
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <circle cx="24" cy="24" r="8" fill="none" stroke="#E8A94A" stroke-width="1.5"/>
+            <line x1="24" y1="8" x2="24" y2="12" stroke="#E8A94A" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="24" y1="36" x2="24" y2="40" stroke="#E8A94A" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="8" y1="24" x2="12" y2="24" stroke="#E8A94A" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="36" y1="24" x2="40" y2="24" stroke="#E8A94A" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Sol</div>
+        </div>
+        <div class="icon-item reveal">
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3">
+            <path d="M 30 14 Q 18 16 16 28 Q 18 38 30 36 Q 22 34 22 26 Q 22 18 30 14" fill="none" stroke="#1F3D2B" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="text-xs text-carbon/70">Luna</div>
+        </div>
+      </div>
+
+      <div class="mt-12 p-8 bg-crema rounded-xl reveal" style="border: 1px solid var(--piedra);">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-4">Reglas de uso</div>
+        <div class="grid md:grid-cols-3 gap-6 text-sm">
+          <div>
+            <div class="font-display text-lg text-bosque mb-2">Grosor</div>
+            <p class="text-carbon/70">Mantener 1.5px en todos los iconos de una misma pieza.</p>
+          </div>
+          <div>
+            <div class="font-display text-lg text-bosque mb-2">Color</div>
+            <p class="text-carbon/70">Bosque Profundo o Cáscara de Café según contexto.</p>
+          </div>
+          <div>
+            <div class="font-display text-lg text-bosque mb-2">Consistencia</div>
+            <p class="text-carbon/70">Nunca mezclar estilos. Todos del mismo set personalizado.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ELEMENTOS GRÁFICOS -->
+  <section id="elementos" class="pattern-topo">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">08 · Elementos Gráficos</div>
+      <h2 class="section-title reveal">Patrones y<br>texturas</h2>
+
+      <div class="grid md:grid-cols-3 gap-6 mt-12">
+        <div class="reveal">
+          <div class="aspect-square rounded-xl overflow-hidden relative" style="background: var(--crema);">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="leafPattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                  <path d="M 40 20 Q 35 35 40 50 Q 45 35 40 20" fill="#8FB573" opacity="0.15"/>
+                  <path d="M 20 60 Q 15 75 20 90 Q 25 75 20 60" fill="#8FB573" opacity="0.15"/>
+                  <path d="M 60 60 Q 55 75 60 90 Q 65 75 60 60" fill="#8FB573" opacity="0.15"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#leafPattern)"/>
+            </svg>
+            <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur p-4 rounded-lg">
+              <div class="font-display text-lg text-bosque">Patrón de Hojas</div>
+              <div class="text-xs text-carbon/60">Opacidad 10-15% · Fondos sutiles</div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="aspect-square rounded-xl overflow-hidden relative" style="background: var(--crema);">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="topoPattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <circle cx="50" cy="50" r="10" fill="none" stroke="#6B4423" stroke-width="0.5" opacity="0.3"/>
+                  <circle cx="50" cy="50" r="20" fill="none" stroke="#6B4423" stroke-width="0.5" opacity="0.3"/>
+                  <circle cx="50" cy="50" r="30" fill="none" stroke="#6B4423" stroke-width="0.5" opacity="0.3"/>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#6B4423" stroke-width="0.5" opacity="0.3"/>
+                  <circle cx="50" cy="50" r="50" fill="none" stroke="#6B4423" stroke-width="0.5" opacity="0.3"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#topoPattern)"/>
+            </svg>
+            <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur p-4 rounded-lg">
+              <div class="font-display text-lg text-bosque">Topografía</div>
+              <div class="text-xs text-carbon/60">Curvas de nivel · Mapas de Nocaima</div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="aspect-square rounded-xl overflow-hidden relative" style="background: linear-gradient(135deg, #F5EFE0 0%, #D4C9B0 100%);">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" opacity="0.4">
+              <defs>
+                <pattern id="paperPattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                  <line x1="0" y1="20" x2="200" y2="25" stroke="#6B4423" stroke-width="0.3"/>
+                  <line x1="0" y1="60" x2="200" y2="55" stroke="#6B4423" stroke-width="0.3"/>
+                  <line x1="0" y1="100" x2="200" y2="105" stroke="#6B4423" stroke-width="0.3"/>
+                  <line x1="0" y1="140" x2="200" y2="135" stroke="#6B4423" stroke-width="0.3"/>
+                  <line x1="0" y1="180" x2="200" y2="185" stroke="#6B4423" stroke-width="0.3"/>
+                  <circle cx="50" cy="80" r="1" fill="#6B4423"/>
+                  <circle cx="150" cy="120" r="1" fill="#6B4423"/>
+                  <circle cx="100" cy="40" r="1" fill="#6B4423"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#paperPattern)"/>
+            </svg>
+            <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur p-4 rounded-lg">
+              <div class="font-display text-lg text-bosque">Papel Artesanal</div>
+              <div class="text-xs text-carbon/60">Fibra visible · Papelería</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 reveal">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6">Texturas aplicadas</div>
+        <div class="grid md:grid-cols-4 gap-4">
+          <div class="aspect-square rounded-xl" style="background: linear-gradient(135deg, #6B4423, #3E2F23); background-image: repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(245,239,224,0.05) 8px, rgba(245,239,224,0.05) 9px);">
+            <div class="h-full flex items-end p-4">
+              <div class="font-display text-crema text-sm">Madera</div>
+            </div>
+          </div>
+          <div class="aspect-square rounded-xl" style="background: linear-gradient(135deg, #F5EFE0, #D4C9B0); background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(107,68,35,0.05) 4px, rgba(107,68,35,0.05) 5px);">
+            <div class="h-full flex items-end p-4">
+              <div class="font-display text-bosque text-sm">Lino</div>
+            </div>
+          </div>
+          <div class="aspect-square rounded-xl" style="background: #2A241E; background-image: radial-gradient(circle at 30% 40%, rgba(232,169,74,0.1) 0%, transparent 50%);">
+            <div class="h-full flex items-end p-4">
+              <div class="font-display text-crema text-sm">Barro</div>
+            </div>
+          </div>
+          <div class="aspect-square rounded-xl" style="background: linear-gradient(135deg, #1F3D2B, #3E2F23); background-image: radial-gradient(ellipse at 50% 50%, rgba(143,181,115,0.15) 0%, transparent 70%);">
+            <div class="h-full flex items-end p-4">
+              <div class="font-display text-crema text-sm">Musgo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TONO DE VOZ -->
+  <section id="voz">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">09 · Tono de Voz</div>
+      <h2 class="section-title reveal">Cómo<br>hablamos</h2>
+
+      <div class="grid md:grid-cols-4 gap-4 mb-12">
+        <div class="p-6 rounded-xl bg-white reveal">
+          <div class="text-3xl mb-2">🌡️</div>
+          <div class="font-display text-xl text-bosque mb-2">Cálida</div>
+          <div class="text-xs text-carbon/60">No fría</div>
+        </div>
+        <div class="p-6 rounded-xl bg-white reveal">
+          <div class="text-3xl mb-2">📜</div>
+          <div class="font-display text-xl text-bosque mb-2">Poética</div>
+          <div class="text-xs text-carbon/60">No corporativa</div>
+        </div>
+        <div class="p-6 rounded-xl bg-white reveal">
+          <div class="text-3xl mb-2">👃</div>
+          <div class="font-display text-xl text-bosque mb-2">Sensorial</div>
+          <div class="text-xs text-carbon/60">No descriptiva</div>
+        </div>
+        <div class="p-6 rounded-xl bg-white reveal">
+          <div class="text-3xl mb-2">🇨🇴</div>
+          <div class="font-display text-xl text-bosque mb-2">Colombiana</div>
+          <div class="text-xs text-carbon/60">No neutra</div>
+        </div>
+      </div>
+
+      <!-- Vocabulario -->
+      <div class="grid md:grid-cols-2 gap-6 mb-12">
+        <div class="do-card reveal">
+          <div class="text-hoja text-sm tracking-widest uppercase mb-4">✅ Vocabulario permitido</div>
+          <div class="space-y-2">
+            <div class="flex justify-between py-2 border-b border-hoja/20">
+              <span class="font-display text-bosque">Refugio, rincón, pausa</span>
+              <span class="text-xs text-carbon/50">en lugar de</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-hoja/20">
+              <span class="font-display text-bosque">Experiencia, vivencia</span>
+              <span class="text-xs text-carbon/50">en lugar de</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-hoja/20">
+              <span class="font-display text-bosque">Huésped, visitante</span>
+              <span class="text-xs text-carbon/50">en lugar de</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-hoja/20">
+              <span class="font-display text-bosque">Territorio, bosque, finca</span>
+              <span class="text-xs text-carbon/50">en lugar de</span>
+            </div>
+            <div class="flex justify-between py-2">
+              <span class="font-display text-bosque">Reconexión, calma</span>
+              <span class="text-xs text-carbon/50">en lugar de</span>
+            </div>
+          </div>
+        </div>
+        <div class="dont-card reveal">
+          <div class="text-sol text-sm tracking-widest uppercase mb-4">❌ Vocabulario prohibido</div>
+          <div class="space-y-2 line-through text-carbon/60">
+            <div class="py-2 border-b border-sol/20">Hotel, alojamiento, hospedaje</div>
+            <div class="py-2 border-b border-sol/20">Servicio, producto</div>
+            <div class="py-2 border-b border-sol/20">Cliente, usuario</div>
+            <div class="py-2 border-b border-sol/20">Instalaciones, predio</div>
+            <div class="py-2 border-b border-sol/20">Relax, descanso</div>
+            <div class="py-2">Premium, luxury, exclusive</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ejemplos de copy -->
+      <div>
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6 reveal">Ejemplos de copy para redes sociales</div>
+        <div class="space-y-4">
+          <div class="voice-card reveal">
+            <div class="text-xs text-cafe tracking-widest uppercase mb-2">Post · Café</div>
+            <div class="font-display text-2xl text-bosque leading-snug mb-3">
+              "El café se siente antes de beberse. En el aroma que despierta la finca, 
+              en las manos que lo recogieron al amanecer."
+            </div>
+            <div class="text-sm text-carbon/70">¿Vienes a sentirlo? ☕🌿</div>
+          </div>
+          <div class="voice-card reveal">
+            <div class="text-xs text-cafe tracking-widest uppercase mb-2">Post · Fogata</div>
+            <div class="font-display text-2xl text-bosque leading-snug mb-3">
+              "Hay conversaciones que solo nacen cuando el fuego reúne a los desconocidos. 
+              Esta noche, la fogata espera."
+            </div>
+            <div class="text-sm text-carbon/70">¿Traes tu historia? 🔥</div>
+          </div>
+          <div class="voice-card reveal">
+            <div class="text-xs text-cafe tracking-widest uppercase mb-2">Post · Naturaleza</div>
+            <div class="font-display text-2xl text-bosque leading-snug mb-3">
+              "El bosque no tiene prisa, y por eso todo en él tiene sentido. 
+              Ven a caminar sin reloj."
+            </div>
+            <div class="text-sm text-carbon/70">Nocaima te recibe 🌄</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hashtags -->
+      <div class="mt-12 reveal">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6">Hashtags oficiales</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-4 py-2 bg-bosque text-crema rounded-full text-sm font-display">#TropicalBiohostel</span>
+          <span class="px-4 py-2 bg-cafe text-crema rounded-full text-sm font-display">#DondeElCafeComienza</span>
+          <span class="px-4 py-2 bg-sol text-bosque rounded-full text-sm font-display">#NocaimaSecreta</span>
+          <span class="px-4 py-2 bg-hoja text-bosque rounded-full text-sm font-display">#BiohostelColombia</span>
+          <span class="px-4 py-2 bg-piedra text-bosque rounded-full text-sm font-display">#TurismoSostenible</span>
+          <span class="px-4 py-2 bg-crema text-bosque rounded-full text-sm font-display border border-piedra">#CundinamarcaNatural</span>
+          <span class="px-4 py-2 bg-crema text-bosque rounded-full text-sm font-display border border-piedra">#ParcheEnElBosque</span>
+          <span class="px-4 py-2 bg-crema text-bosque rounded-full text-sm font-display border border-piedra">#FogataYConversacion</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APLICACIONES -->
+  <section id="aplicaciones" class="pattern-leaves">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">10 · Aplicaciones</div>
+      <h2 class="section-title reveal">La marca<br>en el mundo</h2>
+
+      <!-- Papelería -->
+      <div class="mb-16">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6 reveal">Papelería</div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Tarjeta -->
+          <div class="mockup reveal">
+            <div class="aspect-[9/5] bg-crema p-8 flex flex-col justify-between relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-32 h-32 opacity-10">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="48" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+                  <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#1F3D2B" stroke-width="2"/>
+                  <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+                  <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+                </svg>
+              </div>
+              <div>
+                <div class="font-display text-xl text-bosque">TROPICAL</div>
+                <div class="font-display text-xl text-bosque italic">Biohostel</div>
+              </div>
+              <div class="text-xs text-carbon/70 space-y-1">
+                <div>María Fernanda López</div>
+                <div class="text-cafe">Anfitriona</div>
+                <div class="pt-2 text-[10px]">+57 311 837 1264 · hola@tropicalbiohostel.com</div>
+              </div>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="font-display text-sm text-bosque">Tarjeta de presentación</div>
+              <div class="text-xs text-carbon/60">Papel reciclado 300g · 9×5 cm</div>
+            </div>
+          </div>
+          <!-- Sobre -->
+          <div class="mockup reveal">
+            <div class="aspect-[2/1] bg-crema p-6 flex items-center justify-between relative">
+              <div>
+                <div class="text-xs text-carbon/50 mb-1">Para:</div>
+                <div class="border-b border-carbon/30 w-48 mb-3"></div>
+                <div class="text-xs text-carbon/50 mb-1">Dirección:</div>
+                <div class="border-b border-carbon/30 w-48"></div>
+              </div>
+              <div class="w-16 h-16 rounded-full bg-cafe flex items-center justify-center">
+                <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="48" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+                  <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+                  <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+                  <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+                </svg>
+              </div>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="font-display text-sm text-bosque">Sobre DL</div>
+              <div class="text-xs text-carbon/60">Sello de cera con isotipo</div>
+            </div>
+          </div>
+          <!-- Factura -->
+          <div class="mockup reveal">
+            <div class="aspect-[3/4] bg-white p-6 relative">
+              <div class="flex justify-between items-start mb-6">
+                <div>
+                  <div class="font-display text-sm text-bosque">TROPICAL</div>
+                  <div class="font-display text-sm text-bosque italic">Biohostel</div>
+                </div>
+                <div class="text-xs text-carbon/50 text-right">
+                  <div>FACTURA</div>
+                  <div>N° 00123</div>
+                </div>
+              </div>
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between border-b border-piedra pb-1">
+                  <span>Hospedaje · 2 noches</span>
+                  <span>$400.000</span>
+                </div>
+                <div class="flex justify-between border-b border-piedra pb-1">
+                  <span>Desayuno</span>
+                  <span>$60.000</span>
+                </div>
+                <div class="flex justify-between pt-2 font-semibold">
+                  <span>Total</span>
+                  <span>$460.000</span>
+                </div>
+              </div>
+              <div class="absolute bottom-4 left-6 right-6 text-[9px] text-carbon/50">
+                RNT: 00000 · Nit: 000.000.000-0
+              </div>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="font-display text-sm text-bosque">Factura / Recibo</div>
+              <div class="text-xs text-carbon/60">Papel crema · Inter 10pt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Digital -->
+      <div class="mb-16">
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6 reveal">Digital · Instagram</div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Post 1 -->
+          <div class="mockup reveal">
+            <div class="aspect-square bg-bosque p-8 flex flex-col justify-between relative overflow-hidden">
+              <div class="absolute inset-0 opacity-20">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="igLeaf1" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                      <path d="M 30 15 Q 26 27 30 38 Q 34 27 30 15" fill="#8FB573"/>
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#igLeaf1)"/>
+                </svg>
+              </div>
+              <div class="relative">
+                <div class="text-sol text-xs tracking-widest">TROPICAL BIOHOSTEL</div>
+              </div>
+              <div class="relative">
+                <div class="font-display text-3xl text-crema leading-tight mb-2">
+                  El café<br>se siente<br>antes de<br>beberse.
+                </div>
+                <div class="font-hand text-xl text-sol">☕ Donde el café comienza</div>
+              </div>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="font-display text-sm text-bosque">Post · Manifiesto</div>
+              <div class="text-xs text-carbon/60">Formato cuadrado 1080×1080</div>
+            </div>
+          </div>
+          <!-- Post 2 -->
+          <div class="mockup reveal">
+            <div class="aspect-square bg-crema p-8 flex flex-col justify-between relative">
+              <div class="flex justify-between items-start">
+                <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="48" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+                  <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#1F3D2B" stroke-width="2"/>
+                  <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+                  <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+                </svg>
+                <div class="text-xs text-cafe">01 / 04</div>
+              </div>
+              <div>
+                <div class="font-display text-4xl text-bosque leading-tight mb-4">
+                  Experiencias<br>que <span class="italic text-cafe">conectan</span>
+                </div>
+                <div class="flex gap-2">
+                  <div class="w-8 h-1 bg-bosque"></div>
+                  <div class="w-8 h-1 bg-sol"></div>
+                  <div class="w-8 h-1 bg-hoja"></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="font-display text-sm text-bosque">Carrusel · Portada</div>
+              <div class="text-xs text-carbon/60">Formato cuadrado 1080×1080</div>
+            </div>
+          </div>
+          <!-- Historia -->
+          <div class="mockup reveal">
+            <div class="aspect-[9/16] bg-tierra p-6 flex flex-col justify-between relative overflow-hidden max-h-[500px]">
+              <div class="absolute inset-0 opacity-30" style="background: radial-gradient(circle at 50% 30%, #E8A94A, transparent 60%);"></div>
+              <div class="relative flex justify-between items-start">
+                <div class="text-crema text-xs tracking-widest">@tropical_biohostel</div>
+                <div class="text-crema text-xs">🔥</div>
+              </div>
+              <div class="relative text-center">
+                <div class="font-hand text-4xl text-sol mb-4">Esta noche...</div>
+                <div class="font-display text-3xl text-crema leading-tight">
+                  La fogata<br>reúne a<br>los desconocidos
+                </div>
+              </div>
+              <div class="relative">
+                <button class="w-full py-3 bg-sol text-bosque font-display rounded-full text-sm">
+                  Reserva tu lugar
+                </button>
+              </div>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="font-display text-sm text-bosque">Historia · Evento</div>
+              <div class="text-xs text-carbon/60">Formato vertical 1080×1920</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Merchandising -->
+      <div>
+        <div class="text-cafe text-sm tracking-widest uppercase mb-6 reveal">Merchandising</div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="mockup reveal">
+            <div class="aspect-square bg-crema flex items-center justify-center p-8 relative">
+              <div class="w-48 h-48 rounded-full bg-white shadow-lg flex items-center justify-center">
+                <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="48" fill="none" stroke="#1F3D2B" stroke-width="1.5"/>
+                  <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#1F3D2B" stroke-width="2"/>
+                  <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+                  <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+                </svg>
+              </div>
+              <div class="absolute bottom-4 left-4 right-4 text-center">
+                <div class="font-hand text-lg text-bosque">Cerámica artesanal</div>
+              </div>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="font-display text-sm text-bosque">Taza de cerámica</div>
+              <div class="text-xs text-carbon/60">Isotipo grabado</div>
+            </div>
+          </div>
+          <div class="mockup reveal">
+            <div class="aspect-square flex items-center justify-center p-8 relative" style="background: #6B4423;">
+              <div class="w-40 h-56 bg-crema rounded-sm p-4 flex flex-col justify-between shadow-xl">
+                <div>
+                  <div class="text-[8px] text-cafe tracking-widest">DE LA FINCA</div>
+                  <div class="font-display text-lg text-bosque leading-tight mt-1">Café<br>de Origen</div>
+                </div>
+                <div>
+                  <svg width="30" height="30" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="48" fill="none" stroke="#1F3D2B" stroke-width="2"/>
+                    <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#1F3D2B" stroke-width="2.5"/>
+                    <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+                  </svg>
+                  <div class="text-[7px] text-cafe mt-2">TROPICAL BIOHOSTEL</div>
+                  <div class="text-[6px] text-carbon/50">Nocaima · 350g</div>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="font-display text-sm text-bosque">Bolsa de café</div>
+              <div class="text-xs text-carbon/60">Etiqueta papel kraft</div>
+            </div>
+          </div>
+          <div class="mockup reveal">
+            <div class="aspect-square flex items-center justify-center p-8 relative" style="background: #D4C9B0;">
+              <div class="w-44 h-56 bg-crema rounded-sm p-5 flex flex-col justify-between shadow-xl relative overflow-hidden">
+                <div class="absolute inset-0 opacity-20">
+                  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="notebookLeaf" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 20 10 Q 17 18 20 25 Q 23 18 20 10" fill="#8FB573"/>
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#notebookLeaf)"/>
+                  </svg>
+                </div>
+                <div class="relative">
+                  <div class="font-display text-xl text-bosque leading-tight">Notas<br>del<br><span class="italic">bosque</span></div>
+                </div>
+                <div class="relative">
+                  <div class="text-[8px] text-cafe tracking-widest">TROPICAL BIOHOSTEL</div>
+                  <div class="text-[7px] text-carbon/50 mt-1">Papel reciclado</div>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="font-display text-sm text-bosque">Libreta artesanal</div>
+              <div class="text-xs text-carbon/60">Patrón de hojas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DO'S AND DON'TS -->
+  <section id="dos-donts">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">11 · Do's & Don'ts</div>
+      <h2 class="section-title reveal">Reglas<br>sagradas</h2>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- DO'S -->
+        <div class="reveal">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-hoja flex items-center justify-center text-crema font-display">✓</div>
+            <div class="font-display text-2xl text-bosque">Hacer siempre</div>
+          </div>
+          <div class="space-y-3">
+            <div class="do-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-crema flex items-center justify-center">
+                  <svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="48" fill="none" stroke="#1F3D2B" stroke-width="2"/>
+                    <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#1F3D2B" stroke-width="2.5"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-display text-bosque">Respetar el área de respeto del logotipo</div>
+                  <div class="text-xs text-carbon/60 mt-1">Mínimo = altura de la letra "T"</div>
+                </div>
+              </div>
+            </div>
+            <div class="do-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #E8A94A, #6B4423);"></div>
+                <div>
+                  <div class="font-display text-bosque">Usar fotografía con luz natural</div>
+                  <div class="text-xs text-carbon/60 mt-1">Tratamiento cálido, saturación reducida</div>
+                </div>
+              </div>
+            </div>
+            <div class="do-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-crema flex items-center justify-center font-display text-bosque">Aa</div>
+                <div>
+                  <div class="font-display text-bosque">Mantener la jerarquía tipográfica</div>
+                  <div class="text-xs text-carbon/60 mt-1">Un H1 por página, máximo 3 H2</div>
+                </div>
+              </div>
+            </div>
+            <div class="do-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-crema flex items-center justify-center font-hand text-2xl text-bosque">"</div>
+                <div>
+                  <div class="font-display text-bosque">Escribir con tono sensorial y cálido</div>
+                  <div class="text-xs text-carbon/60 mt-1">Poético, colombiano, no corporativo</div>
+                </div>
+              </div>
+            </div>
+            <div class="do-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-crema flex items-center justify-center text-xs font-mono text-bosque">RNT</div>
+                <div>
+                  <div class="font-display text-bosque">Incluir el RNT en piezas oficiales</div>
+                  <div class="text-xs text-carbon/60 mt-1">Ley 1101 de 2006 · Obligatorio</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DON'TS -->
+        <div class="reveal">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-sol flex items-center justify-center text-bosque font-display">✕</div>
+            <div class="font-display text-2xl text-bosque">Nunca hacer</div>
+          </div>
+          <div class="space-y-3">
+            <div class="dont-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #E8A94A, #1F3D2B);">
+                  <svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="transform: scaleX(1.3);">
+                    <circle cx="50" cy="50" r="48" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-display text-bosque">Alterar los colores del logotipo</div>
+                  <div class="text-xs text-carbon/60 mt-1">Ni deformar, estirar o rotar</div>
+                </div>
+              </div>
+            </div>
+            <div class="dont-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-crema flex items-center justify-center" style="font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #ff00ff;">Aa</div>
+                <div>
+                  <div class="font-display text-bosque">Usar tipografías fuera del sistema</div>
+                  <div class="text-xs text-carbon/60 mt-1">Solo Fraunces, Inter y Caveat</div>
+                </div>
+              </div>
+            </div>
+            <div class="dont-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #ff00ff, #00ffff, #ffff00);"></div>
+                <div>
+                  <div class="font-display text-bosque">Usar filtros genéricos o HDR extremo</div>
+                  <div class="text-xs text-carbon/60 mt-1">Ni colores neón, ni flash directo</div>
+                </div>
+              </div>
+            </div>
+            <div class="dont-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-crema flex items-center justify-center">
+                  <div class="text-[10px] text-carbon font-mono">SERVICIO PREMIUM</div>
+                </div>
+                <div>
+                  <div class="font-display text-bosque">Escribir en tono corporativo o agresivo</div>
+                  <div class="text-xs text-carbon/60 mt-1">Evitar "premium", "luxury", "exclusive"</div>
+                </div>
+              </div>
+            </div>
+            <div class="dont-card">
+              <div class="flex gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #1F3D2B 50%, #E8A94A 50%);"></div>
+                <div>
+                  <div class="font-display text-bosque">Usar colores primarios en igual proporción</div>
+                  <div class="text-xs text-carbon/60 mt-1">Siempre uno debe dominar</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOBERNANZA -->
+  <section id="gobernanza" class="bg-bosque text-crema">
+    <div class="max-w-6xl">
+      <div class="section-number text-sol reveal">12 · Gobernanza</div>
+      <h2 class="font-display text-5xl md:text-7xl leading-none mb-8 reveal" style="color: var(--crema);">
+        Cuidar la<br><span class="italic text-sol">marca</span>
+      </h2>
+
+      <div class="grid md:grid-cols-3 gap-6 mt-12">
+        <div class="p-8 rounded-xl reveal" style="background: rgba(245,239,224,0.05); border: 1px solid rgba(245,239,224,0.15);">
+          <div class="text-sol text-sm tracking-widest uppercase mb-4">Custodio</div>
+          <div class="font-display text-2xl mb-3">Socio tecnológico + Operadores</div>
+          <p class="text-crema/70 text-sm leading-relaxed">
+            Cualquier desviación del manual debe ser aprobada por escrito por ambos custodios.
+          </p>
+        </div>
+        <div class="p-8 rounded-xl reveal" style="background: rgba(245,239,224,0.05); border: 1px solid rgba(245,239,224,0.15);">
+          <div class="text-sol text-sm tracking-widest uppercase mb-4">Actualización</div>
+          <div class="font-display text-2xl mb-3">Anual · Octubre</div>
+          <p class="text-crema/70 text-sm leading-relaxed">
+            Revisiones menores cada 6 meses. Cambios mayores solo con justificación estratégica documentada.
+          </p>
+        </div>
+        <div class="p-8 rounded-xl reveal" style="background: rgba(245,239,224,0.05); border: 1px solid rgba(245,239,224,0.15);">
+          <div class="text-sol text-sm tracking-widest uppercase mb-4">Archivos fuente</div>
+          <div class="font-display text-2xl mb-3">Repositorio privado</div>
+          <p class="text-crema/70 text-sm leading-relaxed">
+            AI, Figma, SVG en Git o Figma Teams. Acceso restringido a diseñadores autorizados.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-16 p-10 rounded-xl reveal" style="background: rgba(232,169,74,0.08); border: 1px solid rgba(232,169,74,0.3);">
+        <div class="text-sol text-sm tracking-widest uppercase mb-4">Archivos de entrega obligatorios</div>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div class="flex gap-3">
+            <span class="text-sol">→</span>
+            <span>Logo: SVG, PNG transparente, PDF vectorial</span>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-sol">→</span>
+            <span>Paleta: archivo .ase + CSS variables</span>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-sol">→</span>
+            <span>Tipografías: .ttf y .woff2 con licencia</span>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-sol">→</span>
+            <span>Fotografía: 50+ fotos curadas en 8 categorías</span>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-sol">→</span>
+            <span>Iconos: set completo en SVG + sprite sheet</span>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-sol">→</span>
+            <span>Plantillas: Figma con componentes reutilizables</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CSS Variables -->
+      <div class="mt-12 reveal">
+        <div class="text-sol text-sm tracking-widest uppercase mb-4">CSS Variables para desarrollo</div>
+        <div class="bg-carbon rounded-xl p-6 font-mono text-sm overflow-x-auto">
+          <pre class="text-crema/90"><code><span class="text-hoja">:root</span> {
+  <span class="text-sol">/* Primarios */</span>
+  <span class="text-piedra">--color-bosque</span>: <span class="text-sol">#1F3D2B</span>;
+  <span class="text-piedra">--color-cafe</span>: <span class="text-sol">#6B4423</span>;
+  
+  <span class="text-hoja">/* Secundarios */</span>
+  <span class="text-piedra">--color-sol</span>: <span class="text-sol">#E8A94A</span>;
+  <span class="text-piedra">--color-hoja</span>: <span class="text-sol">#8FB573</span>;
+  <span class="text-piedra">--color-tierra</span>: <span class="text-sol">#3E2F23</span>;
+  
+  <span class="text-hoja">/* Neutros */</span>
+  <span class="text-piedra">--color-crema</span>: <span class="text-sol">#F5EFE0</span>;
+  <span class="text-piedra">--color-piedra</span>: <span class="text-sol">#D4C9B0</span>;
+  <span class="text-piedra">--color-carbon</span>: <span class="text-sol">#2A241E</span>;
+  
+  <span class="text-hoja">/* Tipografía */</span>
+  <span class="text-piedra">--font-display</span>: <span class="text-sol">'Fraunces', serif</span>;
+  <span class="text-piedra">--font-body</span>: <span class="text-sol">'Inter', sans-serif</span>;
+  <span class="text-piedra">--font-hand</span>: <span class="text-sol">'Caveat', cursive</span>;
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="mt-20 pt-12 border-t border-crema/20 text-center">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-6">
+          <circle cx="50" cy="50" r="48" fill="none" stroke="#E8A94A" stroke-width="1.5"/>
+          <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+          <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+          <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+        </svg>
+        <div class="font-display text-2xl text-crema mb-2">Tropical Biohostel</div>
+        <div class="font-hand text-xl text-sol mb-6">Nocaima · Cundinamarca</div>
+        <div class="text-xs text-crema/50">
+          Manual de Identidad Visual · v1.0 · Octubre 2026<br>
+          Documento confidencial · Uso interno y de partners autorizados
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Copy color
+  function copyColor(el, color) {
+    navigator.clipboard.writeText(color).then(() => {
+      el.classList.add('copied');
+      setTimeout(() => el.classList.remove('copied'), 1500);
+    });
+  }
+
+  // Sidebar active state
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('.sidebar a');
+  
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      if (scrollY >= sectionTop - 200) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+
+    // Scroll progress
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    document.getElementById('scrollBar').style.width = scrolled + '%';
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Mobile sidebar
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+  }
+
+  // Close sidebar on link click (mobile)
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
