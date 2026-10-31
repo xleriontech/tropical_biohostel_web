@@ -227,14 +227,15 @@ export default function SiembraPage() {
                     </span>
                   </p>
                   <div className="flex flex-col items-end gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setModal(true)}
-                      disabled={!tablero.pagoHabilitado}
-                      className="btn-sol rounded-full px-6 py-2.5 text-sm shadow-sm transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      Apadrinar esta casilla
-                    </button>
+                    {tablero.pagoHabilitado && (
+                      <button
+                        type="button"
+                        onClick={() => setModal(true)}
+                        className="btn-sol rounded-full px-6 py-2.5 text-sm shadow-sm transition-transform hover:scale-[1.02]"
+                      >
+                        Apadrinar esta casilla
+                      </button>
+                    )}
                     {tablero.pagoSimulado && (
                       <p className="text-[11px] uppercase tracking-wider text-sol">
                         Pago simulado · entorno de pruebas
@@ -276,12 +277,11 @@ export default function SiembraPage() {
                       </a>{" "}
                       para leer el parte de la finca.
                     </p>
-                    {tablero.cuidados.length > 0 && (
+                    {tablero.pagoHabilitado && tablero.cuidados.length > 0 && (
                       <button
                         type="button"
                         onClick={() => setMimar(true)}
-                        disabled={!tablero.pagoHabilitado}
-                        className="btn-sol rounded-full px-6 py-2.5 text-sm shadow-sm transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+                        className="btn-sol rounded-full px-6 py-2.5 text-sm shadow-sm transition-transform hover:scale-[1.02]"
                       >
                         Mimar este árbol
                       </button>
