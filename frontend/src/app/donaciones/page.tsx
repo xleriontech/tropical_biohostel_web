@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sprout, CloudSun, HeartHandshake } from "lucide-react";
+import { Sprout, CloudSun, HeartHandshake, Grid3x3 } from "lucide-react";
 
 const CATEGORIA: Record<string, { label: string; Icon: any }> = {
   ARBOLES: { label: "Siembra de árboles", Icon: Sprout },
@@ -33,6 +33,27 @@ export default function DonacionesPage() {
         cuidado de la finca. Pagos seguros vía <strong>PayPal</strong>: puedes donar con tu cuenta
         PayPal o con tarjeta, sin crear cuenta.
       </p>
+
+      <a
+        href="/donaciones/siembra"
+        className="group mt-8 flex flex-col gap-4 overflow-hidden rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+      >
+        <span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+            Novedad · Tablero de siembra
+          </span>
+          <span className="mt-1 block font-display text-2xl font-semibold group-hover:text-primary">
+            Apadrina un árbol de café o de cacao 🌱
+          </span>
+          <span className="mt-1 block max-w-2xl text-sm text-muted-foreground">
+            Un ajedrez en 3D con los lugares reales de la finca: eliges tu casilla, la pagas por PayPal y
+            vuelves por aquí a ver cómo crece tu árbol.
+          </span>
+        </span>
+        <span className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground group-hover:bg-primary/90">
+          <Grid3x3 className="h-4 w-4" /> Ver el tablero
+        </span>
+      </a>
 
       {proyectos === null ? (
         <div className="mt-8 grid gap-6 sm:grid-cols-2">

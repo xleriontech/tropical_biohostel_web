@@ -1,6 +1,8 @@
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
+import { randomBytes } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { IntegracionesService } from '../integraciones/integraciones.service';
+import { aplicaMimamiento, nivelesAlDia } from './niveles';
 
 export interface PaypalPublic {
   clientId: string;
@@ -45,6 +47,15 @@ export class DonacionesService {
     };
   }
 
+  /**
+   * Pago simulado para probar el flujo de siembra sin credenciales de PayPal.
+   * Se activa con SIEMBRA_PAGO_SIMULADO=1 y solo fuera de producción: sin las
+   * dos cosas, el aporte pasa por PayPal como siempre.
+   */
+  get pagoSimulado(): boolean {
+    return process.env.SIEMBRA_PAGO_SIMULADO === '1' && process.env.NODE_ENV !== 'production';
+  }
+
   private async credenciales() {
     const pub = await this.configPublica();
     if (!pub.clientId) throw new BadRequestException('PayPal no configurado (falta Client ID).');
@@ -74,11 +85,8 @@ export class DonacionesService {
 
   // ---------- flujo público: crear orden y capturar ----------
 
-  async crearOrden(proyectoId: string, monto: number, datos?: { nombre?: string; email?: string; mensaje?: string }) {
-    if (!monto || monto <= 0 || monto > 100000) throw new BadRequestException('Monto inválido.');
-    const proyecto = await this.prisma.proyectoDonacion.findUnique({ where: { id: proyectoId } });
-    if (!proyecto || proyecto.estado !== 'ACTIVO') throw new BadRequestException('Proyecto no disponible.');
-    const { clientId, secret, mode, currency } = await this.credenciales();
+  private async ordenPaypal(monto: number, moneda: string, descripcion: string, customId: string) {
+    const { clientId, secret, mode } = await this.credenciales();
     const base = basePaypal(mode);
     const token = await this.tokenPaypal(base, clientId, secret);
     const r = await fetch(`${base}/v2/checkout/orders`, {
@@ -88,34 +96,108 @@ export class DonacionesService {
         intent: 'CAPTURE',
         purchase_units: [
           {
-            custom_id: proyecto.id,
-            description: `Donación: ${proyecto.titulo}`.slice(0, 120),
-            amount: { currency_code: proyecto.moneda || currency, value: monto.toFixed(2) },
+            custom_id: customId,
+            description: descripcion.slice(0, 120),
+            amount: { currency_code: moneda, value: monto.toFixed(2) },
           },
         ],
       }),
     });
     if (!r.ok) throw new BadRequestException('PayPal no pudo crear la orden.');
     const order = await r.json();
+    return order.id as string;
+  }
+
+  async crearOrden(proyectoId: string, monto: number, datos?: { nombre?: string; email?: string; mensaje?: string }) {
+    if (!monto || monto <= 0 || monto > 100000) throw new BadRequestException('Monto inválido.');
+    const proyecto = await this.prisma.proyectoDonacion.findUnique({ where: { id: proyectoId } });
+    if (!proyecto || proyecto.estado !== 'ACTIVO') throw new BadRequestException('Proyecto no disponible.');
+    const orderId = await this.ordenPaypal(monto, proyecto.moneda, `Donación: ${proyecto.titulo}`, proyecto.id);
     await this.prisma.donacion.create({
       data: {
         proyectoId: proyecto.id,
         monto,
-        moneda: proyecto.moneda || currency,
+        moneda: proyecto.moneda,
         nombre: datos?.nombre?.slice(0, 120),
         email: datos?.email?.slice(0, 160),
         mensaje: datos?.mensaje?.slice(0, 500),
-        paypalOrderId: order.id,
+        paypalOrderId: orderId,
         estado: 'PENDIENTE',
       },
     });
-    return { orderId: order.id };
+    return { orderId };
+  }
+
+  /** Orden de PayPal vinculada a un árbol ya reservado en el tablero de siembra. */
+  async crearOrdenParaArbol(opts: {
+    codigoApadrinamiento: string;
+    proyectoId: string;
+    monto: number;
+    moneda: string;
+    datos?: { nombre?: string; email?: string; mensaje?: string };
+  }) {
+    if (!opts.monto || opts.monto <= 0 || opts.monto > 100000) throw new BadRequestException('Monto inválido.');
+    const arbol = await this.prisma.apadrinamiento.findUnique({ where: { codigo: opts.codigoApadrinamiento } });
+    if (!arbol || arbol.confirmado) throw new BadRequestException('La reserva de ese árbol ya no está activa.');
+    const orderId = this.pagoSimulado
+      ? `SIM-${randomBytes(8).toString('hex').toUpperCase()}`
+      : await this.ordenPaypal(
+          opts.monto,
+          opts.moneda,
+          `Apadrinamiento árbol ${opts.codigoApadrinamiento}`,
+          arbol.id,
+        );
+    const don = await this.prisma.donacion.create({
+      data: {
+        proyectoId: opts.proyectoId,
+        monto: opts.monto,
+        moneda: opts.moneda,
+        nombre: opts.datos?.nombre?.slice(0, 120),
+        email: opts.datos?.email?.slice(0, 160),
+        mensaje: opts.datos?.mensaje?.slice(0, 500),
+        paypalOrderId: orderId,
+        estado: 'PENDIENTE',
+      },
+    });
+    await this.prisma.apadrinamiento.update({ where: { id: arbol.id }, data: { donacionId: don.id } });
+    return { orderId, donacionId: don.id };
+  }
+
+  /**
+   * Orden de PayPal para mimar un árbol ya sembrado: riego, abono, sustrato o
+   * jornal. Las líneas ya las resolvió SiembraService contra el catálogo.
+   */
+  async crearOrdenParaCuidado(opts: {
+    arbolId: string;
+    proyectoId: string;
+    monto: number;
+    moneda: string;
+    descripcion: string;
+  }) {
+    if (!opts.monto || opts.monto <= 0 || opts.monto > 100000) throw new BadRequestException('Monto inválido.');
+    const orderId = this.pagoSimulado
+      ? `SIM-${randomBytes(8).toString('hex').toUpperCase()}`
+      : await this.ordenPaypal(opts.monto, opts.moneda, opts.descripcion, opts.arbolId);
+    const don = await this.prisma.donacion.create({
+      data: {
+        proyectoId: opts.proyectoId,
+        monto: opts.monto,
+        moneda: opts.moneda,
+        paypalOrderId: orderId,
+        estado: 'PENDIENTE',
+      },
+    });
+    return { orderId, donacionId: don.id };
   }
 
   async capturarOrden(orderId: string) {
     const don = await this.prisma.donacion.findUnique({ where: { paypalOrderId: orderId } });
     if (!don) throw new BadRequestException('Orden no encontrada.');
     if (don.estado === 'APROBADA') return { estado: don.estado, donacionId: don.id };
+    if (orderId.startsWith('SIM-')) {
+      if (!this.pagoSimulado) throw new BadRequestException('Esa orden es de prueba y aquí no se cobra.');
+      return this.confirmaPago(don.id, null);
+    }
     const { clientId, secret, mode } = await this.credenciales();
     const base = basePaypal(mode);
     const token = await this.tokenPaypal(base, clientId, secret);
@@ -134,12 +216,90 @@ export class DonacionesService {
     }
     const captureId =
       data.purchase_units?.[0]?.payments?.captures?.[0]?.id || null;
+    return this.confirmaPago(don.id, captureId);
+  }
+
+  /**
+   * Un pago confirmado —de PayPal o de la simulación de desarrollo— siembra el
+   * árbol en el tablero: la reserva pasa a casilla ocupada con su fecha.
+   */
+  private async confirmaPago(donacionId: string, captureId: string | null) {
     const updated = await this.prisma.donacion.update({
-      where: { id: don.id },
+      where: { id: donacionId },
       data: { estado: 'APROBADA', paypalCaptureId: captureId },
-      include: { proyecto: { select: { titulo: true } } },
+      include: { proyecto: { select: { titulo: true } }, apadrinamiento: true },
     });
-    return { estado: updated.estado, donacionId: updated.id, proyecto: updated.proyecto.titulo };
+
+    if (updated.apadrinamiento) {
+      const arbol = updated.apadrinamiento;
+      await this.prisma.$transaction([
+        this.prisma.apadrinamiento.update({
+          where: { id: arbol.id },
+          data: { confirmado: true, fechaSiembra: arbol.fechaSiembra || new Date() },
+        }),
+        this.prisma.parcela.update({
+          where: { id: arbol.parcelaId },
+          data: { estado: 'OCUPADA', expiraAt: null },
+        }),
+      ]);
+    }
+
+    const cuidados = await this.aplicarCuidados(updated.id);
+
+    return {
+      estado: updated.estado,
+      donacionId: updated.id,
+      proyecto: updated.proyecto.titulo,
+      codigo: updated.apadrinamiento?.codigo || null,
+      cuidados,
+    };
+  }
+
+  /**
+   * Los mimamientos pagados se aplican al árbol: las barras suben lo que diga
+   * el catálogo y el parte de la finca queda con la fecha del riego o del abono.
+   */
+  private async aplicarCuidados(donacionId: string) {
+    const compras = await this.prisma.cuidadoAplicado.findMany({
+      where: { donacionId, estado: 'PENDIENTE' },
+      include: { item: true },
+    });
+    if (!compras.length) return 0;
+    const ahora = new Date();
+
+    // Una orden puede atender varios árboles; se agrupa para no leerlos dos veces.
+    const porArbol = new Map<string, typeof compras>();
+    for (const c of compras) {
+      const prev = porArbol.get(c.arbolId) || [];
+      prev.push(c);
+      porArbol.set(c.arbolId, prev);
+    }
+
+    for (const [arbolId, lineas] of porArbol) {
+      const arbol = await this.prisma.apadrinamiento.findUnique({ where: { id: arbolId } });
+      if (!arbol) continue;
+      let niveles = nivelesAlDia(arbol, ahora);
+      for (const l of lineas) niveles = aplicaMimamiento(niveles, l.item, Number(l.cantidad));
+      const rego = lineas.some((l) => l.item.categoria === 'AGUA');
+      const fertilizo = lineas.some((l) => l.item.categoria === 'ABONO' || l.item.categoria === 'SUSTRATO');
+      await this.prisma.apadrinamiento.update({
+        where: { id: arbolId },
+        data: {
+          aguaNivel: niveles.agua,
+          nutrienteNivel: niveles.nutrientes,
+          saludNivel: niveles.salud,
+          nivelesEn: ahora,
+          ...(rego ? { ultimoRiego: ahora } : {}),
+          ...(fertilizo ? { ultimoAbono: ahora } : {}),
+        },
+      });
+    }
+
+    await this.prisma.cuidadoAplicado.updateMany({
+      where: { id: { in: compras.map((c) => c.id) } },
+      data: { estado: 'PAGADO' },
+    });
+    return compras.length;
   }
 
   // ---------- consulta pública ----------

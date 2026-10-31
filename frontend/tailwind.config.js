@@ -38,6 +38,15 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Paleta del manual de identidad (los 8 colores del territorio)
+        bosque: "hsl(var(--bosque))",
+        cascara: "hsl(var(--cascara))",
+        sol: "hsl(var(--sol))",
+        hoja: "hsl(var(--hoja))",
+        tierra: "hsl(var(--tierra))",
+        crema: "hsl(var(--crema))",
+        piedra: "hsl(var(--piedra))",
+        carbon: "hsl(var(--carbon))",
       },
       borderRadius: {
         lg: "var(--radius)",

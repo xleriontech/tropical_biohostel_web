@@ -368,6 +368,7 @@ model ProyectoDonacion {
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
   donaciones  Donacion[]
+  apadrinamientos Apadrinamiento[]
 
   @@index([estado])
 }
@@ -385,9 +386,147 @@ model Donacion {
   paypalCaptureId String?
   estado          EstadoDonacion   @default(PENDIENTE)
   esManual        Boolean          @default(false)
+  apadrinamiento  Apadrinamiento?
+  /// Donación que pagó un lote de mimamientos (riego, abono, sustrato…).
+  cuidados        CuidadoAplicado[]
   createdAt       DateTime         @default(now())
 
   @@index([proyectoId])
+  @@index([estado])
+}
+
+// --- Sección Siembra: apadrinar un árbol de café o cacao en el tablero de la finca ---
+enum EspecieSiembra {
+  CAFE
+  CACAO
+}
+
+enum EtapaArbol {
+  SEMILLA
+  BROTE
+  JUVENIL
+  PRODUCTIVO
+}
+
+enum EstadoParcela {
+  LIBRE
+  RESERVADA // con orden de pago abierta y sin confirmar
+  OCUPADA // apadrinamiento confirmado
+}
+
+/// Una casilla del ajedrez de siembra. La retícula la define la finca en
+/// SiteConfig('siembraTablero'); aquí solo vive la ocupación real.
+model Parcela {
+  id        String        @id @default(cuid())
+  fila      Int
+  columna   Int
+  estado    EstadoParcela @default(LIBRE)
+  /// Una reserva sin captura de pago se libera sola al vencer.
+  expiraAt  DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  arbol     Apadrinamiento?
+
+  @@unique([fila, columna])
+  @@index([estado])
+}
+
+model Apadrinamiento {
+  id           String            @id @default(cuid())
+  /// El código que recibe el padrino para consultar su árbol sin necesidad de cuenta.
+  codigo       String            @unique
+  parcela      Parcela           @relation(fields: [parcelaId], references: [id])
+  parcelaId    String            @unique
+  proyecto     ProyectoDonacion? @relation(fields: [proyectoId], references: [id], onDelete: SetNull)
+  proyectoId   String?
+  donacion     Donacion?         @relation(fields: [donacionId], references: [id], onDelete: SetNull)
+  donacionId   String?           @unique
+  especie      EspecieSiembra
+  etapa        EtapaArbol        @default(SEMILLA)
+  /// Como lo bautiza quien apadrina. Opcional: no inventamos nombres por él.
+  alias        String?
+  padrino      String?
+  pais         String?
+  mensaje      String?
+  /// false mientras el pago no se captura; el tablero lo muestra como reserva.
+  confirmado   Boolean           @default(false)
+  fechaSiembra DateTime?
+  /// El parte de la finca sobre este árbol (crecimiento, poda, primera cosecha).
+  notasFinca   String?
+  /// Cómo está de atendido el árbol: suben con cada mimamiento pagado y bajan
+  /// solos con los días. Se materializan al leer, sin tareas programadas.
+  aguaNivel      Int       @default(55)
+  nutrienteNivel Int       @default(45)
+  saludNivel     Int       @default(78)
+  /// Desde cuándo se le descuentan los días de sed y de suelo flaco.
+  nivelesEn      DateTime?
+  ultimoRiego    DateTime?
+  ultimoAbono    DateTime?
+  cuidados       CuidadoAplicado[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@index([especie])
+  @@index([confirmado])
+}
+
+enum CategoriaCuidado {
+  AGUA
+  ABONO
+  SUSTRATO
+  CUIDADO
+}
+
+/// Lo que la finca publica que cuesta atender un árbol: riego, abono, sustrato, jornal.
+/// La lista la mantiene la finca; el código solo la muestra y cobra.
+model ItemCuidado {
+  id          String            @id @default(cuid())
+  clave       String            @unique
+  etiqueta    String
+  categoria   CategoriaCuidado
+  /// Cómo se cuenta: 'L', 'kg' o 'u'.
+  unidad      String
+  precio      Decimal           @db.Decimal(10, 2)
+  descripcion String?
+  /// Cuánto le sube a cada nivel una unidad aplicada.
+  realceAgua  Int               @default(0)
+  realceNutri Int               @default(0)
+  realceSalud Int               @default(0)
+  activo      Boolean           @default(true)
+  orden       Int               @default(0)
+  compras     CuidadoAplicado[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([activo, orden])
+}
+
+enum EstadoCuidado {
+  PENDIENTE
+  PAGADO
+  CANCELADO
+}
+
+/// Un mimamiento comprado para un árbol concreto. Nace pendiente y se aplica al capturar el pago.
+model CuidadoAplicado {
+  id         String           @id @default(cuid())
+  arbol      Apadrinamiento   @relation(fields: [arbolId], references: [id], onDelete: Cascade)
+  arbolId    String
+  item       ItemCuidado      @relation(fields: [itemId], references: [id])
+  itemId     String
+  /// La orden de PayPal que pagó este lote (varias líneas comparten una).
+  donacion   Donacion?        @relation(fields: [donacionId], references: [id], onDelete: SetNull)
+  donacionId String?
+  /// Etiqueta, unidad y precio copiados al comprar: si la finca cambia la lista, el historial no se reescribe.
+  etiqueta   String
+  unidad     String
+  cantidad   Decimal          @db.Decimal(6, 2)
+  costo      Decimal          @db.Decimal(10, 2)
+  moneda     String           @default("USD")
+  estado     EstadoCuidado    @default(PENDIENTE)
+  createdAt  DateTime         @default(now())
+
+  @@index([arbolId])
   @@index([estado])
 }
 

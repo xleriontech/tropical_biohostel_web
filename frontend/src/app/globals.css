@@ -28,6 +28,14 @@
   --grad-from: 145 85% 30%;
   --grad-to: 219 60% 32%;
   --grad-fg: 0 0% 100%;
+  --bosque: 144 33% 18%;   /* #1F3D2B Color principal · títulos */
+  --cascara: 28 51% 28%;    /* #6B4423 Acento cálido · iconografía */
+  --sol: 36 77% 60%;        /* #E8A94A CTAs · highlights */
+  --hoja: 95 31% 58%;       /* #8FB573 Elementos orgánicos */
+  --tierra: 27 28% 19%;     /* #3E2F23 Textos secundarios */
+  --crema: 43 51% 92%;      /* #F5EFE0 Fondos principales */
+  --piedra: 42 30% 76%;     /* #D4C9B0 Separadores · bordes */
+  --carbon: 30 7% 14%;      /* #2A241E Texto principal */
 }
 
 .dark {
@@ -599,4 +607,38 @@
     transform: none !important;
     filter: none !important;
   }
+}
+
+/* ============================================================
+   SECCIÓN SIEMBRA · paleta del manual de identidad visual
+   60% neutros (crema/piedra) · 30% primarios (bosque/cáscara)
+   · 10% secundarios (sol/hoja). El escopetado reutiliza los
+   tokens shadcn para que el resto del sitio no cambie.
+   ============================================================ */
+[data-seccion="siembra"] {
+  --background: var(--crema);
+  --foreground: var(--carbon);
+  --card: 45 55% 96%;
+  --card-foreground: var(--carbon);
+  --primary: var(--bosque);
+  --primary-foreground: var(--crema);
+  --secondary: var(--piedra);
+  --secondary-foreground: var(--tierra);
+  --muted: 42 33% 87%;
+  --muted-foreground: var(--tierra);
+  --accent: var(--hoja);
+  --accent-foreground: var(--bosque);
+  --border: var(--piedra);
+  --input: var(--piedra);
+  --ring: var(--sol);
+}
+
+/* El CTA de la sección es Sol de Nocaima sobre Carbón: jerarquía del manual. */
+[data-seccion="siembra"] .btn-sol {
+  background: hsl(var(--sol));
+  color: hsl(var(--carbon));
+  font-weight: 600;
+}
+[data-seccion="siembra"] .btn-sol:hover {
+  background: hsl(var(--sol) / 0.88);
 }

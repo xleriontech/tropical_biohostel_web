@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Delete,
   Body,
   Param,
@@ -11,8 +12,22 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsNumber, IsIn, IsEmail, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+  IsIn,
+  IsEmail,
+  IsArray,
+  ArrayMinSize,
+  ArrayMaxSize,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { DonacionesService } from './donaciones.service';
+import { SiembraService } from './siembra.service';
 
 class CrearOrdenDto {
   @IsString()
@@ -85,6 +100,88 @@ class ProyectoDto {
   orden?: number;
 }
 
+class ReservarArbolDto {
+  @IsNumber()
+  @Min(0)
+  fila: number;
+
+  @IsNumber()
+  @Min(0)
+  columna: number;
+
+  @IsIn(['CAFE', 'CACAO'])
+  especie: 'CAFE' | 'CACAO';
+
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  monto?: number;
+
+  @IsOptional()
+  @IsString()
+  alias?: string;
+
+  @IsOptional()
+  @IsString()
+  nombre?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  pais?: string;
+
+  @IsOptional()
+  @IsString()
+  mensaje?: string;
+}
+
+class LineaCuidadoDto {
+  @IsString()
+  @IsNotEmpty()
+  clave: string;
+
+  @IsNumber()
+  @Min(1)
+  cantidad: number;
+}
+
+class ComprarCuidadoDto {
+  @IsNumber()
+  @Min(0)
+  fila: number;
+
+  @IsNumber()
+  @Min(0)
+  columna: number;
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(8)
+  @ValidateNested({ each: true })
+  @Type(() => LineaCuidadoDto)
+  lineas: LineaCuidadoDto[];
+}
+
+class ActualizarArbolDto {
+  @IsOptional()
+  @IsIn(['SEMILLA', 'BROTE', 'JUVENIL', 'PRODUCTIVO'])
+  etapa?: string;
+
+  @IsOptional()
+  @IsString()
+  notasFinca?: string;
+
+  @IsOptional()
+  @IsString()
+  fechaSiembra?: string;
+
+  @IsOptional()
+  confirmado?: boolean;
+}
+
 class ManualDto {
   @IsString()
   @IsNotEmpty()
@@ -114,7 +211,34 @@ class ManualDto {
 @ApiTags('Donaciones')
 @Controller('donaciones')
 export class DonacionesController {
-  constructor(private donaciones: DonacionesService) {}
+  constructor(
+    private donaciones: DonacionesService,
+    private siembra: SiembraService,
+  ) {}
+
+  @Get('siembra/tablero')
+  @ApiOperation({ summary: 'Tablero de siembra: parcelas, estadísticas y monto (público)' })
+  tablero() {
+    return this.siembra.tablero();
+  }
+
+  @Post('siembra/reserva')
+  @ApiOperation({ summary: 'Reservar parcela del tablero y crear la orden PayPal del árbol' })
+  reserva(@Body() dto: ReservarArbolDto) {
+    return this.siembra.reservar(dto);
+  }
+
+  @Post('siembra/cuidado')
+  @ApiOperation({ summary: 'Comprar cuidados (riego, abono, sustrato) para el árbol de una casilla' })
+  cuidado(@Body() dto: ComprarCuidadoDto) {
+    return this.siembra.comprarCuidado(dto);
+  }
+
+  @Get('siembra/arbol/:codigo')
+  @ApiOperation({ summary: 'Ficha del árbol apadrinado por su código (público)' })
+  arbol(@Param('codigo') codigo: string) {
+    return this.siembra.arbolPorCodigo(codigo);
+  }
 
   @Get('proyectos')
   @ApiOperation({ summary: 'Proyectos activos con lo recaudado (público)' })
@@ -152,7 +276,28 @@ export class DonacionesController {
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class DonacionesAdminController {
-  constructor(private donaciones: DonacionesService) {}
+  constructor(
+    private donaciones: DonacionesService,
+    private siembra: SiembraService,
+  ) {}
+
+  @Get('siembra/arboles')
+  @ApiOperation({ summary: 'Listar árboles apadrinados con su parcela y pago' })
+  arboles() {
+    return this.siembra.listarArboles();
+  }
+
+  @Patch('siembra/arbol/:id')
+  @ApiOperation({ summary: 'Actualizar etapa, parte de la finca o confirmación de un árbol' })
+  actualizarArbol(@Param('id') id: string, @Body() dto: ActualizarArbolDto) {
+    return this.siembra.actualizarArbol(id, dto);
+  }
+
+  @Post('siembra/parcela/:id/liberar')
+  @ApiOperation({ summary: 'Devolver una casilla al tablero (solo reservas sin pago)' })
+  liberarParcela(@Param('id') id: string) {
+    return this.siembra.liberarParcela(id);
+  }
 
   @Get('resumen')
   @ApiOperation({ summary: 'Todos los proyectos con recaudado' })
