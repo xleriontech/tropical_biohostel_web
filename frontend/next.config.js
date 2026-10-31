@@ -32,6 +32,16 @@ const nextConfig = {
         source: "/manifest.webmanifest",
         headers: [{ key: "Content-Type", value: "application/manifest+json; charset=utf-8" }],
       },
+      // El manual de identidad se marca "uso interno y de partners autorizados":
+      // se sirve público pero fuera del índice de los buscadores, y revalidado
+      // para que una corrección de marca no tarde un día en llegar.
+      {
+        source: "/manual-de-imagen.html",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nosnippet" },
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+        ],
+      },
     ];
   },
 

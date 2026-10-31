@@ -145,11 +145,19 @@ inglés de cada sección) y una **galería real de la finca** en `frontend/publi
 
 ## Manejo de Imagen Tropical Biohostel
 
-El **Manual de Identidad Visual v1.0 (Octubre 2026)** está en
-[`docs/Manual-de-Imagen-Tropical-Biohostel.html`](docs/Manual-de-Imagen-Tropical-Biohostel.html):
-un HTML autocontenido —se abre directo en el navegador, sin build— con sidebar, muestras de
-color copiables al portapapeles y mockups de aplicación. Usa Tailwind y las tipografías desde CDN,
-así que necesita internet la primera vez.
+El **Manual de Identidad Visual v1.0 (Octubre 2026)** es una página del sitio: se sirve en
+`https://<dominio-del-sitio>/manual-de-imagen.html` y el archivo vive en
+[`frontend/public/manual-de-imagen.html`](frontend/public/manual-de-imagen.html) (una sola copia,
+la que se publica). Es un HTML autocontenido —se abre directo en el navegador, sin build— con
+sidebar, muestras de color copiables al portapapeles y mockups de aplicación. Usa Tailwind y las
+tipografías desde CDN, así que necesita internet la primera vez.
+
+Lo serve Next como estático y [`frontend/next.config.js`](frontend/next.config.js) le pone
+`X-Robots-Tag: noindex, nosnippet`: el manual se marca *uso interno y de partners autorizados*,
+así que la URL queda fuera del índice de los buscadores, pero **no es privada** — quien tenga el
+enlace lo lee. Las anclas por sección son `#inicio`, `#filosofia`, `#logotipo`, `#paleta`,
+`#tipografia`, `#fotografia`, `#iconografia`, `#elementos`, `#voz`, `#aplicaciones`, `#dos-donts`,
+`#gobernanza`.
 
 | § | Sección | Qué fija |
 |---|---|---|
@@ -185,8 +193,9 @@ H2 48/400, H3 32/400 en Fraunces; Body 18/400, Caption 14/400, Button 16/500 en 
 
 **Gobernanza:** toda desviación del manual la aprueban por escrito los dos custodios (socio
 tecnológico + operadores); revisión mayor anual en octubre, menores cada 6 meses. El pie del
-manual lo marca *"Documento confidencial · Uso interno y de partners autorizados"* — como el
-repositorio es público, publicar este archivo queda a criterio de Miguel.
+manual lo marca *"Documento confidencial · Uso interno y de partners autorizados"*: hoy se
+publica como URL sin enlace (solo `/manual-de-imagen.html`, sin entrada en la navegación y con
+`noindex`). Restringirlo por login es decisión de Miguel.
 
 ## PWA (app instalable)
 
