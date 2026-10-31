@@ -10,8 +10,10 @@ import MimarModal from "@/components/siembra/MimarModal";
 import TableroLista from "@/components/siembra/TableroLista";
 import { cargaTablero, ETAPAS, ESPECIES, type ParcelaTablero, type Tablero } from "@/lib/siembra";
 
+// Sin `ssr: false`: en el edge runtime de Cloudflare Pages ese modo deja el módulo
+// fuera del manifest y la página responde 500. El tablero de todas formas solo se
+// monta cuando el tablero ya llegó, o sea siempre en el navegador.
 const Tablero3D = dynamic(() => import("@/components/siembra/Tablero3D"), {
-  ssr: false,
   loading: () => (
     <div className="h-[340px] w-full rounded-3xl border bg-muted sm:h-[460px]" aria-hidden>
       <p className="flex h-full items-center justify-center text-sm text-muted-foreground">
