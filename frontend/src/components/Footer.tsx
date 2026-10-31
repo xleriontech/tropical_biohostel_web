@@ -67,6 +67,15 @@ export default function Footer() {
           <a href="/xlerion" className="font-semibold text-primary hover:underline">
             Xlerion Disruptive Tech - Colombia
           </a>
+          {" · "}
+          <a
+            href="/manual-de-imagen.html"
+            target="_blank"
+            rel="noopener"
+            className="font-medium text-primary hover:underline"
+          >
+            Manual de identidad visual
+          </a>
         </p>
       </div>
     </footer>
