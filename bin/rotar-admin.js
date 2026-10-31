@@ -2,10 +2,11 @@
 /**
  * Cambia la contraseña del usuario administrador.
  *
- * El seed crea admin@tropicalbiohostel.com con la clave "admin123" y ese valor
- * está publicado en el repositorio; CredencialesAdmin.txt, que guardaba la
- * real, también estuvo versionado. Mientras la contraseña del panel sea una de
- * esas, todo lo demás de la rotación da igual: el /admin es la puerta.
+ * El seed ya no pone una clave de fábrica: usa ADMIN_PASSWORD o genera una y la
+ * anota en CredencialesAdmin.txt. Pero "admin123" quedó publicado en el
+ * historial, así que cualquier admin creado con esa clave —o con la que estaba
+ * en CredencialesAdmin.txt, que también estuvo versionada— es la puerta abierta.
+ * Este script cierra esa puerta en la base que apunte DATABASE_URL.
  *
  *   node bin/rotar-admin.js                    # lista los administradores
  *   node bin/rotar-admin.js --aplicar          # cambia todos los administradores

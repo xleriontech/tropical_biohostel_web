@@ -1,11 +1,16 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import * as bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const prisma = new PrismaClient();
 
 /** "1 ruta creada" / "3 rutas creadas" */
 const plural = (n: number, singular: string, plural_: string) =>
   `${n} ${n === 1 ? singular : plural_}`;
+
+const huella = (v: string) => crypto.createHash('md5').update(v).digest('hex').slice(0, 8);
 
 const img = (archivos: string[]) =>
   archivos.map((url, i) => ({ url: `/tropical/${url}`, orden: i, esPrincipal: i === 0 }));
@@ -422,6 +427,95 @@ async function crearPropiedad(args: { data: Prisma.PropiedadCreateInput }) {
   return true;
 }
 
+/** Cuatro sílabas + dígitos: se puede leer en voz alta y teclear sin errores. */
+function generarClaveAdmin(): string {
+  const consonantes = 'bcdfghjklmnpqrstvwz';
+  const vocales = 'aeiou';
+  const r = (n: number) => crypto.randomInt(n);
+  const silaba = () =>
+    consonantes[r(consonantes.length)] + vocales[r(vocales.length)] + consonantes[r(consonantes.length)];
+  const clave = `${silaba()}${silaba()}${silaba()}${silaba()}${String(r(100))}`;
+  return clave[0].toUpperCase() + clave.slice(1);
+}
+
+/** Primer directorio con .git subiendo desde el seed; en un contenedor no hay. */
+function raizDelRepo(): string | null {
+  let dir = __dirname;
+  for (let i = 0; i < 6; i++) {
+    if (fs.existsSync(path.join(dir, '.git'))) return dir;
+    const padre = path.dirname(dir);
+    if (padre === dir) break;
+    dir = padre;
+  }
+  return null;
+}
+
+/**
+ * La clave del primer admin no puede estar en el código: el repositorio es
+ * público y "admin123" se conoció. ADMIN_PASSWORD fija la del despliegue; sin
+ * esa variable se genera y se deja en CredencialesAdmin.txt (0600, fuera de git).
+ */
+function claveDelAdmin(email: string): { clave: string; generada: boolean } | null {
+  if (process.env.ADMIN_PASSWORD) return { clave: process.env.ADMIN_PASSWORD, generada: false };
+
+  const raiz = raizDelRepo();
+  if (!raiz) {
+    // En un contenedor no hay dónde anotar la clave, y irla a buscar después no
+    // sirve: sin ADMIN_PASSWORD se queda sin admin y hay que volver a correr el seed.
+    console.log(
+      '   - SIN ADMIN: este entorno no tiene repo donde anotar una clave generada. ' +
+        'Defní ADMIN_PASSWORD y volvé a correr el seed (o node bin/rotar-admin.js --aplicar).',
+    );
+    return null;
+  }
+
+  const clave = generarClaveAdmin();
+  const archivo = path.join(raiz, 'CredencialesAdmin.txt');
+  const previo = fs.existsSync(archivo) ? fs.readFileSync(archivo, 'utf8') : '';
+  const momento = new Date().toISOString().slice(0, 16).replace('T', ' ');
+  fs.writeFileSync(archivo, `${previo}\n## Panel admin — creada por el seed el ${momento}\n- ${email}: ${clave}\n`, {
+    mode: 0o600,
+  });
+  return { clave, generada: true };
+}
+
+async function asegurarAdmin(email: string) {
+  if (await prisma.user.findUnique({ where: { email } })) {
+    console.log('   - admin ya existía');
+    return;
+  }
+
+  const entregada = claveDelAdmin(email);
+  if (!entregada) return;
+  const { clave, generada } = entregada;
+
+  const admin = await prisma.user.create({
+    data: {
+      email,
+      supabaseId: 'local_admin@tropicalbiohostel.com',
+      nombre: 'Administrador',
+      role: 'admin',
+    },
+  });
+  await prisma.$executeRawUnsafe(
+    'UPDATE "User" SET "passwordHash" = $1 WHERE id = $2',
+    bcrypt.hashSync(clave, 12),
+    admin.id,
+  );
+
+  // El hash guardado tiene que abrir con la clave que se entregó.
+  const vuelto = await prisma.user.findUniqueOrThrow({ where: { id: admin.id }, select: { passwordHash: true } });
+  if (!bcrypt.compareSync(clave, vuelto.passwordHash)) {
+    throw new Error(`la contraseña de ${email} no verifica después de escribirla`);
+  }
+
+  console.log(
+    generada
+      ? `   - 1 admin creado; la clave se generó y quedó en CredencialesAdmin.txt (huella ${huella(clave)})`
+      : `   - 1 admin creado con ADMIN_PASSWORD (huella ${huella(clave)})`,
+  );
+}
+
 async function main() {
   // Siempre asegura las rutas del café (idempotente; no depende del seed principal)
   await asegurarRutasCafe();
@@ -431,27 +525,7 @@ async function main() {
 
   // Cada sección del seed es idempotente: si falta algo (p. ej. porque una
   // corrida anterior se interrumpió a mitad), se completa en la siguiente.
-  const emailAdmin = "admin@tropicalbiohostel.com";
-  const adminExistente = await prisma.user.findUnique({ where: { email: emailAdmin } });
-  if (adminExistente) {
-    console.log("   - admin ya existía");
-  } else {
-    const adminHash = bcrypt.hashSync("admin123", 10);
-    const admin = await prisma.user.create({
-      data: {
-        email: emailAdmin,
-        supabaseId: "local_admin@tropicalbiohostel.com",
-        nombre: "Administrador",
-        role: "admin",
-      },
-    });
-    await prisma.$executeRawUnsafe(
-      'UPDATE "User" SET "passwordHash" = $1 WHERE id = $2',
-      adminHash,
-      admin.id,
-    );
-    console.log("   - 1 admin creado (admin@tropicalbiohostel.com / admin123)");
-  }
+  await asegurarAdmin("admin@tropicalbiohostel.com");
 
   const aiProviders = [
     { name: "Gemini", apiEndpoint: "https://generativelanguage.googleapis.com/v1beta", websiteUrl: "https://aistudio.google.com/app/apikey", isActive: true, paraChat: true },

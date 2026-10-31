@@ -37,7 +37,9 @@ No borres `node_modules` (ahorran mucho tiempo), ni los `.env`.
 
 ## Datos útiles
 
-- Admin: `admin@tropicalbiohostel.com` / `admin123`
+- Admin: `admin@tropicalbiohostel.com`. La clave la genera el seed al instalar y
+  queda anotada en `CredencialesAdmin.txt` (archivo local, 0600, nunca se sube a
+  git). Ya no existe una clave de fabrica.
 - Frontend: http://localhost:3000
 - API + docs: http://localhost:3001/api/docs
 - Los datos de ejemplo se recrean con `instalar.bat` si algo se daña.
@@ -54,8 +56,8 @@ muestra la URL pública para compartir. El PC debe quedar encendido.
 - Las URLs de prueba cambian en cada ejecución.
 - Para volver a modo local: cierra las ventanas `TROPICAL BIOHOSTEL Tunel-*`,
   corre `detener-tropical.bat` y luego `iniciar-tropical.bat`.
-- Si lo dejas publicado, cambia la clave del admin
-  (`admin@tropicalbiohostel.com` / `admin123`).
+- Si lo dejas publicado, rotá la clave del admin antes de compartir la URL:
+  `node bin\rotar-admin.js --aplicar` (la nueva queda en `CredencialesAdmin.txt`).
 
 ## Limitaciones
 

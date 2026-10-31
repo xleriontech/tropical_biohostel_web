@@ -79,9 +79,12 @@ node prisma/dist/seed.js
 
 ## Nota sobre `CredencialesAdmin.txt`
 
-Ese archivo contiene credenciales reales (AWS, Resend, Groq, OpenAI, Deepseek, OpenRouter) y está
-versionado en git. **No debería seguir ahí**: hay que sacarlo del seguimiento
-(`git rm --cached CredencialesAdmin.txt`), añadirlo a `.gitignore` y **rotar todas las claves**.
+Ese archivo contiene credenciales reales (AWS, Resend, Groq, OpenAI, DeepSeek, OpenRouter). Ya no
+está en el índice ni en el historial (salió del seguimiento con el mensaje `chore: deja de
+versionar CredencialesAdmin.txt` y se purgó del historial el 2026-10-30 con `git filter-repo`),
+pero **eso no las hace seguras**: el repositorio fue público con esas claves vivas, así que cada
+una de ellas sigue pendiente de rotar en su proveedor. El archivo queda como nota local (0600) y
+debería migrar a un gestor de contraseñas.
 
 ## Claves de entorno que no van en el repositorio
 
@@ -92,7 +95,15 @@ Tres familias de secretos, tres orígenes distintos. Ninguno se copia ya de
 | --- | --- | --- |
 | `TURISMO_PG_PASSWORD`, `REDIS_PASSWORD` | `.env` (raíz, sin versionar) | `node bin/credenciales.js` |
 | `AI_MASTER_KEY` | `.env` de cada entorno | `openssl rand -base64 48` |
+| `ADMIN_PASSWORD` | panel de Railway | uno mismo, o `node bin/rotar-admin.js --aplicar` |
 | LLM, R2, Google, pasarelas | panel de Railway / `ClaveApi` cifrada | el proveedor |
+
+El seed ya no pone clave de fábrica en el `/admin`. Con `ADMIN_PASSWORD` definida
+la usa; en local, sin definirla, genera una legible y la anota en
+`CredencialesAdmin.txt` (por eso `arrancar-db.bat` y `instalar.bat` funcionan sin
+configure nada). En un contenedor no hay repo donde anotar nada: sin
+`ADMIN_PASSWORD` el seed avisa `SIN ADMIN` y deja la base sin administrador, que
+es lo que debe pasar en un despliegue.
 
 `arrancar-db.bat` publica Postgres y Redis solo en `127.0.0.1` y exige
 autenticación en Redis. Si un contenedor `tropical-redis-1` ya existía sin

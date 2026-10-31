@@ -3,8 +3,9 @@
  * Rota AI_MASTER_KEY y vuelve a cifrar con la nueva las credenciales que ya
  * están en la base.
  *
- * La master key de e9dda6e quedó versionada en backend/.env.docker, así que
- * cualquier clon del repo puede descifrar APIKey.key y ClaveApi.valor. Rotarla
+ * Durante varias versiones la master key estuvo escrita en backend/.env.docker
+ * (esa ruta ya se purgó del historial), así que quien tuviera ese clon puede
+ * descifrar APIKey.key y ClaveApi.valor. Rotarla
  * sin recifrar deja la app inservible (decrypt() lanza con un ciphertext de la
  * clave anterior), y recifrar sin rotar no sirve de nada: los dos van juntos.
  *
