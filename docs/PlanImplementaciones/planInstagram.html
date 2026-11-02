@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Instagram · Tropical Biohostel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-600-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-300-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-500-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-600-normal.css">
+<style>
+  :root {
+    --bosque: #1F3D2B;
+    --cafe: #6B4423;
+    --sol: #E8A94A;
+    --hoja: #8FB573;
+    --tierra: #3E2F23;
+    --crema: #F5EFE0;
+    --piedra: #D4C9B0;
+    --carbon: #2A241E;
+  }
+  * { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--crema);
+    color: var(--carbon);
+  }
+  .font-display { font-family: 'Fraunces', serif; }
+  
+  /* Header */
+  .hero {
+    background: linear-gradient(135deg, var(--bosque) 0%, var(--tierra) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(143,181,115,0.2) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(232,169,74,0.15) 0%, transparent 50%);
+  }
+  
+  /* Nav */
+  .nav-sticky {
+    position: sticky;
+    top: 0;
+    background: rgba(245, 239, 224, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 40;
+    border-bottom: 1px solid var(--piedra);
+  }
+  .nav-link {
+    position: relative;
+    padding: 8px 0;
+    color: var(--carbon);
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--bosque); }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--sol);
+    transition: width 0.3s;
+  }
+  .nav-link:hover::after { width: 100%; }
+  
+  /* Cards */
+  .phase-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s;
+    border: 1px solid var(--piedra);
+    position: relative;
+    overflow: hidden;
+  }
+  .phase-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    border-color: var(--sol);
+  }
+  .phase-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--sol);
+  }
+  
+  /* Checklist */
+  .checklist-item {
+    background: white;
+    border: 1px solid var(--piedra);
+    border-radius: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .checklist-item:hover {
+    border-color: var(--bosque);
+    background: #fffdf8;
+  }
+  .checklist-item.checked {
+    background: rgba(143, 181, 115, 0.1);
+    border-color: var(--hoja);
+  }
+  .checklist-item.checked .check-text {
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+  .check-box {
+    width: 22px; height: 22px;
+    border: 2px solid var(--piedra);
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    margin-top: 2px;
+  }
+  .checklist-item.checked .check-box {
+    background: var(--hoja);
+    border-color: var(--hoja);
+  }
+  .check-box svg { opacity: 0; transition: opacity 0.2s; }
+  .checklist-item.checked .check-box svg { opacity: 1; }
+  
+  /* Progress bar */
+  .progress-bar {
+    height: 8px;
+    background: var(--piedra);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--hoja), var(--sol));
+    transition: width 0.5s ease;
+    border-radius: 4px;
+  }
+  
+  /* Copy template */
+  .copy-template {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--piedra);
+    position: relative;
+    transition: all 0.3s;
+  }
+  .copy-template:hover {
+    border-color: var(--sol);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  }
+  .copy-btn {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: var(--bosque);
+    color: var(--crema);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .copy-btn:hover { background: var(--sol); color: var(--carbon); }
+  .copy-btn.copied { background: var(--hoja); }
+  
+  /* Calendar */
+  .cal-day {
+    background: white;
+    border: 1px solid var(--piedra);
+    border-radius: 12px;
+    padding: 16px;
+    min-height: 180px;
+    transition: all 0.2s;
+  }
+  .cal-day:hover {
+    border-color: var(--bosque);
+    transform: translateY(-2px);
+  }
+  
+  /* KPI */
+  .kpi-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--piedra);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at top right, var(--sol), transparent 70%);
+    opacity: 0.3;
+  }
+  
+  /* Timeline */
+  .timeline-item {
+    position: relative;
+    padding-left: 40px;
+    padding-bottom: 32px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 11px; top: 30px;
+    width: 2px; height: calc(100% - 30px);
+    background: var(--piedra);
+  }
+  .timeline-item:last-child::before { display: none; }
+  .timeline-dot {
+    position: absolute;
+    left: 0; top: 8px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sol);
+    border: 4px solid var(--crema);
+    box-shadow: 0 0 0 2px var(--sol);
+  }
+  
+  /* Tabs */
+  .tab-btn {
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    border: 1px solid transparent;
+  }
+  .tab-btn.active {
+    background: var(--bosque);
+    color: var(--crema);
+  }
+  .tab-btn:not(.active) {
+    background: white;
+    color: var(--carbon);
+    border-color: var(--piedra);
+  }
+  .tab-btn:not(.active):hover {
+    border-color: var(--bosque);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.4s; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Post preview */
+  .ig-post {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+  .ig-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--piedra);
+  }
+  .ig-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bosque), var(--sol));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--crema);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .ig-content {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+  }
+  .ig-actions {
+    padding: 12px 16px;
+    display: flex;
+    gap: 16px;
+  }
+  
+  /* Section */
+  section {
+    padding: 80px 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  @media (max-width: 768px) {
+    section { padding: 60px 20px; }
+  }
+  
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cafe);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    color: var(--bosque);
+    margin-bottom: 24px;
+    font-weight: 400;
+  }
+  
+  /* Badge */
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge-critical { background: #fee2e2; color: #991b1b; }
+  .badge-high { background: #fef3c7; color: #92400e; }
+  .badge-medium { background: #dbeafe; color: #1e40af; }
+  .badge-done { background: #d1fae5; color: #065f46; }
+  
+  /* Reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--crema); }
+  ::-webkit-scrollbar-thumb { background: var(--piedra); border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--cafe); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero text-[#F5EFE0] py-20 px-6">
+  <div class="max-w-6xl mx-auto relative z-10">
+    <div class="flex items-center gap-4 mb-8">
+      <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="none" stroke="#E8A94A" stroke-width="1.5"/>
+        <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+        <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+        <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+      </svg>
+      <div>
+        <div class="text-xs tracking-widest text-[#E8A94A]">PLAN DE IMPLEMENTACIÓN</div>
+        <div class="font-display text-xl">Tropical Biohostel · Instagram</div>
+      </div>
+    </div>
+    <h1 class="font-display text-5xl md:text-7xl leading-none mb-6">
+      De <span class="italic text-[#E8A94A]">700</span> seguidores<br>
+      a una <span class="italic">máquina</span> de reservas
+    </h1>
+    <p class="text-xl text-[#D4C9B0] max-w-2xl leading-relaxed mb-8">
+      Plan estratégico de 90 días para transformar la presencia digital del biohostel, 
+      reducir comisiones de OTAs y construir un canal de ventas propio.
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <div class="bg-white/10 backdrop-blur px-5 py-3 rounded-full text-sm">
+        <span class="text-[#E8A94A] font-semibold">6</span> Pilares
+      </div>
+      <div class="bg-white/10 backdrop-blur px-5 py-3 rounded-full text-sm">
+        <span class="text-[#E8A94A] font-semibold">42</span> Tareas
+      </div>
+      <div class="bg-white/10 backdrop-blur px-5 py-3 rounded-full text-sm">
+        <span class="text-[#E8A94A] font-semibold">90</span> Días
+      </div>
+      <div class="bg-white/10 backdrop-blur px-5 py-3 rounded-full text-sm">
+        <span class="text-[#E8A94A] font-semibold">25%</span> Meta reservas directas
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV STICKY -->
+<nav class="nav-sticky">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex gap-6 overflow-x-auto text-sm">
+    <a href="#diagnostico" class="nav-link whitespace-nowrap">Diagnóstico</a>
+    <a href="#pilares" class="nav-link whitespace-nowrap">6 Pilares</a>
+    <a href="#checklist" class="nav-link whitespace-nowrap">Checklist</a>
+    <a href="#calendario" class="nav-link whitespace-nowrap">Calendario</a>
+    <a href="#templates" class="nav-link whitespace-nowrap">Templates</a>
+    <a href="#kpis" class="nav-link whitespace-nowrap">KPIs</a>
+    <a href="#timeline" class="nav-link whitespace-nowrap">Timeline</a>
+    <a href="#ejemplos" class="nav-link whitespace-nowrap">Ejemplos</a>
+  </div>
+</nav>
+
+<!-- DIAGNÓSTICO -->
+<section id="diagnostico">
+  <div class="section-label">01 · Diagnóstico actual</div>
+  <h2 class="section-title">Dónde estamos hoy</h2>
+  <p class="text-lg text-[#2A241E]/70 max-w-3xl mb-12">
+    Análisis honesto del estado actual de @tropical_biohostel y las brechas críticas que debemos cerrar.
+  </p>
+
+  <div class="grid md:grid-cols-4 gap-4 mb-12">
+    <div class="kpi-card">
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Seguidores</div>
+      <div class="font-display text-4xl text-[#1F3D2B]">702</div>
+      <div class="text-xs text-[#2A241E]/60 mt-2">Siguiendo: 1,000+ ⚠️</div>
+    </div>
+    <div class="kpi-card">
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Posts</div>
+      <div class="font-display text-4xl text-[#1F3D2B]">422</div>
+      <div class="text-xs text-[#2A241E]/60 mt-2">Publicaciones acumuladas</div>
+    </div>
+    <div class="kpi-card">
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Engagement</div>
+      <div class="font-display text-4xl text-[#E8A94A]">1.4%</div>
+      <div class="text-xs text-[#2A241E]/60 mt-2">Meta: 3-5%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Reservas directas</div>
+      <div class="font-display text-4xl text-[#E8A94A]">~5%</div>
+      <div class="text-xs text-[#2A241E]/60 mt-2">Meta: 25%</div>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="phase-card">
+      <div class="badge badge-critical mb-4">Brechas críticas</div>
+      <h3 class="font-display text-2xl text-[#1F3D2B] mb-4">Lo que nos está costando dinero</h3>
+      <ul class="space-y-3 text-sm">
+        <li class="flex gap-3"><span class="text-red-500">✕</span> <span><strong>Dependencia de OTAs:</strong> 15-20% de comisión por reserva vía Booking/Hostelworld</span></li>
+        <li class="flex gap-3"><span class="text-red-500">✕</span> <span><strong>Biografía sin CTA:</strong> Lenguaje poético pero sin llamado a reserva directo</span></li>
+        <li class="flex gap-3"><span class="text-red-500">✕</span> <span><strong>RNT invisible:</strong> Falta el Registro Nacional de Turismo (obligatorio)</span></li>
+        <li class="flex gap-3"><span class="text-red-500">✕</span> <span><strong>Linktree disperso:</strong> Múltiples clics antes de reservar</span></li>
+        <li class="flex gap-3"><span class="text-red-500">✕</span> <span><strong>Sin automatización:</strong> Respuestas manuales 24/7</span></li>
+      </ul>
+    </div>
+    <div class="phase-card">
+      <div class="badge badge-done mb-4">Fortalezas existentes</div>
+      <h3 class="font-display text-2xl text-[#1F3D2B] mb-4">Lo que ya funciona</h3>
+      <ul class="space-y-3 text-sm">
+        <li class="flex gap-3"><span class="text-[#8FB573]">✓</span> <span><strong>Producto excelente:</strong> 4.6★ en Google y Booking</span></li>
+        <li class="flex gap-3"><span class="text-[#8FB573]">✓</span> <span><strong>Ubicación estratégica:</strong> 1h de Bogotá, mercado enorme</span></li>
+        <li class="flex gap-3"><span class="text-[#8FB573]">✓</span> <span><strong>Identidad clara:</strong> Café, naturaleza, comunidad</span></li>
+        <li class="flex gap-3"><span class="text-[#8FB573]">✓</span> <span><strong>Contenido acumulado:</strong> 422 posts con material reusable</span></li>
+        <li class="flex gap-3"><span class="text-[#8FB573]">✓</span> <span><strong>Web propia:</strong> tropicalbiohostel.pages.dev funcionando</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 6 PILARES -->
+<section id="pilares" style="background: white; max-width: 100%; padding-left: 0; padding-right: 0;">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px;">
+    <div class="section-label">02 · Los 6 pilares</div>
+    <h2 class="section-title">Estrategia integral</h2>
+    <p class="text-lg text-[#2A241E]/70 max-w-3xl mb-12">
+      Cada pilar aborda una dimensión crítica. Juntos forman un sistema que convierte seguidores en huéspedes.
+    </p>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <div class="phase-card">
+        <div class="text-4xl mb-4">🎨</div>
+        <div class="badge badge-critical mb-3">Crítico</div>
+        <h3 class="font-display text-2xl text-[#1F3D2B] mb-3">Identidad Visual</h3>
+        <p class="text-sm text-[#2A241E]/70 mb-4">Alinear toda la comunicación con el nuevo manual de marca: colores, tipografías, tono.</p>
+        <div class="text-xs text-[#6B4423] space-y-1">
+          <div>→ Paleta: Bosque, Sol, Hoja, Crema</div>
+          <div>→ Tipografías: Fraunces + Inter</div>
+          <div>→ Fotografía: luz natural, cálida</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="text-4xl mb-4">📸</div>
+        <div class="badge badge-critical mb-3">Crítico</div>
+        <h3 class="font-display text-2xl text-[#1F3D2B] mb-3">Contenido Estratégico</h3>
+        <p class="text-sm text-[#2A241E]/70 mb-4">5 pilares de contenido: Experiencia, Utilidad, UGC, Contexto local, Behind the scenes.</p>
+        <div class="text-xs text-[#6B4423] space-y-1">
+          <div>→ 35% Experiencia vivida</div>
+          <div>→ 20% Utilidad práctica</div>
+          <div>→ 15% UGC · 15% Local · 15% BTS</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="text-4xl mb-4">💬</div>
+        <div class="badge badge-high mb-3">Alto</div>
+        <h3 class="font-display text-2xl text-[#1F3D2B] mb-3">Narrativa Emocional</h3>
+        <p class="text-sm text-[#2A241E]/70 mb-4">Activar 4 disparadores: pertenencia, calma, curiosidad y aspiración sensorial.</p>
+        <div class="text-xs text-[#6B4423] space-y-1">
+          <div>→ Tono: cálido, poético, sensorial</div>
+          <div>→ Copy: gancho + cuerpo + CTA suave</div>
+          <div>→ Emojis: máximo 2 por post</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="text-4xl mb-4">🤖</div>
+        <div class="badge badge-high mb-3">Alto</div>
+        <h3 class="font-display text-2xl text-[#1F3D2B] mb-3">Automatización IA</h3>
+        <p class="text-sm text-[#2A241E]/70 mb-4">WhatsApp Business API + ManyChat para respuestas 24/7 y cierre de ventas automático.</p>
+        <div class="text-xs text-[#6B4423] space-y-1">
+          <div>→ Respuestas a keywords (PRECIO, FECHAS)</div>
+          <div>→ Secuencias de follow-up 7 días</div>
+          <div>→ Conserje digital RAG</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="text-4xl mb-4">👥</div>
+        <div class="badge badge-medium mb-3">Medio</div>
+        <h3 class="font-display text-2xl text-[#1F3D2B] mb-3">UGC y Comunidad</h3>
+        <p class="text-sm text-[#2A241E]/70 mb-4">Sistema proactivo para capturar y reutilizar contenido de huéspedes reales.</p>
+        <div class="text-xs text-[#6B4423] space-y-1">
+          <div>→ Solicitud en check-in</div>
+          <div>→ Hashtag: #TropicalBiohostel</div>
+          <div>→ Historias destacadas por categoría</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="text-4xl mb-4">💰</div>
+        <div class="badge badge-critical mb-3">Crítico</div>
+        <h3 class="font-display text-2xl text-[#1F3D2B] mb-3">Conversión Directa</h3>
+        <p class="text-sm text-[#2A241E]/70 mb-4">Eliminar OTAs con beneficios exclusivos para reservas directas por WhatsApp.</p>
+        <div class="text-xs text-[#6B4423] space-y-1">
+          <div>→ Mejor tarifa garantizada</div>
+          <div>→ Beneficios exclusivos (upgrade, desayuno)</div>
+          <div>→ Recuperación de carritos abandonados</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CHECKLIST MAESTRO -->
+<section id="checklist">
+  <div class="section-label">03 · Checklist maestro</div>
+  <h2 class="section-title">Tu plan de acción</h2>
+  <p class="text-lg text-[#2A241E]/70 max-w-3xl mb-8">
+    42 tareas concretas organizadas por fase. Marca las completadas — tu progreso se guarda automáticamente.
+  </p>
+
+  <!-- Progress global -->
+  <div class="bg-white rounded-2xl p-6 mb-8 border border-[#D4C9B0]">
+    <div class="flex justify-between items-center mb-3">
+      <div class="font-display text-xl text-[#1F3D2B]">Progreso general</div>
+      <div class="text-sm"><span id="progressText" class="font-semibold text-[#1F3D2B]">0</span><span class="text-[#2A241E]/60"> / 42 tareas</span></div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+    </div>
+    <div class="flex justify-between mt-3 text-xs text-[#2A241E]/60">
+      <span>Inicio</span>
+      <span id="progressPercent">0% completado</span>
+      <span>Meta: 100%</span>
+    </div>
+  </div>
+
+  <!-- Tabs por fase -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button class="tab-btn active" onclick="switchTab('fase1')">Fase 1 · Fundamentos</button>
+    <button class="tab-btn" onclick="switchTab('fase2')">Fase 2 · Contenido</button>
+    <button class="tab-btn" onclick="switchTab('fase3')">Fase 3 · Activación</button>
+    <button class="tab-btn" onclick="switchTab('fase4')">Fase 4 · Automatización</button>
+    <button class="tab-btn" onclick="switchTab('fase5')">Fase 5 · Conversión</button>
+    <button class="tab-btn" onclick="switchTab('fase6')">Fase 6 · Escalamiento</button>
+  </div>
+
+  <!-- FASE 1 -->
+  <div class="tab-content active" id="fase1">
+    <div class="bg-[#1F3D2B] text-[#F5EFE0] rounded-2xl p-6 mb-6">
+      <div class="text-xs tracking-widest text-[#E8A94A] mb-2">SEMANAS 1-2</div>
+      <h3 class="font-display text-3xl mb-2">Fundamentos y optimización</h3>
+      <p class="text-sm opacity-80">Establecer las bases técnicas y visuales para operar eficientemente.</p>
+    </div>
+    <div class="space-y-3" id="checklist-fase1"></div>
+  </div>
+
+  <!-- FASE 2 -->
+  <div class="tab-content" id="fase2">
+    <div class="bg-[#6B4423] text-[#F5EFE0] rounded-2xl p-6 mb-6">
+      <div class="text-xs tracking-widest text-[#E8A94A] mb-2">SEMANAS 3-4</div>
+      <h3 class="font-display text-3xl mb-2">Producción de contenido</h3>
+      <p class="text-sm opacity-80">Crear el banco de activos visuales y el calendario editorial.</p>
+    </div>
+    <div class="space-y-3" id="checklist-fase2"></div>
+  </div>
+
+  <!-- FASE 3 -->
+  <div class="tab-content" id="fase3">
+    <div class="bg-[#E8A94A] text-[#1F3D2B] rounded-2xl p-6 mb-6">
+      <div class="text-xs tracking-widest mb-2">SEMANAS 5-6</div>
+      <h3 class="font-display text-3xl mb-2">Activación y tracción</h3>
+      <p class="text-sm opacity-80">Lanzar la estrategia de contenido y generar tracción orgánica.</p>
+    </div>
+    <div class="space-y-3" id="checklist-fase3"></div>
+  </div>
+
+  <!-- FASE 4 -->
+  <div class="tab-content" id="fase4">
+    <div class="bg-[#8FB573] text-[#1F3D2B] rounded-2xl p-6 mb-6">
+      <div class="text-xs tracking-widest mb-2">SEMANAS 7-8</div>
+      <h3 class="font-display text-3xl mb-2">Automatización inteligente</h3>
+      <p class="text-sm opacity-80">Implementar WhatsApp API y chatbots para escalar la atención.</p>
+    </div>
+    <div class="space-y-3" id="checklist-fase4"></div>
+  </div>
+
+  <!-- FASE 5 -->
+  <div class="tab-content" id="fase5">
+    <div class="bg-[#3E2F23] text-[#F5EFE0] rounded-2xl p-6 mb-6">
+      <div class="text-xs tracking-widest text-[#E8A94A] mb-2">SEMANAS 9-10</div>
+      <h3 class="font-display text-3xl mb-2">Conversión directa</h3>
+      <p class="text-sm opacity-80">Implementar mecanismos para desviar reservas de OTAs a canal propio.</p>
+    </div>
+    <div class="space-y-3" id="checklist-fase5"></div>
+  </div>
+
+  <!-- FASE 6 -->
+  <div class="tab-content" id="fase6">
+    <div class="bg-gradient-to-br from-[#1F3D2B] to-[#6B4423] text-[#F5EFE0] rounded-2xl p-6 mb-6">
+      <div class="text-xs tracking-widest text-[#E8A94A] mb-2">SEMANAS 11-12</div>
+      <h3 class="font-display text-3xl mb-2">Escalamiento y retención</h3>
+      <p class="text-sm opacity-80">Optimizar conversión, escalar alcance y fomentar lealtad.</p>
+    </div>
+    <div class="space-y-3" id="checklist-fase6"></div>
+  </div>
+
+</section>
+
+<!-- CALENDARIO EDITORIAL -->
+<section id="calendario" style="background: white; max-width: 100%; padding-left: 0; padding-right: 0;">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px;">
+    <div class="section-label">04 · Calendario editorial</div>
+    <h2 class="section-title">Semana tipo</h2>
+    <p class="text-lg text-[#2A241E]/70 max-w-3xl mb-12">
+      Distribución óptima de contenido: 6 publicaciones semanales balanceando los 5 pilares estratégicos.
+    </p>
+
+    <div class="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
+      
+      <div class="cal-day">
+        <div class="flex justify-between items-start mb-3">
+          <div class="font-display text-lg text-[#1F3D2B]">Lunes</div>
+          <div class="badge badge-high">Reel</div>
+        </div>
+        <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Experiencia vivida</div>
+        <div class="text-sm text-[#2A241E]/80 mb-3">Rutina matutina: amanecer + café + sendero</div>
+        <div class="text-xs text-[#2A241E]/50 italic">"El bosque no tiene prisa..."</div>
+      </div>
+
+      <div class="cal-day">
+        <div class="flex justify-between items-start mb-3">
+          <div class="font-display text-lg text-[#1F3D2B]">Martes</div>
+          <div class="badge badge-medium">Carrusel</div>
+        </div>
+        <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Utilidad práctica</div>
+        <div class="text-sm text-[#2A241E]/80 mb-3">Guía: "Qué empacar para Nocaima"</div>
+        <div class="text-xs text-[#2A241E]/50 italic">5 slides con tips concretos</div>
+      </div>
+
+      <div class="cal-day">
+        <div class="flex justify-between items-start mb-3">
+          <div class="font-display text-lg text-[#1F3D2B]">Miércoles</div>
+          <div class="badge badge-done">UGC</div>
+        </div>
+        <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Prueba social</div>
+        <div class="text-sm text-[#2A241E]/80 mb-3">Repost de huésped + testimonio</div>
+        <div class="text-xs text-[#2A241E]/50 italic">Crédito siempre visible</div>
+      </div>
+
+      <div class="cal-day">
+        <div class="flex justify-between items-start mb-3">
+          <div class="font-display text-lg text-[#1F3D2B]">Jueves</div>
+          <div class="badge badge-high">Reel</div>
+        </div>
+        <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Contexto local</div>
+        <div class="text-sm text-[#2A241E]/80 mb-3">Tour por atractivo cercano (Laguna El Vergel)</div>
+        <div class="text-xs text-[#2A241E]/50 italic">"A 20 min del biohostel..."</div>
+      </div>
+
+      <div class="cal-day">
+        <div class="flex justify-between items-start mb-3">
+          <div class="font-display text-lg text-[#1F3D2B]">Viernes</div>
+          <div class="badge badge-critical">Post</div>
+        </div>
+        <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Behind the scenes</div>
+        <div class="text-sm text-[#2A241E]/80 mb-3">Proceso del café: grano a taza</div>
+        <div class="text-xs text-[#2A241E]/50 italic">"Así nace cada taza..."</div>
+      </div>
+
+      <div class="cal-day" style="background: linear-gradient(135deg, #1F3D2B, #3E2F23); color: #F5EFE0;">
+        <div class="flex justify-between items-start mb-3">
+          <div class="font-display text-lg">Domingo</div>
+          <div class="badge" style="background: #E8A94A; color: #1F3D2B;">CTA</div>
+        </div>
+        <div class="text-xs uppercase tracking-wider mb-2" style="color: #E8A94A;">Conversión</div>
+        <div class="text-sm mb-3 opacity-90">Fogata nocturna + disponibilidad semana</div>
+        <div class="text-xs italic opacity-70">"Comenta FECHAS y te enviamos..."</div>
+      </div>
+
+    </div>
+
+    <div class="mt-8 bg-[#F5EFE0] rounded-2xl p-6 border border-[#D4C9B0]">
+      <div class="font-display text-xl text-[#1F3D2B] mb-3">💡 Mejores horarios para publicar</div>
+      <div class="grid md:grid-cols-3 gap-4 text-sm">
+        <div>
+          <div class="text-[#6B4423] font-semibold">Domingo 8-9 PM</div>
+          <div class="text-[#2A241E]/70">Usuarios planifican viajes del fin de semana</div>
+        </div>
+        <div>
+          <div class="text-[#6B4423] font-semibold">Martes 7-9 AM</div>
+          <div class="text-[#2A241E]/70">Pico de engagement matutino</div>
+        </div>
+        <div>
+          <div class="text-[#6B4423] font-semibold">Jueves 12-2 PM</div>
+          <div class="text-[#2A241E]/70">Pausa del almuerzo, scroll alto</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMPLATES DE COPY -->
+<section id="templates">
+  <div class="section-label">05 · Templates de copy</div>
+  <h2 class="section-title">Listos para copiar y publicar</h2>
+  <p class="text-lg text-[#2A241E]/70 max-w-3xl mb-12">
+    8 plantillas de copy probadas. Haz clic en "Copiar" y adáptalas a tu contenido.
+  </p>
+
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <div class="copy-template">
+      <button class="copy-btn" onclick="copyText(this, 'template1')">Copiar</button>
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-3">🌅 Post · Amanecer</div>
+      <div class="font-display text-xl text-[#1F3D2B] leading-snug mb-3" id="template1">
+        El bosque no tiene prisa, y por eso todo en él tiene sentido.<br><br>
+        Ven a caminar sin reloj. Ven a escuchar lo que el ruido de la ciudad no te deja oír.<br><br>
+        Nocaima te recibe 🌄<br><br>
+        #TropicalBiohostel #DondeElCafeComienza #NocaimaSecreta
+      </div>
+    </div>
+
+    <div class="copy-template">
+      <button class="copy-btn" onclick="copyText(this, 'template2')">Copiar</button>
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-3">☕ Post · Café</div>
+      <div class="font-display text-xl text-[#1F3D2B] leading-snug mb-3" id="template2">
+        El café se siente antes de beberse.<br><br>
+        En el aroma que despierta la finca, en las manos que lo recogieron al amanecer, en el primer sorbo que te recuerda por qué viniste.<br><br>
+        ¿Vienes a sentirlo? ☕<br><br>
+        #TropicalBiohostel #CaféDeOrigen #Nocaima
+      </div>
+    </div>
+
+    <div class="copy-template">
+      <button class="copy-btn" onclick="copyText(this, 'template3')">Copiar</button>
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-3">🔥 Post · Fogata</div>
+      <div class="font-display text-xl text-[#1F3D2B] leading-snug mb-3" id="template3">
+        Hay conversaciones que solo nacen cuando el fuego reúne a los desconocidos.<br><br>
+        Esta noche, la fogata espera tu historia.<br><br>
+        ¿Traes la tuya? 🔥<br><br>
+        #FogataYConversacion #TropicalBiohostel #Comunidad
+      </div>
+    </div>
+
+    <div class="copy-template">
+      <button class="copy-btn" onclick="copyText(this, 'template4')">Copiar</button>
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-3">📍 Post · Utilidad</div>
+      <div class="font-display text-xl text-[#1F3D2B] leading-snug mb-3" id="template4">
+        5 cosas que SÍ debes empacar para Nocaima:<br><br>
+        1. Protector solar (el sol de montaña engaña)<br>
+        2. Un suéter ligero (las noches refrescan)<br>
+        3. Botas o tenis con agarre (senderos húmedos)<br>
+        4. Repelente biodegradable<br>
+        5. Tu mejor libro (no hay WiFi en las cabañas, y eso es lo mejor)<br><br>
+        Guarda este post para tu próxima visita 🌿
+      </div>
+    </div>
+
+    <div class="copy-template">
+      <button class="copy-btn" onclick="copyText(this, 'template5')">Copiar</button>
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-3">💬 Trigger · DM automático</div>
+      <div class="font-display text-xl text-[#1F3D2B] leading-snug mb-3" id="template5">
+        Comenta FECHAS y te enviamos por DM la disponibilidad y tarifas exclusivas para reserva directa (sin comisiones de Booking) 💚
+      </div>
+    </div>
+
+    <div class="copy-template">
+      <button class="copy-btn" onclick="copyText(this, 'template6')">Copiar</button>
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-3">🏡 Post · Cabaña</div>
+      <div class="font-display text-xl text-[#1F3D2B] leading-snug mb-3" id="template6">
+        El Cosmic Bungalow no es una habitación. Es un hexágono pensado para que duermas bajo las estrellas sin salir de la cama.<br><br>
+        Ventanas que enmarcan el bosque. Silencio que se mastica. Una experiencia que no se olvida.<br><br>
+        ¿Listo para desconectar? Link en bio 🌿
+      </div>
+    </div>
+
+    <div class="copy-template">
+      <button class="copy-btn" onclick="copyText(this, 'template7')">Copiar</button>
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-3">🎁 Post · Beneficio directo</div>
+      <div class="font-display text-xl text-[#1F3D2B] leading-snug mb-3" id="template7">
+        Reserva directo con nosotros y recibe:<br><br>
+        ✓ Upgrade gratis (sujeto a disponibilidad)<br>
+        ✓ Desayuno extendido hasta las 11am<br>
+        ✓ Tour de café incluido para 2<br>
+        ✓ Late check-out sin costo<br><br>
+        Todo esto NO lo encuentras en Booking. Escríbenos al link del bio 💚
+      </div>
+    </div>
+
+    <div class="copy-template">
+      <button class="copy-btn" onclick="copyText(this, 'template8')">Copiar</button>
+      <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-3">🤖 Respuesta automática DM</div>
+      <div class="font-display text-xl text-[#1F3D2B] leading-snug mb-3" id="template8">
+        ¡Hola! 🌿 Qué bueno que nos escribas.<br><br>
+        Para darte la mejor opción, cuéntame:<br>
+        📅 ¿Qué fechas tienes en mente?<br>
+        👥 ¿Cuántas personas son?<br>
+        🏡 ¿Prefieres cabaña privada o experiencia compartida?<br><br>
+        En menos de 1 hora te enviamos disponibilidad y tarifas exclusivas 💚
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- KPIs -->
+<section id="kpis" style="background: white; max-width: 100%; padding-left: 0; padding-right: 0;">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px;">
+    <div class="section-label">06 · Métricas de éxito</div>
+    <h2 class="section-title">Lo que sí importa medir</h2>
+    <p class="text-lg text-[#2A241E]/70 max-w-3xl mb-12">
+      Olvida los likes. Estas son las métricas que realmente impactan el negocio.
+    </p>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="kpi-card">
+        <div class="flex justify-between items-start mb-4">
+          <div class="text-3xl">💾</div>
+          <div class="badge badge-critical">Crítico</div>
+        </div>
+        <div class="font-display text-2xl text-[#1F3D2B] mb-2">Guardados por post</div>
+        <div class="text-sm text-[#2A241E]/70 mb-4">Indica alta intención de viaje. Los usuarios guardan lo que planean hacer.</div>
+        <div class="flex justify-between text-xs">
+          <span class="text-[#6B4423]">Actual: ~0.5%</span>
+          <span class="text-[#8FB573] font-semibold">Meta: 3-5%</span>
+        </div>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 10%"></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="flex justify-between items-start mb-4">
+          <div class="text-3xl">👤</div>
+          <div class="badge badge-critical">Crítico</div>
+        </div>
+        <div class="font-display text-2xl text-[#1F3D2B] mb-2">Visitas al perfil</div>
+        <div class="text-sm text-[#2A241E]/70 mb-4">Mide cuántos Reels atraen interés real hacia la marca completa.</div>
+        <div class="flex justify-between text-xs">
+          <span class="text-[#6B4423]">Actual: ~0.5%</span>
+          <span class="text-[#8FB573] font-semibold">Meta: 1-3%</span>
+        </div>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 15%"></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="flex justify-between items-start mb-4">
+          <div class="text-3xl">💬</div>
+          <div class="badge badge-critical">Crítico</div>
+        </div>
+        <div class="font-display text-2xl text-[#1F3D2B] mb-2">DMs cualificados</div>
+        <div class="text-sm text-[#2A241E]/70 mb-4">40-60% de reservas de Instagram se cierran por DM. Es tu canal de venta.</div>
+        <div class="flex justify-between text-xs">
+          <span class="text-[#6B4423]">Actual: ~5/mes</span>
+          <span class="text-[#8FB573] font-semibold">Meta: 30+/mes</span>
+        </div>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 17%"></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="flex justify-between items-start mb-4">
+          <div class="text-3xl">📊</div>
+          <div class="badge badge-high">Alto</div>
+        </div>
+        <div class="font-display text-2xl text-[#1F3D2B] mb-2">Tasa finalización Stories</div>
+        <div class="text-sm text-[#2A241E]/70 mb-4">Indica que tu narrativa visual mantiene la atención hasta el final.</div>
+        <div class="flex justify-between text-xs">
+          <span class="text-[#6B4423]">Actual: ~50%</span>
+          <span class="text-[#8FB573] font-semibold">Meta: >75%</span>
+        </div>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 67%"></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="flex justify-between items-start mb-4">
+          <div class="text-3xl">💰</div>
+          <div class="badge badge-critical">Crítico</div>
+        </div>
+        <div class="font-display text-2xl text-[#1F3D2B] mb-2">Reservas directas</div>
+        <div class="text-sm text-[#2A241E]/70 mb-4">El indicador definitivo de ROI. Porcentaje de huéspedes que llegan por Instagram.</div>
+        <div class="flex justify-between text-xs">
+          <span class="text-[#6B4423]">Actual: ~5%</span>
+          <span class="text-[#8FB573] font-semibold">Meta: 25%</span>
+        </div>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 20%"></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="flex justify-between items-start mb-4">
+          <div class="text-3xl">📉</div>
+          <div class="badge badge-high">Alto</div>
+        </div>
+        <div class="font-display text-2xl text-[#1F3D2B] mb-2">Costo de adquisición</div>
+        <div class="text-sm text-[#2A241E]/70 mb-4">Comparación comisiones OTA vs. inversión en marketing propio.</div>
+        <div class="flex justify-between text-xs">
+          <span class="text-[#6B4423]">OTA: 18% comisión</span>
+          <span class="text-[#8FB573] font-semibold">Meta: -15-20% anual</span>
+        </div>
+        <div class="progress-bar mt-2">
+          <div class="progress-fill" style="width: 30%"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE 30-60-90 -->
+<section id="timeline">
+  <div class="section-label">07 · Timeline de implementación</div>
+  <h2 class="section-title">90 días para transformar</h2>
+  <p class="text-lg text-[#2A241E]/70 max-w-3xl mb-12">
+    Hoja de ruta fase por fase con entregables concretos y puntos de control.
+  </p>
+
+  <div class="grid md:grid-cols-3 gap-8">
+    
+    <div>
+      <div class="bg-[#1F3D2B] text-[#F5EFE0] rounded-2xl p-6 mb-6">
+        <div class="text-xs tracking-widest text-[#E8A94A] mb-2">DÍAS 1-30</div>
+        <div class="font-display text-3xl mb-2">Fundamentos</div>
+        <div class="text-sm opacity-80">Construir la base</div>
+      </div>
+      <div class="space-y-4">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="font-display text-lg text-[#1F3D2B]">Semana 1</div>
+          <div class="text-sm text-[#2A241E]/70">Auditoría de perfil, limpieza de seguidores, optimización de biografía con RNT</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="font-display text-lg text-[#1F3D2B]">Semana 2</div>
+          <div class="text-sm text-[#2A241E]/70">Sesión fotográfica profesional (2 días), configuración WhatsApp Business API</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="font-display text-lg text-[#1F3D2B]">Semana 3-4</div>
+          <div class="text-sm text-[#2A241E]/70">Producción de 24 piezas de contenido, diseño de Historias Destacadas</div>
+        </div>
+      </div>
+      <div class="mt-6 p-4 bg-[#F5EFE0] rounded-xl border border-[#D4C9B0]">
+        <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Entregable clave</div>
+        <div class="text-sm text-[#1F3D2B]">Banco de 50+ fotos curadas + perfil 100% optimizado</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="bg-[#E8A94A] text-[#1F3D2B] rounded-2xl p-6 mb-6">
+        <div class="text-xs tracking-widest mb-2">DÍAS 31-60</div>
+        <div class="font-display text-3xl mb-2">Activación</div>
+        <div class="text-sm opacity-80">Generar tracción</div>
+      </div>
+      <div class="space-y-4">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="font-display text-lg text-[#1F3D2B]">Semana 5</div>
+          <div class="text-sm text-[#2A241E]/70">Lanzamiento de campaña UGC, protocolo de solicitud en check-in</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="font-display text-lg text-[#1F3D2B]">Semana 6</div>
+          <div class="text-sm text-[#2A241E]/70">Contacto con 10-15 micro-influencers locales, inicio de publicación consistente</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="font-display text-lg text-[#1F3D2B]">Semana 7-8</div>
+          <div class="text-sm text-[#2A241E]/70">Activación de triggers DM, secuencias automatizadas de WhatsApp</div>
+        </div>
+      </div>
+      <div class="mt-6 p-4 bg-[#F5EFE0] rounded-xl border border-[#D4C9B0]">
+        <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Entregable clave</div>
+        <div class="text-sm text-[#1F3D2B]">100+ UGC recolectados + 30 DMs/mes</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="bg-gradient-to-br from-[#8FB573] to-[#1F3D2B] text-[#F5EFE0] rounded-2xl p-6 mb-6">
+        <div class="text-xs tracking-widest text-[#E8A94A] mb-2">DÍAS 61-90</div>
+        <div class="font-display text-3xl mb-2">Escalamiento</div>
+        <div class="text-sm opacity-80">Optimizar y crecer</div>
+      </div>
+      <div class="space-y-4">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="font-display text-lg text-[#1F3D2B]">Semana 9</div>
+          <div class="text-sm text-[#2A241E]/70">Campañas de retargeting en Meta para usuarios que no reservaron</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="font-display text-lg text-[#1F3D2B]">Semana 10</div>
+          <div class="text-sm text-[#2A241E]/70">Análisis profundo de métricas, ajuste de estrategia, programa de lealtad</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="font-display text-lg text-[#1F3D2B]">Semana 11-12</div>
+          <div class="text-sm text-[#2A241E]/70">Evaluación ROI, reasignación de presupuesto, planificación Q2</div>
+        </div>
+      </div>
+      <div class="mt-6 p-4 bg-[#F5EFE0] rounded-xl border border-[#D4C9B0]">
+        <div class="text-xs text-[#6B4423] uppercase tracking-wider mb-2">Entregable clave</div>
+        <div class="text-sm text-[#1F3D2B]">25% reservas directas + sistema escalable</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EJEMPLOS VISUALES -->
+<section id="ejemplos" style="background: white; max-width: 100%; padding-left: 0; padding-right: 0;">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px;">
+    <div class="section-label">08 · Ejemplos visuales</div>
+    <h2 class="section-title">Así se verá tu feed</h2>
+    <p class="text-lg text-[#2A241E]/70 max-w-3xl mb-12">
+      Mockups de publicaciones aplicando el manual de marca y las estrategias de copy.
+    </p>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Post 1: Reel amanecer -->
+      <div class="ig-post">
+        <div class="ig-header">
+          <div class="ig-avatar">TB</div>
+          <div>
+            <div class="text-sm font-semibold">tropical_biohostel</div>
+            <div class="text-xs text-[#2A241E]/60">Nocaima, Cundinamarca</div>
+          </div>
+        </div>
+        <div class="ig-content" style="background: linear-gradient(135deg, #E8A94A, #1F3D2B);">
+          <div class="text-[#F5EFE0]">
+            <div class="text-6xl mb-4">🌄</div>
+            <div class="font-display text-2xl leading-tight italic">"El bosque no tiene prisa..."</div>
+          </div>
+        </div>
+        <div class="ig-actions">
+          <span>❤️ 234</span>
+          <span>💬 18</span>
+          <span>💾 67</span>
+        </div>
+        <div class="px-4 pb-4 text-xs text-[#2A241E]/70">
+          <strong>tropical_biohostel</strong> El bosque no tiene prisa, y por eso todo en él tiene sentido...
+        </div>
+      </div>
+
+      <!-- Post 2: Carrusel utilidad -->
+      <div class="ig-post">
+        <div class="ig-header">
+          <div class="ig-avatar">TB</div>
+          <div>
+            <div class="text-sm font-semibold">tropical_biohostel</div>
+            <div class="text-xs text-[#2A241E]/60">1/5</div>
+          </div>
+        </div>
+        <div class="ig-content" style="background: #F5EFE0;">
+          <div class="text-[#1F3D2B]">
+            <div class="text-xs tracking-widest text-[#6B4423] mb-3">GUÍA PRÁCTICA</div>
+            <div class="font-display text-3xl leading-tight mb-4">5 cosas que SÍ debes empacar para Nocaima</div>
+            <div class="flex gap-2 justify-center">
+              <div class="w-2 h-2 rounded-full bg-[#1F3D2B]"></div>
+              <div class="w-2 h-2 rounded-full bg-[#D4C9B0]"></div>
+              <div class="w-2 h-2 rounded-full bg-[#D4C9B0]"></div>
+              <div class="w-2 h-2 rounded-full bg-[#D4C9B0]"></div>
+              <div class="w-2 h-2 rounded-full bg-[#D4C9B0]"></div>
+            </div>
+          </div>
+        </div>
+        <div class="ig-actions">
+          <span>❤️ 456</span>
+          <span>💬 42</span>
+          <span>💾 234</span>
+        </div>
+        <div class="px-4 pb-4 text-xs text-[#2A241E]/70">
+          <strong>tropical_biohostel</strong> Guarda este post para tu próxima visita 🌿
+        </div>
+      </div>
+
+      <!-- Post 3: CTA conversión -->
+      <div class="ig-post">
+        <div class="ig-header">
+          <div class="ig-avatar">TB</div>
+          <div>
+            <div class="text-sm font-semibold">tropical_biohostel</div>
+            <div class="text-xs text-[#2A241E]/60">Sponsored</div>
+          </div>
+        </div>
+        <div class="ig-content" style="background: linear-gradient(135deg, #1F3D2B, #6B4423);">
+          <div class="text-[#F5EFE0]">
+            <div class="text-xs tracking-widest text-[#E8A94A] mb-3">RESERVA DIRECTO</div>
+            <div class="font-display text-2xl leading-tight mb-4">Beneficios exclusivos solo por WhatsApp</div>
+            <div class="inline-block bg-[#E8A94A] text-[#1F3D2B] px-4 py-2 rounded-full text-sm font-semibold">Comenta FECHAS</div>
+          </div>
+        </div>
+        <div class="ig-actions">
+          <span>❤️ 189</span>
+          <span>💬 87</span>
+          <span>💾 45</span>
+        </div>
+        <div class="px-4 pb-4 text-xs text-[#2A241E]/70">
+          <strong>tropical_biohostel</strong> Upgrade, desayuno extendido, tour de café... todo esto NO lo encuentras en Booking 💚
+        </div>
+      </div>
+
+      <!-- Post 4: UGC -->
+      <div class="ig-post">
+        <div class="ig-header">
+          <div class="ig-avatar">TB</div>
+          <div>
+            <div class="text-sm font-semibold">tropical_biohostel</div>
+            <div class="text-xs text-[#2A241E]/60">Repost · @huésped</div>
+          </div>
+        </div>
+        <div class="ig-content" style="background: linear-gradient(135deg, #8FB573, #3E2F23);">
+          <div class="text-[#F5EFE0]">
+            <div class="text-6xl mb-4">🔥</div>
+            <div class="font-display text-xl leading-tight italic mb-3">"La mejor decisión del año. Volvemos seguro."</div>
+            <div class="text-xs opacity-80">— @maria.travel · Octubre 2026</div>
+          </div>
+        </div>
+        <div class="ig-actions">
+          <span>❤️ 312</span>
+          <span>💬 28</span>
+          <span>💾 56</span>
+        </div>
+        <div class="px-4 pb-4 text-xs text-[#2A241E]/70">
+          <strong>tropical_biohostel</strong> Gracias María 🌿 La fogata también te extrañó 🔥
+        </div>
+      </div>
+
+      <!-- Post 5: Behind the scenes -->
+      <div class="ig-post">
+        <div class="ig-header">
+          <div class="ig-avatar">TB</div>
+          <div>
+            <div class="text-sm font-semibold">tropical_biohostel</div>
+            <div class="text-xs text-[#2A241E]/60">Detrás de cámaras</div>
+          </div>
+        </div>
+        <div class="ig-content" style="background: linear-gradient(135deg, #6B4423, #3E2F23);">
+          <div class="text-[#F5EFE0]">
+            <div class="text-6xl mb-4">☕</div>
+            <div class="font-display text-2xl leading-tight italic">"Así nace cada taza..."</div>
+            <div class="text-xs opacity-80 mt-3">Del grano a tu mesa · 100% de la finca</div>
+          </div>
+        </div>
+        <div class="ig-actions">
+          <span>❤️ 278</span>
+          <span>💬 34</span>
+          <span>💾 89</span>
+        </div>
+        <div class="px-4 pb-4 text-xs text-[#2A241E]/70">
+          <strong>tropical_biohostel</strong> 6 meses de proceso, 12 horas de tostión, 3 minutos en tu taza. Así de serio nos lo tomamos.
+        </div>
+      </div>
+
+      <!-- Post 6: Contexto local -->
+      <div class="ig-post">
+        <div class="ig-header">
+          <div class="ig-avatar">TB</div>
+          <div>
+            <div class="text-sm font-semibold">tropical_biohostel</div>
+            <div class="text-xs text-[#2A241E]/60">Nocaima secreta</div>
+          </div>
+        </div>
+        <div class="ig-content" style="background: linear-gradient(135deg, #1F3D2B, #8FB573);">
+          <div class="text-[#F5EFE0]">
+            <div class="text-xs tracking-widest text-[#E8A94A] mb-3">A 20 MIN DEL BIOHOSTEL</div>
+            <div class="font-display text-2xl leading-tight mb-3">Laguna El Vergel</div>
+            <div class="text-sm opacity-80">El secreto mejor guardado de Cundinamarca</div>
+          </div>
+        </div>
+        <div class="ig-actions">
+          <span>❤️ 345</span>
+          <span>💬 52</span>
+          <span>💾 178</span>
+        </div>
+        <div class="px-4 pb-4 text-xs text-[#2A241E]/70">
+          <strong>tropical_biohostel</strong> ¿Sabías que a 20 min tenemos este paraíso? Te llevamos 🌿
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section style="background: linear-gradient(135deg, #1F3D2B, #3E2F23); color: #F5EFE0; max-width: 100%; padding: 80px 24px;">
+  <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+    <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-6">
+      <circle cx="50" cy="50" r="48" fill="none" stroke="#E8A94A" stroke-width="1.5"/>
+      <path d="M 25 65 Q 35 45 50 40 Q 65 45 75 65" fill="none" stroke="#F5EFE0" stroke-width="2"/>
+      <path d="M 50 40 Q 45 25 50 15 Q 55 25 50 40" fill="#8FB573"/>
+      <circle cx="50" cy="20" r="6" fill="#E8A94A"/>
+    </svg>
+    <h2 class="font-display text-4xl md:text-5xl mb-6 leading-tight">
+      "Donde el café comienza<br>y el <span class="italic text-[#E8A94A]">ruido termina</span>"
+    </h2>
+    <p class="text-lg opacity-80 max-w-2xl mx-auto mb-8">
+      Este plan está listo para ejecutarse. Cada checklist, cada template, cada KPI está diseñado para convertir seguidores en huéspedes reales.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button onclick="resetProgress()" class="px-6 py-3 bg-[#E8A94A] text-[#1F3D2B] rounded-full font-semibold hover:bg-[#F5EFE0] transition">
+        Reiniciar progreso
+      </button>
+      <button onclick="window.print()" class="px-6 py-3 bg-white/10 backdrop-blur text-[#F5EFE0] rounded-full font-semibold hover:bg-white/20 transition border border-white/20">
+        Imprimir plan
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+// ============ CHECKLIST DATA ============
+const checklistData = {
+  fase1: [
+    { text: "Actualizar biografía con RNT, ubicación y CTA directo", detail: "Ej: 🌿 Eco-Hostel · Nocaima · RNT: XXXXX · Reserva directa 👇" },
+    { text: "Optimizar campo 'Nombre' para SEO: 'Tropical Biohostel | Eco-Hostel Nocaima'", detail: "Instagram usa este campo para búsquedas" },
+    { text: "Eliminar seguidores inactivos/bots (dejar de seguir cuentas no relevantes)", detail: "Mejora ratio de autoridad y engagement rate" },
+    { text: "Configurar 5 Historias Destacadas: Reservar, Cabañas, Experiencias, Ubicación, Huéspedes", detail: "Menú de navegación permanente" },
+    { text: "Reemplazar Linktree por enlace directo a WhatsApp Business o motor de reservas", detail: "Cada clic adicional reduce conversión 20%" },
+    { text: "Migrar a WhatsApp Business API (Twilio o 360dialog)", detail: "Habilita bandeja compartida y automatizaciones" },
+    { text: "Configurar respuestas rápidas en WhatsApp para preguntas frecuentes", detail: "PRECIO, FECHAS, UBICACIÓN, MASCOTAS" },
+    { text: "Crear plantilla de consentimiento Habeas Data para formularios", detail: "Cumplimiento Ley 1581 de 2012" }
+  ],
+  fase2: [
+    { text: "Realizar sesión fotográfica profesional (2 días, 50+ fotos curadas)", detail: "8 categorías: paisaje, cabaña, café, fogata, hamaca, sendero, detalle botánico, gastronomía" },
+    { text: "Editar fotos con tratamiento cálido (5500-6000K, saturación -10-15%)", detail: "Según manual de marca" },
+    { text: "Grabar 12 videos verticales (Reels) de 7-15 segundos", detail: "Amanecer, café, fogata, hamaca, sendero, cabañas" },
+    { text: "Diseñar 6 plantillas de carruseles en Figma/Canva", detail: "Utilidad, guía, testimonio, proceso, contexto local" },
+    { text: "Crear banco de 20 copies listos para publicar", detail: "Usar los templates de la sección 05" },
+    { text: "Definir calendario editorial de 4 semanas", detail: "6 publicaciones/semana según pilares" },
+    { text: "Preparar set de hashtags oficiales", detail: "#TropicalBiohostel #DondeElCafeComienza #NocaimaSecreta" },
+    { text: "Diseñar 'Rincón Instagrammable' físico en el biohostel", detail: "Maloka decorada, columpio con vista, taza con logo" }
+  ],
+  fase3: [
+    { text: "Lanzar campaña de UGC con protocolo de solicitud en check-in", detail: "Preguntar permiso + incentivar con hashtag" },
+    { text: "Identificar y contactar 10-15 micro-influencers locales de Bogotá", detail: "Nicho: ecoturismo, bienestar, fotografía" },
+    { text: "Ofrecer 3 estancias de intercambio a cambio de contenido auténtico", detail: "Contrato simple con entregables claros" },
+    { text: "Iniciar publicación consistente (4-6 veces/semana)", detail: "Según calendario editorial" },
+    { text: "Implementar triggers de DM en cada publicación", detail: "Ej: 'Comenta FECHAS y te enviamos...'" },
+    { text: "Responder todos los comentarios en menos de 2 horas", detail: "Community management activo" },
+    { text: "Publicar mínimo 3 Stories diarias", detail: "Behind the scenes, reposts, disponibilidad" },
+    { text: "Repostear 100% de menciones positivas de huéspedes", detail: "Siempre con crédito y permiso" }
+  ],
+  fase4: [
+    { text: "Configurar ManyChat o similar para automatización de DMs", detail: "Respuestas a keywords: PRECIO, FECHAS, INFO" },
+    { text: "Crear flujo automatizado de bienvenida para nuevos seguidores", detail: "Mensaje de agradecimiento + pregunta sobre fechas" },
+    { text: "Implementar chatbot RAG con base de conocimiento del biohostel", detail: "Políticas, menú, experiencias, FAQs" },
+    { text: "Configurar secuencias de follow-up de 7 días para leads tibios", detail: "5 mensajes: resumen, valor, prueba social, recordatorio, cierre" },
+    { text: "Integrar WhatsApp con motor de reservas web", detail: "Link profundo con mensaje predefinido" },
+    { text: "Configurar recuperación de carritos abandonados", detail: "Mensaje automático 1-2 horas después del abandono" },
+    { text: "Crear respuestas automáticas para fuera de horario laboral", detail: "Respuesta inmediata + promesa de seguimiento" }
+  ],
+  fase5: [
+    { text: "Definir beneficios exclusivos para reservas directas", detail: "Upgrade, desayuno extendido, tour de café, late check-out" },
+    { text: "Publicar 'Garantía de mejor tarifa' en biografía y Stories destacadas", detail: "Comunicar claramente la ventaja vs OTAs" },
+    { text: "Crear landing page específica para tráfico de Instagram", detail: "Con testimonios, galería y CTA directo a WhatsApp" },
+    { text: "Implementar sistema de tracking de origen de reservas", detail: "Preguntar '¿Cómo nos encontraste?' en formulario" },
+    { text: "Reducir gradualmente dependencia de OTAs (meta: 25% directo)", detail: "Monitorear mensualmente el porcentaje" },
+    { text: "Crear campaña de email marketing pre-estancia (upselling)", detail: "Ofrecer experiencias adicionales antes de la llegada" },
+    { text: "Implementar campaña post-estancia para solicitar reseñas", detail: "Google, TripAdvisor, Instagram" }
+  ],
+  fase6: [
+    { text: "Lanzar campañas de retargeting en Meta para usuarios que no reservaron", detail: "Audiencia: visitaron web o interactuaron con Instagram" },
+    { text: "Realizar análisis profundo de métricas de los primeros 60 días", detail: "Identificar qué contenido generó más guardados y DMs" },
+    { text: "Ajustar estrategia editorial duplicando lo que funciona", detail: "Eliminar formatos de bajo rendimiento" },
+    { text: "Implementar programa de lealtad simple vía WhatsApp", detail: "Mensajes personalizados en fechas especiales" },
+    { text: "Calcular ROI real: ahorro en comisiones vs inversión en marketing", detail: "Documento ejecutivo para socios" },
+    { text: "Reasignar presupuesto hacia canales de mayor retorno", detail: "Google Hotel Ads, retargeting Meta" },
+    { text: "Planificar Q2 con base en aprendizajes de Q1", detail: "Nuevo calendario editorial + objetivos" },
+    { text: "Documentar procesos para escalar a otros biohostels (SaaS)", detail: "Playbook operativo completo" }
+  ]
+};
+
+// ============ RENDER CHECKLISTS ============
+function renderChecklists() {
+  const saved = JSON.parse(localStorage.getItem('tropicalChecklist') || '{}');
+  
+  Object.keys(checklistData).forEach(fase => {
+    const container = document.getElementById(`checklist-${fase}`);
+    if (!container) return;
+    
+    container.innerHTML = checklistData[fase].map((item, idx) => {
+      const key = `${fase}-${idx}`;
+      const checked = saved[key] ? 'checked' : '';
+      return `
+        <div class="checklist-item ${checked}" onclick="toggleCheck('${key}', this)">
+          <div class="check-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="check-text font-medium text-[#1F3D2B]">${item.text}</div>
+            <div class="text-xs text-[#2A241E]/60 mt-1">${item.detail}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  });
+  
+  updateProgress();
+}
+
+function toggleCheck(key, el) {
+  const saved = JSON.parse(localStorage.getItem('tropicalChecklist') || '{}');
+  saved[key] = !saved[key];
+  localStorage.setItem('tropicalChecklist', JSON.stringify(saved));
+  el.classList.toggle('checked');
+  updateProgress();
+}
+
+function updateProgress() {
+  const saved = JSON.parse(localStorage.getItem('tropicalChecklist') || '{}');
+  const total = Object.values(checklistData).reduce((sum, arr) => sum + arr.length, 0);
+  const completed = Object.values(saved).filter(v => v).length;
+  const percent = Math.round((completed / total) * 100);
+  
+  document.getElementById('progressText').textContent = completed;
+  document.getElementById('progressBar').style.width = percent + '%';
+  document.getElementById('progressPercent').textContent = percent + '% completado';
+}
+
+function resetProgress() {
+  if (confirm('¿Seguro que quieres reiniciar todo el progreso?')) {
+    localStorage.removeItem('tropicalChecklist');
+    renderChecklists();
+  }
+}
+
+// ============ TABS ============
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ============ COPY TEMPLATE ============
+function copyText(btn, id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copiar';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// ============ REVEAL ON SCROLL ============
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ============ INIT ============
+renderChecklists();
+</script>
+
+</body>
+</html>
