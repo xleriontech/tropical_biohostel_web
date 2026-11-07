@@ -505,7 +505,7 @@ async function asegurarAdmin(email: string) {
 
   // El hash guardado tiene que abrir con la clave que se entregó.
   const vuelto = await prisma.user.findUniqueOrThrow({ where: { id: admin.id }, select: { passwordHash: true } });
-  if (!bcrypt.compareSync(clave, vuelto.passwordHash)) {
+  if (!vuelto.passwordHash || !bcrypt.compareSync(clave, vuelto.passwordHash)) {
     throw new Error(`la contraseña de ${email} no verifica después de escribirla`);
   }
 
