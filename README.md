@@ -217,7 +217,7 @@ estáticos *caché primero*, API GET *red primero* con respaldo. Las escrituras 
 panel admin) **nunca** se cachean.
 
 > **Al publicar cambios hay que subir la versión** en `frontend/public/sw.js`
-> (`const VERSION = "v7"` → `"v8"`). Si no, los dispositivos con la app instalada seguirán
+> (`const VERSION = "v8"` → `"v9"`). Si no, los dispositivos con la app instalada seguirán
 > sirviendo la versión anterior. El `activate` borra las cachés de versiones anteriores.
 
 ## Licencia

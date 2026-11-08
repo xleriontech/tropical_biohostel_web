@@ -6,14 +6,17 @@ import { usePathname } from "next/navigation";
 /**
  * Transición entre páginas/secciones.
  *
- * Al navegar sube un overlay blanco con el **mandala de marca armándose junto
- * a las letras del logo** (TROPICAL · BIO · mandala · HOSTEL): cada pieza entra
- * escalonada y con un movimiento fluido, y al terminar reconstruyen el
- * logotipo exacto. Mientras carga, el mandala sigue girando suavemente.
+ * Al navegar sube un overlay blanco con el **emblema de marca armando**: los
+ * aros con TROPICAL · BIOHOSTEL entran primero y el núcleo (hojas + loro +
+ * punto dorado) cae después, encima. Al terminar las dos piezas coinciden
+ * exactamente con el logotipo. Mientras carga, el núcleo respira suavemente.
+ *
+ * Las dos piezas salen del mismo lienzo cuadrado (1024 x 1024), así que se
+ * apilan a tamaño completo: no hay que calibrar porcentajes entre ellas.
  */
 
-const ANCHO_MAX = 560; // px del logo compuesto en el cargador
-const RELACION = 3.936; // proporcion del logo (2200 x 559)
+const ANCHO_MAX = 380; // px del emblema cuadrado en el cargador
+const RELACION = 1; // proporcion del logo (2048 x 2048)
 
 export default function RouteLoader() {
   const pathname = usePathname();
@@ -108,63 +111,33 @@ export default function RouteLoader() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[90] flex flex-col items-center justify-center gap-7 bg-white"
+      className="pointer-events-none fixed inset-0 z-[90] flex flex-col items-center justify-center gap-7 bg-white px-4"
       style={{
         opacity: fase === "entrando" ? 1 : 0,
         transition: "opacity 0.35s ease",
       }}
     >
-      {/* El logotipo armándose: la clave fuerza el reinicio de la animacion */}
+      {/* El emblema armándose: la clave fuerza el reinicio de la animacion */}
       <div
         key={pathname}
-        className="relative w-full max-w-[560px] px-4"
-        style={{ aspectRatio: String(RELACION) }}
+        className="relative w-full"
+        style={{ maxWidth: ANCHO_MAX, aspectRatio: String(RELACION) }}
       >
-        {/* TROPICAL */}
+        {/* Aros: entran primero, girando */}
         <img
-          src="/loader/loader-tropical.png"
+          src="/loader/loader-aros.png"
           alt=""
-          className="tl-tropical absolute select-none"
-          style={{ left: "0.27%", top: "0.89%", width: "28.41%" }}
+          className="tl-aros absolute inset-0 h-full w-full select-none"
         />
 
-        {/* Filetes naranjas */}
-        <div
-          className="tl-linea absolute left-[0.59%] top-[27.5%] h-[1.5px] w-[42%]"
-          style={{ background: "linear-gradient(90deg,#ea9400,#f0b429)" }}
-        />
-        <div
-          className="tl-linea tl-linea-der absolute right-[1.5%] top-[27.5%] h-[1.5px] w-[40%]"
-          style={{ background: "linear-gradient(270deg,#ea9400,#f0b429)" }}
-        />
-
-        {/* BIO */}
-        <img
-          src="/loader/loader-bio.png"
-          alt=""
-          className="tl-bio absolute select-none"
-          style={{ left: "0.59%", top: "30.23%", width: "42.05%" }}
-        />
-
-        {/* El mandala: entra girando y sigue vivo mientras carga */}
-        <div
-          className="tl-mandala absolute select-none"
-          style={{ left: "43.91%", top: "33.81%", width: "15.05%" }}
-        >
+        {/* Núcleo: cae encima y sigue respirando mientras carga */}
+        <div className="tl-nucleo absolute inset-0 select-none">
           <img
-            src="/loader/loader-mandala.png"
+            src="/loader/loader-nucleo.png"
             alt=""
-            className="tl-mandala-viva w-full"
+            className="tl-nucleo-viva h-full w-full"
           />
         </div>
-
-        {/* HOSTEL */}
-        <img
-          src="/loader/loader-hostel.png"
-          alt=""
-          className="tl-hostel absolute select-none"
-          style={{ left: "59.5%", top: "33.81%", width: "39.55%" }}
-        />
       </div>
 
       {/* Barra de progreso */}

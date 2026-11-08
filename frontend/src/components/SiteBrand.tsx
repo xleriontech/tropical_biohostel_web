@@ -25,15 +25,19 @@ export function useSiteLogo(): string {
   return logo;
 }
 
-export default function SiteBrand({ className = "h-10 w-auto" }: { className?: string }) {
+/**
+ * Logo del sitio. La marca nueva es cuadrada (1:1), así que siempre se pide
+ * alto y ancho iguales: `w-auto` sobre una imagen cuadrada funciona, pero se
+ * deja explícito para que nadie reintroduzca una proporción vieja (3.94:1).
+ */
+export default function SiteBrand({ className = "h-12 w-12" }: { className?: string }) {
   const logo = useSiteLogo();
   return (
     <img
       src={logo}
       onError={(e) => { if (e.currentTarget.src !== window.location.origin + FALLBACK) e.currentTarget.src = FALLBACK; }}
       alt="Tropical Biohostel — BIO HOSTEL"
-      style={{ filter: "drop-shadow(0 0 1px rgba(243,236,218,.7))" }}
-      className={`${className} w-auto max-w-none shrink-0 bg-transparent`}
+      className={`${className} max-w-none shrink-0 bg-transparent`}
     />
   );
 }

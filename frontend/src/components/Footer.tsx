@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-[1.2fr_1fr_1fr] md:px-6">
         <div>
           <div className="flex items-center gap-2">
-            <SiteBrand className="h-9 w-auto" />
+            <SiteBrand className="h-11 w-11" />
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
             Tropical Biohostel · Naturaleza que se vive, sabores que se descubren, experiencias que permanecen.
