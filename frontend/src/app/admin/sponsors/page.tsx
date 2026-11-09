@@ -27,7 +27,7 @@ export default function AdminSponsorsPage() {
   const [contacto, setContacto] = useState("");
 
   const fetchSponsors = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/sponsors`, {
+    const res = await fetch(`"http://localhost:3001/api"/admin/sponsors`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     if (res.ok) setSponsors(await res.json());
@@ -57,13 +57,13 @@ export default function AdminSponsorsPage() {
     const body = { nombre, logoUrl: logoUrl || undefined, sitioWeb: sitioWeb || undefined, contacto: contacto || undefined };
 
     if (editing) {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/sponsors/${editing.id}`, {
+      await fetch(`"http://localhost:3001/api"/admin/sponsors/${editing.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(body),
       });
     } else {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/sponsors`, {
+      await fetch(`"http://localhost:3001/api"/admin/sponsors`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(body),

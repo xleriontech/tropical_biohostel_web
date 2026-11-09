@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { CheckCircle2, ExternalLink, FlaskConical, KeyRound, Pencil, Plus, Trash2, XCircle } from "lucide-react";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+const API = "http://localhost:3001/api";
 
 interface Clave {
   id: string;

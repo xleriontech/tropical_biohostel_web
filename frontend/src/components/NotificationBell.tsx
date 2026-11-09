@@ -10,7 +10,7 @@ export default function NotificationBell() {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notificaciones/count`, {
+      const res = await fetch(`"http://localhost:3001/api"/notificaciones/count`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) setCount((await res.json()).count);

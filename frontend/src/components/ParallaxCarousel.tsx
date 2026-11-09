@@ -33,7 +33,7 @@ export default function ParallaxCarousel() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/config/parallax`)
+    fetch(`"http://localhost:3001/api"/config/parallax`)
       .then((res) => res.json())
       .then((data: ParallaxConfig) => {
         if (data.images && data.images.length > 0) setImages(data.images);

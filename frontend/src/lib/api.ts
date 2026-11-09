@@ -1,6 +1,6 @@
 import { Property, SearchResult } from "@/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+const API_URL = "http://localhost:3001/api";
 
 interface FetchOptions extends RequestInit {
   token?: string;

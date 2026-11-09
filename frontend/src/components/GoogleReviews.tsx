@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { MapPin, Phone, Quote, Star } from "lucide-react";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+const API = "http://localhost:3001/api";
 const SLUG = "tropical-biohostel";
 const GOOGLE_MAPS =
   "https://www.google.com/maps/place/Tropical+Biohostel/@5.0732862,-74.3693468,17z/data=!4m8!3m7!1s0x8e408e4c500b0ded:0x930ccf82bc032730!8m2!3d5.0732862!4d-74.3693468!9m1!1b1!16s%2Fg%2F11cny2_yd8";

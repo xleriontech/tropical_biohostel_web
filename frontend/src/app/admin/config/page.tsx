@@ -108,7 +108,7 @@ export default function AdminConfigPage() {
   const saveParallax = async () => {
     setSaving(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/config/parallax`, {
+      const res = await fetch(`"http://localhost:3001/api"/config/parallax`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
         body: JSON.stringify(parallax),
@@ -124,7 +124,7 @@ export default function AdminConfigPage() {
   const saveAdsDisplay = async () => {
     setSaving(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/config/ads-display`, {
+      const res = await fetch(`"http://localhost:3001/api"/config/ads-display`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
         body: JSON.stringify(adsDisplay),
@@ -492,7 +492,7 @@ function MarcaTab({ onMessage }: { onMessage: (t: string, e?: boolean) => void }
   const guardar = async () => {
     setGuardando(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/config/site-branding`, {
+      const res = await fetch(`"http://localhost:3001/api"/config/site-branding`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
         body: JSON.stringify({ logoUrl: logoUrl.trim() || null }),

@@ -75,7 +75,7 @@ export default function EditPropertyPage() {
   useEffect(() => {
     if (!id) return;
     const token = localStorage.getItem("token");
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/properties/${id}`, {
+    fetch(`"http://localhost:3001/api"/admin/properties/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => (r.ok ? r.json() : null))
@@ -116,8 +116,8 @@ export default function EditPropertyPage() {
     setError("");
     const token = localStorage.getItem("token");
     const url = isNew
-      ? `${process.env.NEXT_PUBLIC_API_URL}/admin/properties`
-      : `${process.env.NEXT_PUBLIC_API_URL}/admin/properties/${id}`;
+      ? `"http://localhost:3001/api"/admin/properties`
+      : `"http://localhost:3001/api"/admin/properties/${id}`;
     const { facebook, instagram, twitter, tiktok, youtube, ...formData } = form;
     const res = await fetch(url, {
       method: isNew ? "POST" : "PUT",
@@ -169,7 +169,7 @@ export default function EditPropertyPage() {
     setIcalLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/properties/${id}/ical-info`, {
+      const res = await fetch(`"http://localhost:3001/api"/admin/properties/${id}/ical-info`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -187,7 +187,7 @@ export default function EditPropertyPage() {
     try {
       const token = localStorage.getItem("token");
       const urls = icalUrlsText.split("\n").map((u) => u.trim()).filter(Boolean);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/properties/${id}/ical`, {
+      const res = await fetch(`"http://localhost:3001/api"/admin/properties/${id}/ical`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ icalImportUrls: urls }),
@@ -202,7 +202,7 @@ export default function EditPropertyPage() {
     }
   };
 
-  const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api").replace(/\/api$/, "");
+  const apiBase = "http://localhost:3001/api".replace(/\/api$/, "");
   const exportUrl = icalInfo?.icalToken
     ? `${apiBase}/api/calendar/${icalInfo.slug}--${icalInfo.icalToken}.ics`
     : null;
@@ -226,7 +226,7 @@ export default function EditPropertyPage() {
       for (const f of Array.from(files)) {
         const fd = new FormData();
         fd.append("file", f);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/properties/${id}/images`, {
+        const res = await fetch(`"http://localhost:3001/api"/admin/properties/${id}/images`, {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
           body: fd,

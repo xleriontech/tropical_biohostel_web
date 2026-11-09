@@ -35,11 +35,11 @@ export default function DonarProyectoPage() {
   datosRef.current = { monto: montoFinal, nombre, email, mensaje };
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/donaciones/proyectos/${slug}`)
+    fetch(`"http://localhost:3001/api"/donaciones/proyectos/${slug}`)
       .then((r) => (r.ok ? r.json() : null))
       .then(setProyecto)
       .catch(() => {});
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/donaciones/paypal-public`)
+    fetch(`"http://localhost:3001/api"/donaciones/paypal-public`)
       .then((r) => (r.ok ? r.json() : null))
       .then(setPub)
       .catch(() => {});
@@ -60,7 +60,7 @@ export default function DonarProyectoPage() {
           createOrder: async () => {
             setEstado("pagando");
             const d = datosRef.current;
-            const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/donaciones/orden`, {
+            const r = await fetch(`"http://localhost:3001/api"/donaciones/orden`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -79,7 +79,7 @@ export default function DonarProyectoPage() {
           },
           onApprove: async (data: any) => {
             try {
-              const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/donaciones/capturar`, {
+              const r = await fetch(`"http://localhost:3001/api"/donaciones/capturar`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ orderId: data.orderID }),

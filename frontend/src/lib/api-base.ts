@@ -1,4 +1,4 @@
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+const API = "http://localhost:3001/api";
 
 /** Origen del backend (sin /api final). Ej: http://localhost:3001 */
 export function apiOrigin(): string {

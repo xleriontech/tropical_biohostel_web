@@ -28,7 +28,7 @@ interface AdDisplayConfig {
  */
 function trackEvent(adId: string, tipo: "impression" | "click") {
   try {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/ads/${adId}/${tipo}`;
+    const url = `"http://localhost:3001/api"/ads/${adId}/${tipo}`;
     if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
       const blob = new Blob([], { type: "application/json" });
       if (navigator.sendBeacon(url, blob)) return;
@@ -96,14 +96,14 @@ export default function AdCarousel({ placement, className = "" }: { placement: s
   const hasTracked = useRef(false);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/ads?placement=${placement}`)
+    fetch(`"http://localhost:3001/api"/ads?placement=${placement}`)
       .then((res) => res.ok ? res.json() : [])
       .then(setAds)
       .catch(() => {});
   }, [placement]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/config/ads-display`)
+    fetch(`"http://localhost:3001/api"/config/ads-display`)
       .then((res) => res.ok ? res.json() : {})
       .then((data: Record<string, AdDisplayConfig>) => {
         const pc = data[placement];

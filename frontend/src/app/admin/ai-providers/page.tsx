@@ -29,7 +29,7 @@ export default function AdminAIProvidersPage() {
   }, []);
 
   const fetchProviders = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers`, {
+    const res = await fetch(`"http://localhost:3001/api"/admin/ai-providers`, {
       headers: { Authorization: `Bearer ${getToken()}` },
     });
     if (res.ok) {
@@ -41,7 +41,7 @@ export default function AdminAIProvidersPage() {
 
   const addKey = async () => {
     if (!newKey.providerId || !newKey.key) return;
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/${newKey.providerId}/keys`, {
+    await fetch(`"http://localhost:3001/api"/admin/ai-providers/${newKey.providerId}/keys`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export default function AdminAIProvidersPage() {
     fetchProviders();
   };
 
-  const toggleProvider = async (id: string, isActive: boolean) => {    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/${id}`, {
+  const toggleProvider = async (id: string, isActive: boolean) => {    await fetch(`"http://localhost:3001/api"/admin/ai-providers/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export default function AdminAIProvidersPage() {
   };
 
   const toggleKey = async (keyId: string) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/keys/${keyId}/toggle`, {
+    await fetch(`"http://localhost:3001/api"/admin/ai-providers/keys/${keyId}/toggle`, {
       method: "PUT",
       headers: { Authorization: `Bearer ${getToken()}` },
     });
@@ -74,14 +74,14 @@ export default function AdminAIProvidersPage() {
 
   const removeKey = async (keyId: string) => {
     if (!confirm("¿Borrar esta API key?")) return;
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/keys/${keyId}`, {
+    await fetch(`"http://localhost:3001/api"/admin/ai-providers/keys/${keyId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${getToken()}` },
     });
     fetchProviders();
   };
 
-  const setParaChat = async (id: string) => {    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/${id}`, {
+  const setParaChat = async (id: string) => {    await fetch(`"http://localhost:3001/api"/admin/ai-providers/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export default function AdminAIProvidersPage() {
   const probar = async (id: string) => {
     setProbando(id);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ai-providers/probar`, {
+      const res = await fetch(`"http://localhost:3001/api"/admin/ai-providers/probar`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

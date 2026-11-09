@@ -34,10 +34,10 @@ export default function AdminAdsPage() {
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     const [adsRes, spRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/advertisements`, {
+      fetch(`"http://localhost:3001/api"/admin/advertisements`, {
         headers: { Authorization: `Bearer ${token}` },
       }),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/sponsors`, {
+      fetch(`${"http://localhost:3001/api"}/admin/sponsors`, {
         headers: { Authorization: `Bearer ${token}` },
       }),
     ]);
@@ -82,13 +82,13 @@ export default function AdminAdsPage() {
     };
 
     if (editing) {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/advertisements/${editing.id}`, {
+      await fetch(`"http://localhost:3001/api"/admin/advertisements/${editing.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(body),
       });
     } else {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/advertisements`, {
+      await fetch(`${"http://localhost:3001/api"}/admin/advertisements`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(body),

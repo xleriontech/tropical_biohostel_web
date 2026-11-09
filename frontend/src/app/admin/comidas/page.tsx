@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { UtensilsCrossed, Plus, Pencil, Trash2, X, ChefHat, Soup, Upload, Film } from "lucide-react";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+const API = "http://localhost:3001/api";
 
 function auth(extra: Record<string, string> = {}) {
   return { Authorization: `Bearer ${localStorage.getItem("token")}`, ...extra };

@@ -60,7 +60,7 @@ export default function BookingModal({
       setChecking(true);
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/properties/${propiedadSlug}/availability?desde=${form.fechaLlegada}&hasta=${form.fechaSalida}`
+          `"http://localhost:3001/api"/properties/${propiedadSlug}/availability?desde=${form.fechaLlegada}&hasta=${form.fechaSalida}`
         );
         if (res.ok) setDisp(await res.json());
       } catch {}
@@ -113,7 +113,7 @@ export default function BookingModal({
 
     setSubmitting(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservas`, {
+      const res = await fetch(`"http://localhost:3001/api"/reservas`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({

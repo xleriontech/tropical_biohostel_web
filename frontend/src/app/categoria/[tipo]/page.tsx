@@ -90,7 +90,7 @@ export default function CategoryPage() {
     if (!category) { setLoading(false); return; }
     setLoading(true);
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/properties?tipo=${category.tipo}&limit=50${minRating > 0 ? `&calificacionMin=${minRating}` : ""}`;
+      const url = `"http://localhost:3001/api"/properties?tipo=${category.tipo}&limit=50${minRating > 0 ? `&calificacionMin=${minRating}` : ""}`;
       const res = await fetch(url);
       const data = await res.json();
       setProperties(data.items || []);

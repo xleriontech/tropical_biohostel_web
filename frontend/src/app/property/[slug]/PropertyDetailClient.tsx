@@ -38,7 +38,7 @@ function ReviewForm({ slug, onCreated }: { slug: string; onCreated: () => void }
     e.preventDefault();
     setSubmitting(true);
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${slug}/reviews`, {
+      await fetch(`"http://localhost:3001/api"/properties/${slug}/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

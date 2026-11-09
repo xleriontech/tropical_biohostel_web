@@ -47,7 +47,7 @@ export default function AdminLayout({
         return;
       }
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+      const res = await fetch(`"http://localhost:3001/api"/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -84,10 +84,10 @@ export default function AdminLayout({
     const poll = async () => {
       try {
         const [countRes, notifsRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/notificaciones/count`, {
+          fetch(`"http://localhost:3001/api"/notificaciones/count`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           }),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/notificaciones?soloNoLeidas=true`, {
+          fetch(`"http://localhost:3001/api"/notificaciones?soloNoLeidas=true`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           }),
         ]);

@@ -19,7 +19,7 @@ export default function AdminReservasPage() {
   const fetchReservas = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservas`, {
+      const res = await fetch(`"http://localhost:3001/api"/reservas`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Error al cargar reservas");
@@ -36,7 +36,7 @@ export default function AdminReservasPage() {
   const handleNoShow = async (id: string) => {
     if (!confirm("¿Marcar como No Show? El usuario será bloqueado por 1 mes.")) return;
     const token = localStorage.getItem("token");
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservas/${id}/no-show`, {
+    await fetch(`"http://localhost:3001/api"/reservas/${id}/no-show`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
     });
