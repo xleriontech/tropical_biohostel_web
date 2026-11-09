@@ -1,0 +1,17 @@
+# .htaccess para la carpeta /siembra/
+# ------------------------------------------------
+# Este archivo vive en public_html/siembra/ y le dice al navegador que
+# acepte el header Authorization: Bearer. El .htaccess raíz bloquea todo lo
+# que empiece por "_" y este archivo gana por evaluación posterior.
+<IfModule mod_headers.c>
+  Header always set Access-Control-Allow-Origin "*"
+  Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+  Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Admin-Token"
+  Header always set Access-Control-Max-Age "86400"
+</IfModule>
+
+# Protección contra listado de directorios
+Options -Indexes
+
+# Si alguien intente acceder a una carpeta sin índice, 403.
+ErrorDocument 403 /404.html

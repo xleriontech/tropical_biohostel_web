@@ -56,13 +56,13 @@ export default function ApadrinarModal({
     });
   };
 
-  // El entorno de pruebas se salta PayPal: reserva y captura la orden simulada.
+  // El entorno de pruebas se salta PayPal: la reserva ya vuelve confirmada.
   const sembrarSimulado = async () => {
     setError("");
     setEstado("pagando");
     try {
       const r = await apartarCasilla();
-      const c = await capturaPago(r.orderId);
+      const c = r.codigo ? { estado: "APROBADA", codigo: r.codigo } : await capturaPago(r.orderId);
       vivos.current.onListo(c.codigo || "");
     } catch (e: any) {
       setEstado("listo");
@@ -82,7 +82,7 @@ export default function ApadrinarModal({
       setEstado("pagando");
       try {
         const r = await apartarCasilla();
-        return r.orderId;
+        return r.orderId || "";
       } catch (e: any) {
         setEstado("listo");
         setError(e.message || "No pudimos apartar esa casilla.");

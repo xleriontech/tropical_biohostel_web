@@ -97,20 +97,37 @@ export interface Ficha {
 }
 
 export interface Reserva {
-  orderId: string;
+  /** Sin pasarela de pago configurada viene null: el árbol ya quedó confirmado. */
+  orderId: string | null;
   donacionId: string;
   codigo: string;
-  expiraAt: string;
+  expiraAt: string | null;
+  confirmado: boolean;
 }
 
 export interface OrdenCuidado {
-  orderId: string;
+  /** Sin pasarela de pago configurada viene null: el mimo ya quedó aplicado. */
+  orderId: string | null;
   donacionId: string;
   total: number;
   moneda: string;
 }
 
-const url = (p: string) => `${process.env.NEXT_PUBLIC_API_URL}${p}`;
+/**
+ * Base del API de siembra, que vive en el cPanel (PHP + MariaDB).
+ * Se configura aparte de NEXT_PUBLIC_API_URL porque el resto del sitio sigue
+ * hablando con el backend NestJS.
+ *
+ *   NEXT_PUBLIC_SIEMBRA_API_URL=https://xlerion.com.co/siembra
+ *
+ * Los archivos PHP son frontend/src/app/donaciones/siembra/*.php y se publican
+ * en public_html/siembra/ del cPanel.
+ */
+const API = (
+  process.env.NEXT_PUBLIC_SIEMBRA_API_URL || "https://xlerion.com.co/siembra"
+).replace(/\/+$/, "");
+
+const url = (p: string) => `${API}${p}`;
 
 async function leer<T>(ruta: string, init?: RequestInit): Promise<T> {
   const r = await fetch(url(ruta), {
@@ -118,13 +135,16 @@ async function leer<T>(ruta: string, init?: RequestInit): Promise<T> {
     headers: { "Content-Type": "application/json", ...(init?.headers || {}) },
   });
   const data = await r.json().catch(() => null);
-  if (!r.ok) throw new Error(data?.message || `No se pudo cargar ${ruta}`);
+  if (!r.ok || (data && data.success === false)) {
+    throw new Error(data?.error || data?.message || `No se pudo cargar ${ruta}`);
+  }
   return data as T;
 }
 
-export const cargaTablero = () => leer<Tablero>("/donaciones/siembra/tablero");
+export const cargaTablero = () => leer<Tablero>("/tablero.php");
+
 export const cargaFicha = (codigo: string) =>
-  leer<Ficha>(`/donaciones/siembra/arbol/${encodeURIComponent(codigo)}`);
+  leer<Ficha>(`/arbol.php?codigo=${encodeURIComponent(codigo)}`);
 
 export function reservaArbol(input: {
   fila: number;
@@ -137,7 +157,7 @@ export function reservaArbol(input: {
   pais?: string;
   mensaje?: string;
 }) {
-  return leer<Reserva>("/donaciones/siembra/reserva", {
+  return leer<Reserva>("/reserva.php", {
     method: "POST",
     body: JSON.stringify(input),
   });
@@ -149,14 +169,21 @@ export function compraCuidados(input: {
   columna: number;
   lineas: { clave: string; cantidad: number }[];
 }) {
-  return leer<OrdenCuidado>("/donaciones/siembra/cuidado", {
+  return leer<OrdenCuidado>("/cuidado.php", {
     method: "POST",
     body: JSON.stringify(input),
   });
 }
 
-export function capturaPago(orderId: string) {
-  return leer<{ estado: string; codigo: string | null; cuidados?: number }>("/donaciones/capturar", {
+/**
+ * Confirma el pago de una orden. Con el flujo simulado no hay orden externa
+ * (orderId null): el backend PHP ya confirmó la siembra o el mimamiento.
+ */
+export async function capturaPago(orderId: string | null) {
+  if (!orderId) {
+    return { estado: "APROBADA", codigo: null };
+  }
+  return leer<{ estado: string; codigo: string | null; cuidados?: number }>("/capturar.php", {
     method: "POST",
     body: JSON.stringify({ orderId }),
   });

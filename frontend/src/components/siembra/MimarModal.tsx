@@ -85,7 +85,7 @@ export default function MimarModal({
     }
   };
 
-  const confirmar = async (orderId: string) => {
+  const confirmar = async (orderId: string | null) => {
     try {
       await capturaPago(orderId);
       onListo();
@@ -98,7 +98,7 @@ export default function MimarModal({
   const { boton, clientId, sinBoton, reintentar } = usarPagoPaypal({
     moneda: tablero.moneda,
     clave: `${casilla.fila}-${casilla.columna}|${lineas.map((l) => `${l.item.clave}:${l.cantidad}`).join(",")}`,
-    crearOrden: async () => (await comprar()).orderId,
+    crearOrden: async () => (await comprar()).orderId || "",
     alAprobar: confirmar,
     alCancelar: () => setEstado("listo"),
     alError: () => {
