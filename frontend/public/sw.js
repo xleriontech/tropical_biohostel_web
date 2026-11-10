@@ -15,7 +15,7 @@
  * borra las cachés de versiones anteriores.
  */
 
-const VERSION = "v8";
+const VERSION = "v9";
 const CACHE_SHELL = `tb-shell-${VERSION}`;
 const CACHE_ESTATICOS = `tb-estaticos-${VERSION}`;
 const CACHE_PAGINAS = `tb-paginas-${VERSION}`;
@@ -26,17 +26,14 @@ const SHELL = [
   "/offline",
   "/offline.html",
   "/manifest.webmanifest",
-  "/icons/icon-192.png?v=3",
-  "/icons/icon-512.png?v=3",
-  "/icons/icon-maskable-192.png?v=3",
-  "/icons/icon-maskable-512.png?v=3",
-  "/icons/apple-touch-icon-180.png?v=3",
-  "/favicon.svg",
-  "/tropical-logo.svg",
+  "/icons/icon-192.png?v=4",
+  "/icons/icon-512.png?v=4",
+  "/icons/icon-maskable-192.png?v=4",
+  "/icons/icon-maskable-512.png?v=4",
+  "/icons/apple-touch-icon-180.png?v=4",
+  "/favicon.svg?v=4",
+  "/tropical-logo.svg?v=4",
   "/tropical-logo.png",
-  // Piezas del emblema animado del cargador
-  "/loader/loader-aros.png",
-  "/loader/loader-nucleo.png",
 ];
 
 const esEstatico = (url) =>
@@ -115,7 +112,7 @@ async function respaldo(request, respuestaAlternativa) {
         "<title>Sin conexión · Tropical Biohostel</title>" +
         "<body style='font-family:system-ui,sans-serif;background:#f5efe0;color:#2b2119;" +
         "text-align:center;padding:3rem 1.5rem'>" +
-        "<img src='/icons/icon-192.png?v=3' alt='' width='92' height='92' style='border-radius:16px'>" +
+        "<img src='/icons/icon-192.png?v=4' alt='' width='92' height='92' style='border-radius:16px'>" +
         "<h1 style='font-size:1.6rem'>Estás sin conexión</h1>" +
         "<p style='color:#6b5d4c'>Inténtalo de nuevo cuando vuelvas a tener internet.</p>" +
         "<a href='/' style='display:inline-block;margin-top:1rem;padding:.7rem 1.5rem;" +

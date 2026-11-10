@@ -15,10 +15,10 @@ export default function CosmicBungaloPage() {
         <img
           src="/fotos/BioHostel9.jpg"
           alt="Interior del Cosmic Bungalow"
-          className="absolute inset-0 h-full w-full object-cover opacity-35"
+          className="absolute inset-0 h-full w-full object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#16264D]/80 via-[#1E3D24]/80 to-[#7A2E14]/80" />
-        <div className="mx-auto max-w-5xl px-4 py-16 text-center sm:py-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#16264D]/60 via-[#1E3D24]/60 to-[#7A2E14]/60" />
+        <div className="relative z-10 mx-auto max-w-5xl px-4 py-16 text-center sm:py-20">
           <div className="mb-4 flex justify-center gap-2">
             <button
               onClick={() => setLang("es")}

@@ -142,7 +142,7 @@ export default function CategoryPage() {
           alt={category.label}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-80`} />
+        <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-30`} />
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjAgMjBtMC0yMGEyMCAyMCAwIDEgMCA0MCAwIDIwIDIwIDAgMSAwLTQwIDB6IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20" />
         <div className="mx-auto max-w-7xl px-4 py-16 sm:py-24 relative">
           <nav className="mb-6 text-sm text-white/70">

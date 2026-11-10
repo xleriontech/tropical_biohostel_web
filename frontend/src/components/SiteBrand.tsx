@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { absoluteUrl, apiUrl } from "@/lib/api-base";
 
-const FALLBACK = "/tropical-logo.svg";
+import { LOGO } from "@/lib/brand";
+
+const FALLBACK = LOGO;
 
 /** Logo del sitio: lee /api/config/site-branding (admin lo cambia). */
 export function useSiteLogo(): string {

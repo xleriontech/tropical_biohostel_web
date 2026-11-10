@@ -12,6 +12,22 @@ export default function ServiceWorkerRegister() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
+    // En desarrollo el service worker sirve chunks estáticos en "caché
+    // primero" y oculta los cambios del hot reload (hasta se llega a ver
+    // el loader antiguo). Se desregistra y se limpian sus cachés para que
+    // localhost siempre muestre el código recién compilado.
+    if (process.env.NODE_ENV === "development") {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then((rs) => rs.forEach((r) => r.unregister()))
+        .catch(() => {});
+      caches
+        .keys()
+        .then((ks) => ks.forEach((k) => caches.delete(k)))
+        .catch(() => {});
+      return;
+    }
+
     const esLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
     if (window.location.protocol !== "https:" && !esLocal) return;
 

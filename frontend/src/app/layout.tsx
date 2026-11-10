@@ -42,14 +42,14 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false, address: false, email: false },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/icons/icon-192.png?v=3", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png?v=3", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.svg?v=4", type: "image/svg+xml" },
+      { url: "/icons/icon-192.png?v=4", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png?v=4", sizes: "512x512", type: "image/png" },
     ],
     apple: [
-      { url: "/icons/apple-touch-icon-180.png?v=3", sizes: "180x180", type: "image/png" },
+      { url: "/icons/apple-touch-icon-180.png?v=4", sizes: "180x180", type: "image/png" },
     ],
-    shortcut: ["/icons/icon-192.png?v=3"],
+    shortcut: ["/icons/icon-192.png?v=4"],
   },
   other: {
     "mobile-web-app-capable": "yes",
