@@ -18,3 +18,11 @@ export const MANDALA = `/favicon.svg?v=${VERSION}`;
 
 /** Logotipo horizontal con versión de caché (lo usan header y loader). */
 export const LOGO = `/tropical-logo.svg?v=${VERSION}`;
+
+/**
+ * Logotipo horizontal en versión clara: el texto va en crema `#F5EFE0`
+ * en lugar de bosque `#1F3D2B`, para fondos oscuros (barra de navegación
+ * de la mayoría de los temas, modo oscuro). El resto de la paleta
+ * (verde `#8FB573`, sol `#E8A94A`) es igual en ambas versiones.
+ */
+export const LOGO_CLARO = `/tropical-logo-claro.svg?v=${VERSION}`;

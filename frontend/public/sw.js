@@ -15,7 +15,7 @@
  * borra las cachés de versiones anteriores.
  */
 
-const VERSION = "v9";
+const VERSION = "v10";
 const CACHE_SHELL = `tb-shell-${VERSION}`;
 const CACHE_ESTATICOS = `tb-estaticos-${VERSION}`;
 const CACHE_PAGINAS = `tb-paginas-${VERSION}`;
@@ -33,6 +33,7 @@ const SHELL = [
   "/icons/apple-touch-icon-180.png?v=4",
   "/favicon.svg?v=4",
   "/tropical-logo.svg?v=4",
+  "/tropical-logo-claro.svg?v=4",
   "/tropical-logo.png",
 ];
 
