@@ -1,6 +1,10 @@
 "use client";
 
 import SiteBrand from "./SiteBrand";
+import { InstagramIcon } from "./icons";
+
+const INSTAGRAM_URL = "https://www.instagram.com/tropical_biohostel";
+const INSTAGRAM_HANDLE = "@tropical_biohostel";
 
 export default function Footer() {
   return (
@@ -19,6 +23,19 @@ export default function Footer() {
           <p className="mt-3 text-sm">
             <a href="/en" className="text-primary hover:underline">Read in English</a>
           </p>
+          <div className="mt-5">
+            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Síguenos</p>
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-2.5 rounded-2xl border border-input bg-white px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
+              title="Instagram · Tropical Biohostel"
+            >
+              <InstagramIcon className="h-5 w-5 shrink-0" />
+              <span>{INSTAGRAM_HANDLE}</span>
+            </a>
+          </div>
         </div>
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Recorrer</p>

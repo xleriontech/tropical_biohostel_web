@@ -168,3 +168,32 @@ export function RatingBadge({ value }: { value: number | string }) {
 export function BedIcon({ className }: { className?: string }) {
   return <BedDouble className={className || "h-4 w-4"} />;
 }
+
+/**
+ * Icono de Instagram según el Manual de Identidad Visual v2.0:
+ * marco redondeado en bosque (#1F3D2B), lente en sol (#E8A94A)
+ * y destello en hoja (#8FB573) — mismos tonos del emblema.
+ */
+export function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className || "h-5 w-5"}
+      aria-hidden="true"
+      focusable="false"
+    >
+      <rect
+        x="3.25"
+        y="3.25"
+        width="17.5"
+        height="17.5"
+        rx="5.25"
+        stroke="#1F3D2B"
+        strokeWidth="1.8"
+      />
+      <circle cx="12" cy="12" r="4.1" stroke="#E8A94A" strokeWidth="1.8" />
+      <circle cx="17.35" cy="6.7" r="1.2" fill="#8FB573" />
+    </svg>
+  );
+}
