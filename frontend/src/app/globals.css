@@ -220,9 +220,6 @@
 .font-display {
   font-family: var(--font-nido-serif), "Fraunces", ui-serif, Georgia, serif;
 }
-.font-nido-sans {
-  font-family: var(--font-nido-sans), "Outfit", ui-sans-serif, system-ui, sans-serif;
-}
 
 /* Distribución de superficies por tema */
 [data-theme="colombia"] {

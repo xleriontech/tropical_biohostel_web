@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter, Outfit } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import RouteLoader from "@/components/RouteLoader";
 import PublicChrome from "@/components/PublicChrome";
@@ -10,7 +10,6 @@ import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import InstallPrompt from "@/components/InstallPrompt";
 
 const inter = Inter({ subsets: ["latin"] });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-nido-sans" });
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-nido-serif", style: ["normal", "italic"] });
 
 // Cloudflare Pages (Workers): todo el render dinámico corre en el edge runtime
@@ -76,7 +75,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={`${inter.className} ${outfit.variable} ${fraunces.variable}`}>
+      <body className={`${inter.className} ${fraunces.variable}`}>
         <ThemeProvider>
           <SearchProvider>
             <ClientWrapper>

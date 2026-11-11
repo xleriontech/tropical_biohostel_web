@@ -15,7 +15,7 @@
  * borra las cachés de versiones anteriores.
  */
 
-const VERSION = "v10";
+const VERSION = "v11";
 const CACHE_SHELL = `tb-shell-${VERSION}`;
 const CACHE_ESTATICOS = `tb-estaticos-${VERSION}`;
 const CACHE_PAGINAS = `tb-paginas-${VERSION}`;
@@ -34,7 +34,6 @@ const SHELL = [
   "/favicon.svg?v=4",
   "/tropical-logo.svg?v=4",
   "/tropical-logo-claro.svg?v=4",
-  "/tropical-logo.png",
 ];
 
 const esEstatico = (url) =>
