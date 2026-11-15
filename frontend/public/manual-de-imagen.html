@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manual de Identidad Visual — Tropical Biohostel</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-400-normal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-600-normal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-300-normal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-500-normal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-600-normal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/caveat@latest/latin-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/fraunces@latest/latin-400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/fraunces@latest/latin-600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/fraunces@latest/latin-300.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@latest/latin-400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@latest/latin-500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@latest/latin-600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/caveat@latest/latin-400.css">
 <style>
   :root {
     --bosque: #1F3D2B;
@@ -520,6 +520,267 @@
     padding: 14px 18px;
     font-size: 13px;
   }
+
+  /* ===== Estudio Instagram (sección 13) ===== */
+  .studio {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    margin-top: 36px;
+  }
+  @media (min-width: 1100px) {
+    .studio { grid-template-columns: 300px minmax(0, 1fr) 340px; align-items: start; }
+  }
+  .studio-bottom {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    margin-top: 20px;
+  }
+  @media (min-width: 900px) { .studio-bottom { grid-template-columns: 1fr 1fr; } }
+  .studio-panel {
+    background: white;
+    border: 1px solid var(--piedra);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(31, 61, 43, 0.06);
+  }
+  .studio-label {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--cafe);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .ig-drop {
+    border: 2px dashed var(--piedra);
+    border-radius: 12px;
+    padding: 18px 12px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(42, 36, 30, 0.7);
+    cursor: pointer;
+    transition: 0.2s;
+    background: var(--crema);
+  }
+  .ig-drop:hover, .ig-drop.over { border-color: var(--hoja); background: rgba(143, 181, 115, 0.14); color: var(--bosque); }
+  .ig-media-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; max-height: 250px; overflow-y: auto; }
+  .ig-media-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border: 1px solid var(--piedra);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    background: white;
+    transition: 0.15s;
+  }
+  .ig-media-item:hover { border-color: var(--hoja); }
+  .ig-media-item.active { border-color: var(--sol); background: rgba(232, 169, 74, 0.12); box-shadow: 0 0 0 1px var(--sol); }
+  .ig-media-item img { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: var(--crema); }
+  .ig-media-item .m-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ig-media-item .m-del { border: 0; background: none; cursor: pointer; color: rgba(42, 36, 30, 0.45); font-size: 14px; padding: 2px 4px; }
+  .ig-media-item .m-del:hover { color: #b91c1c; }
+  .ig-empty { font-size: 12px; color: rgba(42, 36, 30, 0.55); border: 1px dashed var(--piedra); border-radius: 10px; padding: 14px; text-align: center; line-height: 1.5; }
+  .ig-note { font-size: 11px; color: rgba(42, 36, 30, 0.55); margin-top: 10px; line-height: 1.55; }
+  .ig-note code { background: var(--crema); padding: 1px 4px; border-radius: 4px; }
+  .ig-formats { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .ig-format-btn {
+    font-family: inherit;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--piedra);
+    background: white;
+    color: rgba(42, 36, 30, 0.75);
+    transition: 0.15s;
+  }
+  .ig-format-btn:hover { border-color: var(--hoja); }
+  .ig-format-btn.active { background: var(--bosque); border-color: var(--bosque); color: var(--crema); font-weight: 600; }
+  .ig-canvas-wrap {
+    background: repeating-conic-gradient(#efe7d6 0 25%, #f7f2e6 0 50%) 0 0 / 24px 24px;
+    border: 1px solid var(--piedra);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    min-height: 320px;
+  }
+  #igCanvas {
+    max-width: 100%;
+    max-height: 56vh;
+    height: auto;
+    width: auto;
+    border-radius: 6px;
+    box-shadow: 0 12px 30px rgba(31, 61, 43, 0.25);
+    cursor: grab;
+    touch-action: none;
+    display: block;
+  }
+  #igCanvas:active { cursor: grabbing; }
+  .ig-slider-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 12px; color: rgba(42, 36, 30, 0.7); }
+  .ig-slider-row input[type="range"] { flex: 1; accent-color: var(--sol); }
+  .ig-hint { font-size: 11px; color: rgba(42, 36, 30, 0.5); margin-top: 6px; line-height: 1.5; }
+  .ig-actions-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .ig-btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid var(--piedra);
+    background: white;
+    color: var(--bosque);
+    transition: 0.15s;
+  }
+  .ig-btn:hover { border-color: var(--bosque); background: var(--crema); }
+  .ig-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .ig-btn-primary {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid var(--bosque);
+    background: var(--bosque);
+    color: var(--crema);
+    transition: 0.15s;
+  }
+  .ig-btn-primary:hover { background: var(--tierra); }
+  .ig-btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+  .ig-templates { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .ig-tpl {
+    border: 2px solid var(--piedra);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    background: white;
+    transition: 0.15s;
+  }
+  .ig-tpl:hover { border-color: var(--hoja); }
+  .ig-tpl.active { border-color: var(--sol); box-shadow: 0 0 0 2px rgba(232, 169, 74, 0.35); }
+  .ig-tpl img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--crema); }
+  .ig-tpl span { display: block; font-size: 9px; padding: 3px 2px 4px; color: rgba(42, 36, 30, 0.75); text-align: center; line-height: 1.15; }
+  .ig-fields { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .ig-field label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cafe);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .ig-field input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid var(--piedra);
+    border-radius: 8px;
+    background: white;
+    color: var(--carbon);
+  }
+  .ig-field input:focus { outline: 2px solid var(--sol); outline-offset: 1px; border-color: transparent; }
+  .ig-opts { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 14px; font-size: 12px; color: rgba(42, 36, 30, 0.8); }
+  .ig-accent-btns { display: flex; gap: 6px; }
+  .ig-accent-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid white;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px var(--piedra);
+    padding: 0;
+  }
+  .ig-accent-btn.active { box-shadow: 0 0 0 2px var(--bosque); }
+  .ig-caption {
+    width: 100%;
+    min-height: 190px;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.55;
+    padding: 12px;
+    border: 1px solid var(--piedra);
+    border-radius: 10px;
+    resize: vertical;
+    background: #fffdf8;
+    color: var(--carbon);
+  }
+  .ig-caption:focus { outline: 2px solid var(--sol); outline-offset: 1px; }
+  .ig-counter { display: flex; justify-content: space-between; font-size: 11px; color: rgba(42, 36, 30, 0.6); margin-top: 6px; }
+  .ig-counter.over { color: #b91c1c; font-weight: 600; }
+  .ig-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .ig-tag {
+    font-family: inherit;
+    font-size: 11px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--piedra);
+    background: var(--crema);
+    color: var(--bosque);
+  }
+  .ig-tag:hover { background: var(--hoja); border-color: var(--hoja); color: #10261a; }
+  .ig-queue { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; }
+  .ig-queue-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--piedra);
+    border-radius: 10px;
+    padding: 6px 8px;
+    font-size: 12px;
+    background: white;
+  }
+  .ig-queue-item img { width: 34px; border-radius: 4px; flex-shrink: 0; }
+  .ig-queue-item .q-info { flex: 1; min-width: 0; }
+  .ig-queue-item .m-del { border: 0; background: none; cursor: pointer; color: rgba(42, 36, 30, 0.45); font-size: 14px; }
+  .ig-queue-item .m-del:hover { color: #b91c1c; }
+  .ig-queue-empty {
+    font-size: 12px;
+    color: rgba(42, 36, 30, 0.55);
+    border: 1px dashed var(--piedra);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    line-height: 1.55;
+  }
+  .ig-video-tools {
+    margin-top: 12px;
+    border-top: 1px dashed var(--piedra);
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ig-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--bosque);
+    color: var(--crema);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.25s;
+    z-index: 999;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+  .ig-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -560,7 +821,8 @@
     <a href="#aplicaciones">10 · Aplicaciones</a>
     <a href="#dos-donts">11 · Do's & Don'ts</a>
     <a href="#plan-instagram">12 · Plan Instagram</a>
-    <a href="#gobernanza">13 · Gobernanza</a>
+    <a href="#estudio">13 · Estudio Instagram</a>
+    <a href="#gobernanza">14 · Gobernanza</a>
   </div>
   <div class="p-6 mt-4 mx-4 rounded-lg" style="background: rgba(232,169,74,0.1);">
     <div class="font-hand text-2xl text-sol mb-2">"Donde el café comienza y el ruido termina"</div>
@@ -589,7 +851,7 @@
       </p>
       <div class="mt-12 flex flex-wrap justify-center gap-8 text-sm opacity-70">
         <div><span class="text-sol font-semibold">v2.0</span> · Noviembre 2026</div>
-        <div><span class="text-sol font-semibold">13</span> secciones</div>
+        <div><span class="text-sol font-semibold">14</span> secciones</div>
         <div><span class="text-sol font-semibold">3</span> tipografías</div>
         <div><span class="text-sol font-semibold">8</span> colores</div>
       </div>
@@ -2554,10 +2816,139 @@
     </div>
   </section>
 
+  <!-- ESTUDIO INSTAGRAM -->
+  <section id="estudio" class="pattern-topo">
+    <div class="max-w-6xl">
+      <div class="section-number reveal">13 · Estudio Instagram</div>
+      <h2 class="section-title reveal">Crea tu<br><span class="italic">publicación</span></h2>
+      <p class="text-lg reveal mb-5" style="color: rgba(42,36,30,0.7); max-width: 46rem;">
+        Importa tus fotos o videos, elige una de las 8 plantillas oficiales y ajusta los textos con la
+        paleta y tipografías de este manual. Al exportar obtienes un PNG de 1080 px listo para Instagram;
+        el video se descarga tal cual, sin recodificar.
+      </p>
+      <div class="flex flex-wrap gap-3 reveal">
+        <div class="plan-chip"><strong class="text-bosque">8</strong> plantillas</div>
+        <div class="plan-chip"><strong class="text-bosque">3</strong> formatos · 1:1 · 4:5 · 9:16</div>
+        <div class="plan-chip"><strong class="text-bosque">100%</strong> local · nada se sube a internet</div>
+        <div class="plan-chip"><a href="#plan-instagram" style="color: inherit;">Ver el feed de referencia ↓</a></div>
+      </div>
+
+      <div class="studio">
+        <!-- 1 · Contenido -->
+        <div class="studio-panel reveal">
+          <div class="studio-label">1 · Contenido</div>
+          <div class="ig-drop" id="igDrop" role="button" tabindex="0">
+            Arrastra fotos o videos<br><strong>o haz clic para elegir</strong>
+          </div>
+          <input type="file" id="igFiles" accept="image/*,video/*" multiple hidden>
+          <div class="ig-media-list" id="igMediaList"></div>
+          <div class="ig-note">
+            🔒 Todo se procesa en tu navegador: ningún archivo se sube a internet. Los textos y ajustes
+            se guardan solos en este equipo.
+          </div>
+          <div class="ig-video-tools" id="igVideoTools" hidden>
+            <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--cafe);font-weight:600;">
+              Video · portada
+            </div>
+            <div class="ig-slider-row">
+              <span>Fotograma</span>
+              <input type="range" id="igFrame" min="0" max="1000" value="0">
+              <span id="igFrameTime">0.0s</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="ig-btn" id="igPlayBtn" style="flex:1;">▶ Vista previa</button>
+              <button class="ig-btn" id="igDlVideo" style="flex:1;">⬇ Video original</button>
+            </div>
+            <div class="ig-hint">Exporta la portada en PNG y sube el video original tal cual a Instagram.</div>
+          </div>
+        </div>
+
+        <!-- 2 · Vista previa -->
+        <div class="studio-panel reveal">
+          <div class="studio-label">2 · Vista previa y exportación</div>
+          <div class="ig-formats" id="igFormats">
+            <button class="ig-format-btn" data-f="1x1" type="button">1:1 · 1080×1080</button>
+            <button class="ig-format-btn active" data-f="4x5" type="button">4:5 · 1080×1350</button>
+            <button class="ig-format-btn" data-f="9x16" type="button">9:16 · 1080×1920</button>
+          </div>
+          <div class="ig-canvas-wrap">
+            <canvas id="igCanvas" width="1080" height="1350" aria-label="Vista previa del post"></canvas>
+          </div>
+          <div class="ig-slider-row">
+            <span>Zoom</span>
+            <input type="range" id="igZoom" min="100" max="260" value="100">
+            <button class="ig-btn" id="igReset" type="button" style="padding:5px 10px;font-size:12px;">Reiniciar</button>
+          </div>
+          <div class="ig-hint">
+            📐 Arrastra la imagen dentro del lienzo para recortar · Instagram recomienda 1080 px de ancho
+            y formato 4:5 para ocupar más pantalla.
+          </div>
+          <div class="ig-actions-row">
+            <button class="ig-btn-primary" id="igExport" type="button">⬇ Exportar PNG</button>
+            <button class="ig-btn" id="igQueueAdd" type="button">＋ Añadir a la cola</button>
+            <button class="ig-btn" id="igOpenIg" type="button">↗ Abrir Instagram</button>
+          </div>
+        </div>
+
+        <!-- 3 · Plantilla -->
+        <div class="studio-panel reveal">
+          <div class="studio-label">3 · Plantilla</div>
+          <div class="ig-templates" id="igTemplates"></div>
+          <div class="ig-fields" id="igFields"></div>
+          <div class="ig-opts">
+            <span>Acento:</span>
+            <span class="ig-accent-btns" id="igAccents">
+              <button class="ig-accent-btn active" data-a="sol" type="button" style="background:#E8A94A" title="Sol"></button>
+              <button class="ig-accent-btn" data-a="hoja" type="button" style="background:#8FB573" title="Hoja"></button>
+              <button class="ig-accent-btn" data-a="crema" type="button" style="background:#F5EFE0" title="Crema"></button>
+            </span>
+            <label style="display:flex;gap:6px;align-items:center;cursor:pointer;">
+              <input type="checkbox" id="igWatermark" checked> Emblema
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy + cola -->
+      <div class="studio-bottom">
+        <div class="studio-panel reveal">
+          <div class="studio-label">4 · Copy del post</div>
+          <textarea class="ig-caption" id="igCaption" placeholder="Gancho + cuerpo + CTA suave · máximo 2 emojis (tono de voz, sección 09)…"></textarea>
+          <div class="ig-counter" id="igCounterWrap">
+            <span id="igCounter">0 / 2200 caracteres</span>
+            <span>Instagram corta a 2.200</span>
+          </div>
+          <div class="ig-actions-row">
+            <button class="ig-btn-primary" id="igCopyCaption" type="button">⧉ Copiar copy</button>
+            <button class="ig-btn" id="igRegenCaption" type="button">↺ Regenerar</button>
+          </div>
+          <div class="ig-tags" id="igTags"></div>
+        </div>
+        <div class="studio-panel reveal">
+          <div class="studio-label">5 · Cola de exportación</div>
+          <div class="ig-queue" id="igQueue">
+            <div class="ig-queue-empty">
+              Aún no has añadido diseños. Prepara un post y pulsa «Añadir a la cola»:
+              al final exportas todos los PNG de una vez.
+            </div>
+          </div>
+          <div class="ig-actions-row">
+            <button class="ig-btn-primary" id="igQueueExport" type="button" disabled>⬇ Exportar cola (0)</button>
+            <button class="ig-btn" id="igQueueClear" type="button" disabled>Vaciar</button>
+          </div>
+          <div class="ig-note">
+            📤 Cada diseño se descarga como <code>tbi_plantilla_formato.png</code> y se sube a Instagram
+            desde el celular o la web. Para videos: sube el archivo original y usa el PNG como portada.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- GOBERNANZA -->
   <section id="gobernanza" class="bg-bosque text-crema">
     <div class="max-w-6xl">
-      <div class="section-number text-sol reveal">13 · Gobernanza</div>
+      <div class="section-number text-sol reveal">14 · Gobernanza</div>
       <h2 class="font-display text-5xl md:text-7xl leading-none mb-8 reveal" style="color: var(--crema);">
         Cuidar la<br><span class="italic text-sol">marca</span>
       </h2>
@@ -2847,6 +3238,1257 @@
   }
 
   renderPlanChecklists();
+</script>
+
+<script>
+/* ===== Estudio Instagram (sección 13) =====
+   Todo ocurre en el navegador: canvas 1080 px, sin librerías externas,
+   sin subir archivos. Exporta PNG (1:1 / 4:5 / 9:16) y descarga el video original. */
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var cv = $('igCanvas');
+  if (!cv) return;
+  var cx = cv.getContext('2d');
+  var LS = 'tbiEstudioIG';
+
+  var SIZES = { '1x1': [1080, 1080], '4x5': [1080, 1350], '9x16': [1080, 1920] };
+  var P = {
+    bosque: '#1F3D2B', cafe: '#6B4423', sol: '#E8A94A', hoja: '#8FB573',
+    tierra: '#3E2F23', crema: '#F5EFE0', piedra: '#D4C9B0', carbon: '#2A241E'
+  };
+  var ACC = { sol: '#E8A94A', hoja: '#8FB573', crema: '#F5EFE0' };
+
+  /* ---------- Plantillas oficiales (pilares de la sección B + citas) ---------- */
+  var TPLS = [
+    {
+      id: 'experiencia', nombre: 'Experiencia',
+      fields: [
+        { k: 'eyebrow', l: 'Antetítulo', d: 'EXPERIENCIA VIVIDA' },
+        { k: 'title', l: 'Título', d: 'El bosque despierta a las 5:40' },
+        { k: 'sub', l: 'Bajada', d: 'Amanecer, café de la finca y sendero entre guaduales' }
+      ],
+      caption: function (f) {
+        return f.title + '.\n\n' + f.sub + '. Ven a escuchar lo que el ruido de la ciudad no te deja oír.\n\nNocaima te recibe 🌄\n\n#TropicalBiohostel #DondeElCafeComienza #NocaimaSecreta #Nocaima';
+      }
+    },
+    {
+      id: 'utilidad', nombre: 'Utilidad',
+      fields: [
+        { k: 'title', l: 'Título', d: 'Qué empacar para Nocaima' },
+        { k: 'tip1', l: 'Tip 1', d: 'Protector solar (el sol de montaña engaña)' },
+        { k: 'tip2', l: 'Tip 2', d: 'Suéter ligero (las noches refrescan)' },
+        { k: 'tip3', l: 'Tip 3', d: 'Botas con agarre (senderos húmedos)' }
+      ],
+      caption: function (f) {
+        return f.title + ' — lo que SÍ debes llevar:\n\n1. ' + f.tip1 + '\n2. ' + f.tip2 + '\n3. ' + f.tip3 +
+          '\n4. Repelente biodegradable\n5. Tu mejor libro (no hay WiFi en las cabañas, y eso es lo mejor)\n\nGuarda este post para tu próxima visita 🌿\n\n#TropicalBiohostel #NocaimaSecreta #Nocaima';
+      }
+    },
+    {
+      id: 'ugc', nombre: 'Prueba social',
+      fields: [
+        { k: 'quote', l: 'Testimonio', d: 'La mejor decisión del año. Volvemos seguro.' },
+        { k: 'credit', l: 'Crédito', d: '— @maria.travel · huésped' }
+      ],
+      caption: function (f) {
+        return '«' + f.quote + '»\n\nGracias por dejarnos ser parte de tu historia 💚\n\n' + f.credit +
+          '\n\n#TropicalBiohostel #Comunidad #NocaimaSecreta';
+      }
+    },
+    {
+      id: 'local', nombre: 'Contexto local',
+      fields: [
+        { k: 'eyebrow', l: 'Antetítulo', d: 'CONTEXTO LOCAL' },
+        { k: 'title', l: 'Título', d: 'Laguna El Vergel' },
+        { k: 'sub', l: 'Bajada', d: 'El secreto mejor guardado de Cundinamarca' },
+        { k: 'chip', l: 'Distancia', d: '20 min en auto' }
+      ],
+      caption: function (f) {
+        return f.title + ': ' + f.sub + '.\n\nA solo ' + f.chip + ' del biohostel — te llevamos 🌿\n\n#NocaimaSecreta #TropicalBiohostel #Cundinamarca #Nocaima';
+      }
+    },
+    {
+      id: 'bts', nombre: 'Detrás de cámaras',
+      fields: [
+        { k: 'eyebrow', l: 'Antetítulo', d: 'BEHIND THE SCENES' },
+        { k: 'title', l: 'Título', d: 'Del fruto a tu taza' },
+        { k: 'sub', l: 'Bajada', d: '6 meses de proceso · 12 h de tostión · 3 min en tu mesa' },
+        { k: 'steps', l: 'Etapas', d: '1 Cosecha · 2 Tueste · 3 Taza' }
+      ],
+      caption: function (f) {
+        return f.title + '.\n\n' + f.sub + '\n\n' + f.steps +
+          '\n\n#TropicalBiohostel #CafeDeOrigen #DondeElCafeComienza';
+      }
+    },
+    {
+      id: 'cta', nombre: 'CTA reserva',
+      fields: [
+        { k: 'eyebrow', l: 'Antetítulo', d: 'RESERVA DIRECTO' },
+        { k: 'title', l: 'Título', d: 'Ahorra 15% reservando con nosotros' },
+        { k: 'sub', l: 'Bajada', d: 'Mejor tarifa garantizada + beneficios exclusivos por WhatsApp' },
+        { k: 'button', l: 'Botón', d: 'Comenta FECHAS' }
+      ],
+      caption: function (f) {
+        return f.title + '.\n\n' + f.sub + '.\n\nComenta FECHAS y te enviamos por DM la disponibilidad y tarifas exclusivas para reserva directa (sin comisiones de Booking) 💚\n\n#TropicalBiohostel #ReservaDirecta #Nocaima';
+      }
+    },
+    {
+      id: 'cita1', nombre: 'Cita (crema)',
+      fields: [
+        { k: 'quote', l: 'Cita', d: 'La vida se siente mejor en el bosque' },
+        { k: 'credit', l: 'Firma', d: 'Tropical Biohostel · Nocaima' }
+      ],
+      caption: function (f) {
+        return '«' + f.quote + '»\n\n— ' + f.credit + '\n\n#TropicalBiohostel #DondeElCafeComienza #NocaimaSecreta';
+      }
+    },
+    {
+      id: 'cita2', nombre: 'Cita (foto)',
+      fields: [
+        { k: 'quote', l: 'Cita', d: 'El bosque no tiene prisa…' },
+        { k: 'credit', l: 'Firma', d: 'Nocaima, 5:40 a. m.' }
+      ],
+      caption: function (f) {
+        return f.quote + '\n\n— ' + f.credit + '\n\n#FogataYConversacion #TropicalBiohostel #Comunidad';
+      }
+    }
+  ];
+  var BY_ID = {};
+  TPLS.forEach(function (t) { BY_ID[t.id] = t; });
+
+  var TAGS = ['#TropicalBiohostel', '#DondeElCafeComienza', '#NocaimaSecreta', '#Nocaima',
+    '#Cundinamarca', '#CafeDeOrigen', '#EcoHostel', '#ReservaDirecta'];
+
+  /* ---------- Estado ---------- */
+  var state = {
+    tpl: 'experiencia', format: '4x5', accent: 'sol', watermark: true,
+    zoom: 1, panX: 0, panY: 0, mediaId: null, fields: {}
+  };
+  TPLS.forEach(function (t) {
+    state.fields[t.id] = {};
+    t.fields.forEach(function (f) { state.fields[t.id][f.k] = f.d; });
+  });
+  var captionEdited = false;
+
+  try {
+    var raw = localStorage.getItem(LS);
+    if (raw) {
+      var s = JSON.parse(raw);
+      ['tpl', 'format', 'accent', 'watermark', 'zoom', 'panX', 'panY'].forEach(function (k) {
+        if (s[k] !== undefined) state[k] = s[k];
+      });
+      if (s.fields) TPLS.forEach(function (t) {
+        if (s.fields[t.id]) Object.keys(s.fields[t.id]).forEach(function (k) {
+          if (state.fields[t.id][k] !== undefined) state.fields[t.id][k] = s.fields[t.id][k];
+        });
+      });
+      if (s.caption) { $('igCaption').value = s.caption; captionEdited = !!s.captionEdited; }
+    }
+  } catch (e) { /* storage no disponible: seguimos con valores por defecto */ }
+  if (!BY_ID[state.tpl]) state.tpl = 'experiencia';
+  if (!SIZES[state.format]) state.format = '4x5';
+  if (!ACC[state.accent]) state.accent = 'sol';
+
+  function save() {
+    try {
+      state.caption = $('igCaption').value;
+      state.captionEdited = captionEdited;
+      localStorage.setItem(LS, JSON.stringify(state));
+    } catch (e) { /* sin storage */ }
+  }
+
+  /* ---------- Medios importados ---------- */
+  var mediaItems = [];
+  var mediaSeq = 0;
+
+  function currentItem() {
+    for (var i = 0; i < mediaItems.length; i++) if (mediaItems[i].id === state.mediaId) return mediaItems[i];
+    return null;
+  }
+  function currentEl() { var it = currentItem(); return it ? it.el : null; }
+
+  function addFiles(list) {
+    var files = Array.prototype.slice.call(list || []).filter(function (f) {
+      return f.type.indexOf('image/') === 0 || f.type.indexOf('video/') === 0;
+    });
+    if (!files.length) { toast('Formato no soportado: solo imágenes o videos'); return; }
+    var firstNew = null;
+    files.forEach(function (file) {
+      var url = URL.createObjectURL(file);
+      var item = {
+        id: 'm' + (++mediaSeq),
+        type: file.type.indexOf('video/') === 0 ? 'video' : 'image',
+        name: file.name, url: url, file: file, el: null, thumb: '', duration: 0
+      };
+      if (item.type === 'image') {
+        var img = new Image();
+        img.onload = function () { item.el = img; scheduleRender(); refreshThumbs(); };
+        img.onerror = function () { toast('No se pudo leer: ' + file.name); };
+        img.src = url;
+        item.el = img;
+      } else {
+        var v = document.createElement('video');
+        v.src = url; v.muted = true; v.playsInline = true; v.preload = 'auto';
+        v.addEventListener('loadeddata', function () {
+          item.el = v; item.duration = v.duration || 0;
+          item.thumb = grabThumb(v);
+          renderMediaList(); updateVideoTools(); scheduleRender(); refreshThumbs();
+        });
+        v.addEventListener('seeked', function () {
+          if (state.mediaId === item.id) {
+            $('igFrameTime').textContent = (v.currentTime || 0).toFixed(1) + 's';
+            if (item.thumb === '') { item.thumb = grabThumb(v); renderMediaList(); }
+            scheduleRender();
+          }
+        });
+        v.addEventListener('error', function () { toast('No se pudo leer: ' + file.name); });
+        item.el = v;
+      }
+      if (!firstNew) firstNew = item;
+      mediaItems.push(item);
+    });
+    // Selecciona el contenido recién importado (lo último que vio el usuario)
+    if (firstNew) selectMedia(firstNew.id);
+    else { renderMediaList(); scheduleRender(); refreshThumbs(); }
+    save();
+  }
+
+  function grabThumb(v) {
+    try {
+      var w = 96;
+      var h = Math.round(w * ((v.videoHeight || 9) / (v.videoWidth || 16)));
+      var c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(v, 0, 0, w, h);
+      return c.toDataURL('image/png');
+    } catch (e) { return ''; }
+  }
+
+  function selectMedia(id) {
+    var prev = currentItem();
+    if (prev && prev.type === 'video' && prev.el) prev.el.pause();
+    var btn = $('igPlayBtn'); if (btn) btn.textContent = '▶ Vista previa';
+    state.mediaId = id;
+    renderMediaList(); updateVideoTools(); scheduleRender(); refreshThumbs(); save();
+  }
+
+  function removeMedia(id) {
+    var idx = -1;
+    for (var i = 0; i < mediaItems.length; i++) if (mediaItems[i].id === id) idx = i;
+    if (idx < 0) return;
+    var it = mediaItems[idx];
+    if (it.type === 'video' && it.el) { try { it.el.pause(); } catch (e) {} }
+    URL.revokeObjectURL(it.url);
+    mediaItems.splice(idx, 1);
+    if (state.mediaId === id) state.mediaId = mediaItems.length ? mediaItems[0].id : null;
+    renderMediaList(); updateVideoTools(); scheduleRender(); refreshThumbs(); save();
+  }
+
+  function renderMediaList() {
+    var box = $('igMediaList');
+    box.innerHTML = '';
+    if (!mediaItems.length) {
+      var e = document.createElement('div');
+      e.className = 'ig-empty';
+      e.textContent = 'Sin contenido: la plantilla usará el fondo de marca. También puedes diseñar sin foto.';
+      box.appendChild(e);
+      return;
+    }
+    mediaItems.forEach(function (it) {
+      var row = document.createElement('div');
+      row.className = 'ig-media-item' + (it.id === state.mediaId ? ' active' : '');
+      var t = document.createElement('img');
+      t.alt = ''; t.src = it.thumb || it.url;
+      var n = document.createElement('span');
+      n.className = 'm-name';
+      n.textContent = (it.type === 'video' ? '🎬 ' : '📷 ') + it.name;
+      var del = document.createElement('button');
+      del.className = 'm-del'; del.type = 'button'; del.textContent = '✕'; del.title = 'Quitar';
+      del.addEventListener('click', function (ev) { ev.stopPropagation(); removeMedia(it.id); });
+      row.appendChild(t); row.appendChild(n); row.appendChild(del);
+      row.addEventListener('click', function () { selectMedia(it.id); });
+      box.appendChild(row);
+    });
+  }
+
+  function updateVideoTools() {
+    var it = currentItem();
+    var isV = !!(it && it.type === 'video');
+    $('igVideoTools').hidden = !isV;
+    $('igExport').textContent = isV ? '⬇ Exportar portada (PNG)' : '⬇ Exportar PNG';
+    if (isV && it.el) {
+      $('igFrameTime').textContent = (it.el.currentTime || 0).toFixed(1) + 's';
+    }
+  }
+
+  /* ---------- Fuentes ---------- */
+  var fontsReady = null;
+  function ensureFonts() {
+    if (fontsReady) return fontsReady;
+    fontsReady = Promise.all([
+      document.fonts.load('600 88px Fraunces'),
+      document.fonts.load('400 40px Fraunces'),
+      document.fonts.load('600 40px Fraunces'),
+      document.fonts.load('400 34px Inter'),
+      document.fonts.load('600 30px Inter'),
+      document.fonts.load('700 36px Inter'),
+      document.fonts.load('400 150px Caveat')
+    ]).catch(function () {}).then(function () {
+      return document.fonts.ready;
+    }).catch(function () {});
+    return fontsReady;
+  }
+
+  /* ---------- Assets de marca ---------- */
+  var emblemReady = false;
+  var emblem = new Image();
+  emblem.onload = function () { emblemReady = true; scheduleRender(); refreshThumbs(); };
+  emblem.src = '/favicon.svg';
+
+  /* ---------- Helpers de dibujo ---------- */
+  function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+  function accent(d) { return ACC[d.accent] || ACC.sol; }
+
+  function rr(c, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+  function tracking(c, px) { if ('letterSpacing' in c) c.letterSpacing = px ? px + 'px' : '0px'; }
+
+  function wrap(c, text, maxW) {
+    var words = String(text == null ? '' : text).split(/\s+/).filter(Boolean);
+    if (!words.length) return [''];
+    var lines = [], line = '';
+    for (var i = 0; i < words.length; i++) {
+      var t = line ? line + ' ' + words[i] : words[i];
+      if (c.measureText(t).width > maxW && line) { lines.push(line); line = words[i]; }
+      else line = t;
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+  function setFont(c, o, size) {
+    c.font = ((o.style ? o.style + ' ' : '') + (o.weight || 400) + ' ' + size + 'px ' + o.fam);
+  }
+  function fit(c, text, o) {
+    var size = o.start;
+    while (size > o.min) {
+      setFont(c, o, size);
+      var lines = wrap(c, text, o.maxW);
+      if (lines.length <= (o.maxLines || 3)) return { size: size, lines: lines };
+      size -= 2;
+    }
+    setFont(c, o, o.min);
+    return { size: o.min, lines: wrap(c, text, o.maxW).slice(0, o.maxLines || 3) };
+  }
+  function drawLines(c, lines, x, y, lh, align) {
+    c.textAlign = align || 'left';
+    for (var i = 0; i < lines.length; i++) c.fillText(lines[i], x, y + i * lh);
+    c.textAlign = 'left';
+  }
+  function drawRegion(c, el, w, h, d) {
+    if (!el) return false;
+    var isV = el.tagName === 'VIDEO';
+    if (isV) { if (el.readyState < 2) return false; }
+    else if (!el.naturalWidth) return false;
+    var iw = isV ? el.videoWidth : el.naturalWidth;
+    var ih = isV ? el.videoHeight : el.naturalHeight;
+    if (!iw || !ih) return false;
+    var s = Math.max(w / iw, h / ih) * (d.zoom || 1);
+    var dw = iw * s, dh = ih * s;
+    var maxX = Math.max(0, (dw - w) / 2), maxY = Math.max(0, (dh - h) / 2);
+    var dx = (w - dw) / 2 + (d.panX || 0) * maxX;
+    var dy = (h - dh) / 2 + (d.panY || 0) * maxY;
+    try { c.drawImage(el, dx, dy, dw, dh); } catch (e) { return false; }
+    return true;
+  }
+  function fallbackGrad(c, w, h, a, b) {
+    var g = c.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, a); g.addColorStop(1, b);
+    c.fillStyle = g; c.fillRect(0, 0, w, h);
+  }
+  function topHandle(c, d, color) {
+    if (!emblemReady) return;
+    c.save();
+    c.globalAlpha = 0.95;
+    c.drawImage(emblem, 64, 54, 46, 46);
+    c.restore();
+    c.save();
+    c.font = '600 27px Inter, sans-serif';
+    c.fillStyle = color;
+    c.shadowColor = 'rgba(0,0,0,0.6)';
+    c.shadowBlur = 12;
+    c.shadowOffsetY = 2;
+    c.textAlign = 'left';
+    tracking(c, 1);
+    c.fillText('tropical_biohostel', 124, 87);
+    c.restore();
+    tracking(c, 0);
+  }
+  function wmTR(c, d) {
+    if (!d.watermark || !emblemReady) return;
+    c.save();
+    c.globalAlpha = 0.9;
+    c.drawImage(emblem, c.canvasLogicalW - 64 - 44, 56, 44, 44);
+    c.restore();
+  }
+  function scrimBottom(c, w, h, from) {
+    var g = c.createLinearGradient(0, h * from, 0, h);
+    g.addColorStop(0, 'rgba(7,7,7,0)');
+    g.addColorStop(0.55, 'rgba(7,7,7,0.42)');
+    g.addColorStop(1, 'rgba(7,7,7,0.86)');
+    c.fillStyle = g;
+    c.fillRect(0, h * from, w, h * (1 - from));
+  }
+  function star(c, x, y, r, fill) {
+    c.beginPath();
+    for (var i = 0; i < 5; i++) {
+      var a = -Math.PI / 2 + i * (Math.PI * 2 / 5);
+      var a2 = a + Math.PI / 5;
+      c.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+      c.lineTo(x + Math.cos(a2) * r * 0.45, y + Math.sin(a2) * r * 0.45);
+    }
+    c.closePath(); c.fillStyle = fill; c.fill();
+  }
+  function pinIcon(c, x, y, s, color) {
+    c.save();
+    c.fillStyle = color; c.strokeStyle = color;
+    c.lineWidth = s * 0.16;
+    c.beginPath(); c.arc(x, y, s * 0.34, 0, Math.PI * 2); c.stroke();
+    c.beginPath(); c.arc(x, y, s * 0.12, 0, Math.PI * 2); c.fill();
+    c.beginPath();
+    c.moveTo(x - s * 0.26, y + s * 0.18);
+    c.lineTo(x + s * 0.26, y + s * 0.18);
+    c.lineTo(x, y + s * 0.78);
+    c.closePath(); c.fill();
+    c.restore();
+  }
+
+  /* ---------- Renderers por plantilla ---------- */
+  var RENDER = {};
+
+  RENDER.experiencia = function (c, W, H, d, el) {
+    // Base siempre: evita que un PNG con transparencia exporte fondo transparente
+    fallbackGrad(c, W, H, P.bosque, P.tierra);
+    drawRegion(c, el, W, H, d);
+    scrimBottom(c, W, H, 0.35);
+    topHandle(c, d, 'rgba(245,239,224,0.95)');
+    wmTR(c, d);
+    var f = d.fields.experiencia, pad = 72, maxW = W - pad * 2;
+    var title = fit(c, f.title, { fam: 'Fraunces, serif', weight: 600, maxW: maxW, maxLines: 3, start: 88, min: 46 });
+    var sub = fit(c, f.sub, { fam: 'Inter, sans-serif', weight: 400, maxW: maxW, maxLines: 2, start: 34, min: 24 });
+    var lhT = title.size * 1.08, lhS = sub.size * 1.45;
+    var total = 48 + title.lines.length * lhT + 16 + sub.lines.length * lhS;
+    var y = H - 72 - total;
+    c.fillStyle = accent(d);
+    c.font = '600 28px Inter, sans-serif';
+    c.textAlign = 'left';
+    tracking(c, 4);
+    c.fillText(String(f.eyebrow).toUpperCase(), pad, y + 28);
+    tracking(c, 0);
+    y += 48;
+    c.fillStyle = P.crema;
+    c.font = '600 ' + title.size + 'px Fraunces, serif';
+    drawLines(c, title.lines, pad, y + title.size, lhT);
+    y += title.lines.length * lhT + 16;
+    c.fillStyle = 'rgba(245,239,224,0.87)';
+    c.font = '400 ' + sub.size + 'px Inter, sans-serif';
+    drawLines(c, sub.lines, pad, y + sub.size, lhS);
+  };
+
+  RENDER.utilidad = function (c, W, H, d, el) {
+    var mediaH = Math.round(H * 0.46);
+    c.save();
+    c.beginPath(); c.rect(0, 0, W, mediaH); c.clip();
+    fallbackGrad(c, W, mediaH, P.bosque, P.tierra);
+    var ok = drawRegion(c, el, W, mediaH, d);
+    if (!ok) {
+      if (emblemReady) {
+        c.save(); c.globalAlpha = 0.16;
+        var s = 320;
+        c.drawImage(emblem, (W - s) / 2, (mediaH - s) / 2, s, s);
+        c.restore();
+      }
+    } else {
+      var g = c.createLinearGradient(0, mediaH * 0.45, 0, mediaH);
+      g.addColorStop(0, 'rgba(7,7,7,0)'); g.addColorStop(1, 'rgba(7,7,7,0.4)');
+      c.fillStyle = g; c.fillRect(0, mediaH * 0.45, W, mediaH * 0.55);
+    }
+    c.restore();
+    topHandle(c, d, 'rgba(245,239,224,0.95)');
+    if (d.watermark && emblemReady) {
+      c.save(); c.globalAlpha = 0.9;
+      c.drawImage(emblem, W - 64 - 44, mediaH - 44 - 56, 44, 44);
+      c.restore();
+    }
+    c.fillStyle = P.crema;
+    c.fillRect(0, mediaH, W, H - mediaH);
+    c.fillStyle = accent(d);
+    c.fillRect(0, mediaH, W, 8);
+
+    var f = d.fields.utilidad, pad = 72, maxW = W - pad * 2;
+    var y = mediaH + 56;
+    var title = fit(c, f.title, { fam: 'Fraunces, serif', weight: 600, maxW: maxW, maxLines: 2, start: 62, min: 40 });
+    c.fillStyle = P.bosque;
+    c.font = '600 ' + title.size + 'px Fraunces, serif';
+    c.textAlign = 'left';
+    drawLines(c, title.lines, pad, y + title.size, title.size * 1.1);
+    y += title.lines.length * (title.size * 1.1) + 26;
+
+    [f.tip1, f.tip2, f.tip3].forEach(function (tip) {
+      var ft = fit(c, tip, { fam: 'Inter, sans-serif', weight: 400, maxW: maxW - 58, maxLines: 2, start: 32, min: 24 });
+      var cy = y + ft.size * 0.55;
+      c.beginPath(); c.arc(pad + 16, cy, 16, 0, Math.PI * 2);
+      c.fillStyle = P.hoja; c.fill();
+      c.strokeStyle = '#FFFFFF'; c.lineWidth = 4; c.lineCap = 'round';
+      c.beginPath();
+      c.moveTo(pad + 8, cy);
+      c.lineTo(pad + 14, cy + 6);
+      c.lineTo(pad + 24, cy - 6);
+      c.stroke();
+      c.fillStyle = P.carbon;
+      c.font = '400 ' + ft.size + 'px Inter, sans-serif';
+      drawLines(c, ft.lines, pad + 52, y + ft.size, ft.size * 1.4);
+      y += ft.lines.length * (ft.size * 1.4) + 14;
+    });
+    c.fillStyle = 'rgba(42,36,30,0.5)';
+    c.font = '600 25px Inter, sans-serif';
+    c.textAlign = 'left';
+    c.fillText('tropical_biohostel · Nocaima', pad, H - 52);
+  };
+
+  RENDER.ugc = function (c, W, H, d, el) {
+    fallbackGrad(c, W, H, P.hoja, P.tierra);
+    drawRegion(c, el, W, H, d);
+    var ov = c.createLinearGradient(0, 0, W, H);
+    ov.addColorStop(0, 'rgba(31,61,43,0.92)');
+    ov.addColorStop(1, 'rgba(62,47,35,0.82)');
+    c.fillStyle = ov; c.fillRect(0, 0, W, H);
+    topHandle(c, d, 'rgba(245,239,224,0.95)');
+    wmTR(c, d);
+
+    var f = d.fields.ugc, pad = 72, maxW = W - pad * 2;
+    var quote = fit(c, f.quote, { fam: 'Fraunces, serif', style: 'italic', weight: 600, maxW: maxW, maxLines: 5, start: 66, min: 40 });
+    var credit = fit(c, f.credit, { fam: 'Inter, sans-serif', weight: 400, maxW: maxW, maxLines: 2, start: 30, min: 22 });
+    var lhQ = quote.size * 1.22;
+    var markH = 170, starsH = 56;
+    var total = markH + quote.lines.length * lhQ + 36 + starsH + 22 + credit.lines.length * 40;
+    var y = (H - total) / 2;
+
+    c.fillStyle = accent(d);
+    c.font = '700 240px Fraunces, serif';
+    c.textAlign = 'left';
+    c.save(); c.globalAlpha = 0.9;
+    c.fillText('“', pad - 12, y + 165);
+    c.restore();
+    y += markH;
+
+    c.fillStyle = P.crema;
+    c.font = '600 italic ' + quote.size + 'px Fraunces, serif';
+    c.font = 'italic 600 ' + quote.size + 'px Fraunces, serif';
+    drawLines(c, quote.lines, pad, y + quote.size, lhQ);
+    y += quote.lines.length * lhQ + 36;
+
+    for (var i = 0; i < 5; i++) star(c, pad + 26 + i * 62, y + 26, 26, accent(d));
+    y += starsH + 22;
+
+    c.fillStyle = 'rgba(245,239,224,0.85)';
+    c.font = '400 ' + credit.size + 'px Inter, sans-serif';
+    drawLines(c, credit.lines, pad, y + credit.size, 40);
+  };
+
+  RENDER.local = function (c, W, H, d, el) {
+    fallbackGrad(c, W, H, P.bosque, P.hoja);
+    drawRegion(c, el, W, H, d);
+    scrimBottom(c, W, H, 0.4);
+    topHandle(c, d, 'rgba(245,239,224,0.95)');
+    wmTR(c, d);
+    var f = d.fields.local, pad = 72, maxW = W - pad * 2;
+    var title = fit(c, f.title, { fam: 'Fraunces, serif', weight: 600, maxW: maxW, maxLines: 2, start: 96, min: 52 });
+    var sub = fit(c, f.sub, { fam: 'Inter, sans-serif', weight: 400, maxW: maxW, maxLines: 2, start: 34, min: 24 });
+    var chipTxt = String(f.chip);
+    c.font = '600 26px Inter, sans-serif';
+    var chipW = c.measureText(chipTxt).width + 44;
+    var lhT = title.size * 1.08, lhS = sub.size * 1.45;
+    var total = 48 + title.lines.length * lhT + 16 + sub.lines.length * lhS + 26 + 48;
+    var y = H - 72 - total;
+
+    pinIcon(c, pad + 13, y + 12, 30, accent(d));
+    c.fillStyle = accent(d);
+    c.font = '600 28px Inter, sans-serif';
+    c.textAlign = 'left';
+    tracking(c, 4);
+    c.fillText(String(f.eyebrow).toUpperCase(), pad + 40, y + 22);
+    tracking(c, 0);
+    y += 48;
+
+    c.fillStyle = P.crema;
+    c.font = '600 ' + title.size + 'px Fraunces, serif';
+    drawLines(c, title.lines, pad, y + title.size, lhT);
+    y += title.lines.length * lhT + 16;
+
+    c.fillStyle = 'rgba(245,239,224,0.87)';
+    c.font = '400 ' + sub.size + 'px Inter, sans-serif';
+    drawLines(c, sub.lines, pad, y + sub.size, lhS);
+    y += sub.lines.length * lhS + 26;
+
+    rr(c, pad, y, chipW, 48, 24);
+    c.fillStyle = accent(d); c.fill();
+    c.fillStyle = P.bosque;
+    c.font = '600 26px Inter, sans-serif';
+    c.textAlign = 'center';
+    c.fillText(chipTxt, pad + chipW / 2, y + 32);
+    c.textAlign = 'left';
+  };
+
+  RENDER.bts = function (c, W, H, d, el) {
+    fallbackGrad(c, W, H, P.bosque, P.cafe);
+    drawRegion(c, el, W, H, d);
+    scrimBottom(c, W, H, 0.45);
+    c.strokeStyle = 'rgba(245,239,224,0.8)';
+    c.lineWidth = 4;
+    c.strokeRect(44, 44, W - 88, H - 88);
+    topHandle(c, d, 'rgba(245,239,224,0.95)');
+    wmTR(c, d);
+
+    var f = d.fields.bts;
+    var eyebrow = String(f.eyebrow).toUpperCase();
+    c.font = '600 26px Inter, sans-serif';
+    tracking(c, 3);
+    var pw = c.measureText(eyebrow).width + 56;
+    tracking(c, 0);
+    rr(c, W / 2 - pw / 2, 72, pw, 54, 27);
+    c.fillStyle = P.crema; c.fill();
+    c.fillStyle = P.bosque;
+    c.font = '600 26px Inter, sans-serif';
+    c.textAlign = 'center';
+    tracking(c, 3);
+    c.fillText(eyebrow, W / 2, 106);
+    tracking(c, 0);
+    c.textAlign = 'left';
+
+    var pad = 72, maxW = W - pad * 2;
+    var title = fit(c, f.title, { fam: 'Fraunces, serif', weight: 600, maxW: maxW, maxLines: 2, start: 78, min: 46 });
+    var sub = fit(c, f.sub, { fam: 'Inter, sans-serif', weight: 400, maxW: maxW, maxLines: 2, start: 32, min: 24 });
+    var steps = fit(c, f.steps, { fam: 'Inter, sans-serif', weight: 500, maxW: maxW - 52, maxLines: 1, start: 28, min: 20 });
+    var lhT = title.size * 1.1, lhS = sub.size * 1.45;
+    var pillH = steps.size + 30;
+    var total = title.lines.length * lhT + 16 + sub.lines.length * lhS + 28 + pillH;
+    var y = H - 72 - total;
+
+    c.fillStyle = P.crema;
+    c.font = '600 ' + title.size + 'px Fraunces, serif';
+    drawLines(c, title.lines, pad, y + title.size, lhT);
+    y += title.lines.length * lhT + 16;
+
+    c.fillStyle = 'rgba(245,239,224,0.87)';
+    c.font = '400 ' + sub.size + 'px Inter, sans-serif';
+    drawLines(c, sub.lines, pad, y + sub.size, lhS);
+    y += sub.lines.length * lhS + 28;
+
+    c.font = '500 ' + steps.size + 'px Inter, sans-serif';
+    var sw = c.measureText(steps.lines[0]).width + 52;
+    rr(c, pad, y, sw, pillH, pillH / 2);
+    c.fillStyle = 'rgba(245,239,224,0.16)'; c.fill();
+    c.strokeStyle = 'rgba(245,239,224,0.55)'; c.lineWidth = 2; c.stroke();
+    c.fillStyle = P.crema;
+    c.textAlign = 'left';
+    c.fillText(steps.lines[0], pad + 26, y + pillH / 2 + steps.size * 0.36);
+  };
+
+  RENDER.cta = function (c, W, H, d, el) {
+    fallbackGrad(c, W, H, P.bosque, P.tierra);
+    if (emblemReady) {
+      c.save(); c.globalAlpha = 0.1;
+      var s = Math.min(W * 0.85, 720);
+      c.drawImage(emblem, (W - s) / 2, H / 2 - s / 2, s, s);
+      c.restore();
+    }
+    var f = d.fields.cta, maxW = W - 160;
+    var title = fit(c, f.title, { fam: 'Fraunces, serif', weight: 600, maxW: maxW, maxLines: 3, start: 94, min: 52 });
+    var sub = fit(c, f.sub, { fam: 'Inter, sans-serif', weight: 400, maxW: maxW, maxLines: 3, start: 34, min: 24 });
+    var lhT = title.size * 1.1, lhS = sub.size * 1.5;
+    c.font = '700 36px Inter, sans-serif';
+    var btnTxt = String(f.button);
+    var btnW = c.measureText(btnTxt).width + 96, btnH = 88;
+    var total = 34 + 26 + title.lines.length * lhT + 20 + sub.lines.length * lhS + 46 + btnH;
+    var y = (H - total) / 2;
+
+    c.fillStyle = accent(d);
+    c.font = '600 28px Inter, sans-serif';
+    c.textAlign = 'center';
+    tracking(c, 5);
+    c.fillText(String(f.eyebrow).toUpperCase(), W / 2, y + 28);
+    tracking(c, 0);
+    y += 60;
+
+    c.fillStyle = P.crema;
+    c.font = '600 ' + title.size + 'px Fraunces, serif';
+    drawLines(c, title.lines, W / 2, y + title.size, lhT, 'center');
+    y += title.lines.length * lhT + 20;
+
+    c.fillStyle = 'rgba(245,239,224,0.87)';
+    c.font = '400 ' + sub.size + 'px Inter, sans-serif';
+    drawLines(c, sub.lines, W / 2, y + sub.size, lhS, 'center');
+    y += sub.lines.length * lhS + 46;
+
+    rr(c, W / 2 - btnW / 2, y, btnW, btnH, btnH / 2);
+    c.fillStyle = accent(d); c.fill();
+    c.fillStyle = P.bosque;
+    c.font = '700 36px Inter, sans-serif';
+    c.textAlign = 'center';
+    c.fillText(btnTxt, W / 2, y + btnH / 2 + 13);
+
+    c.fillStyle = 'rgba(245,239,224,0.7)';
+    c.font = '500 26px Inter, sans-serif';
+    c.fillText('tropical_biohostel · Nocaima, Cundinamarca', W / 2, H - 72);
+    c.textAlign = 'left';
+  };
+
+  RENDER.cita1 = function (c, W, H, d, el) {
+    c.fillStyle = P.crema;
+    c.fillRect(0, 0, W, H);
+    c.strokeStyle = P.piedra;
+    c.lineWidth = 3;
+    rr(c, 56, 56, W - 112, H - 112, 24);
+    c.stroke();
+
+    var f = d.fields.cita1, maxW = W - 240;
+    var q = fit(c, f.quote, { fam: 'Caveat, cursive', weight: 400, maxW: maxW, maxLines: 4, start: 150, min: 88 });
+    var credit = fit(c, String(f.credit).toUpperCase(), { fam: 'Inter, sans-serif', weight: 600, maxW: maxW, maxLines: 2, start: 26, min: 20 });
+    var lhQ = q.size * 1.15;
+    var emblemH = emblemReady ? 190 : 0;
+    var markH = 150;
+    var total = emblemH + markH + q.lines.length * lhQ + 44 + 4 + 40 + credit.lines.length * 36;
+    var y = (H - total) / 2;
+
+    if (emblemReady) {
+      var es = 150;
+      c.drawImage(emblem, W / 2 - es / 2, y, es, es * 0.99);
+      y += emblemH;
+    }
+
+    c.save();
+    c.globalAlpha = 0.9;
+    c.fillStyle = accent(d);
+    c.font = '700 230px Fraunces, serif';
+    c.textAlign = 'center';
+    c.fillText('“', W / 2, y + 140);
+    c.restore();
+    y += markH;
+
+    c.fillStyle = P.bosque;
+    c.font = '400 ' + q.size + 'px Caveat, cursive';
+    drawLines(c, q.lines, W / 2, y + q.size, lhQ, 'center');
+    y += q.lines.length * lhQ + 44;
+
+    c.fillStyle = accent(d);
+    c.fillRect(W / 2 - 55, y, 110, 4);
+    y += 4 + 40;
+
+    c.fillStyle = P.cafe;
+    c.font = '600 ' + credit.size + 'px Inter, sans-serif';
+    c.textAlign = 'center';
+    tracking(c, 3);
+    drawLines(c, credit.lines, W / 2, y + credit.size, 36, 'center');
+    tracking(c, 0);
+    c.textAlign = 'center';
+    c.fillStyle = 'rgba(42,36,30,0.45)';
+    c.font = '500 24px Inter, sans-serif';
+    c.fillText('tropical_biohostel', W / 2, H - 92);
+    c.textAlign = 'left';
+  };
+
+  RENDER.cita2 = function (c, W, H, d, el) {
+    fallbackGrad(c, W, H, P.tierra, P.bosque);
+    drawRegion(c, el, W, H, d);
+    var ov = c.createLinearGradient(0, 0, 0, H);
+    ov.addColorStop(0, 'rgba(62,47,35,0.55)');
+    ov.addColorStop(1, 'rgba(31,61,43,0.85)');
+    c.fillStyle = ov; c.fillRect(0, 0, W, H);
+    topHandle(c, d, 'rgba(245,239,224,0.95)');
+    wmTR(c, d);
+
+    var f = d.fields.cita2, maxW = W - 220;
+    var q = fit(c, f.quote, { fam: 'Caveat, cursive', weight: 400, maxW: maxW, maxLines: 4, start: 148, min: 88 });
+    var credit = fit(c, '— ' + f.credit, { fam: 'Inter, sans-serif', weight: 400, maxW: maxW, maxLines: 2, start: 30, min: 22 });
+    var lhQ = q.size * 1.15;
+    var total = 60 + q.lines.length * lhQ + 36 + credit.lines.length * 42;
+    var y = (H - total) / 2;
+
+    c.fillStyle = accent(d);
+    c.fillRect(W / 2 - 45, y, 90, 4);
+    y += 60;
+
+    c.fillStyle = P.crema;
+    c.font = '400 ' + q.size + 'px Caveat, cursive';
+    drawLines(c, q.lines, W / 2, y + q.size, lhQ, 'center');
+    y += q.lines.length * lhQ + 36;
+
+    c.fillStyle = 'rgba(245,239,224,0.85)';
+    c.font = '400 ' + credit.size + 'px Inter, sans-serif';
+    drawLines(c, credit.lines, W / 2, y + credit.size, 42, 'center');
+  };
+
+  /* ---------- Pintado ---------- */
+  function paint(canvas, d, w, h) {
+    canvas.width = w;
+    canvas.height = h;
+    var k = w / 1080;
+    var g = canvas.getContext('2d');
+    g.setTransform(k, 0, 0, k, 0, 0);
+    g.clearRect(0, 0, 1080, h / k);
+    var it = null;
+    for (var i = 0; i < mediaItems.length; i++) if (mediaItems[i].id === d.mediaId) it = mediaItems[i];
+    var el = it ? it.el : null;
+    g.canvasLogicalW = 1080;
+    (RENDER[d.tpl] || RENDER.experiencia)(g, 1080, h / k, d, el);
+    return g;
+  }
+
+  var renderPending = false;
+  function scheduleRender() {
+    if (renderPending) return;
+    renderPending = true;
+    requestAnimationFrame(function () { renderPending = false; render(); });
+  }
+  function render() {
+    var size = SIZES[state.format] || SIZES['4x5'];
+    if (cv.width !== size[0] || cv.height !== size[1]) { cv.width = size[0]; cv.height = size[1]; }
+    cx.setTransform(1, 0, 0, 1, 0, 0);
+    cx.clearRect(0, 0, cv.width, cv.height);
+    var it = currentItem();
+    cx.canvasLogicalW = cv.width;
+    (RENDER[state.tpl] || RENDER.experiencia)(cx, cv.width, cv.height, state, it ? it.el : null);
+  }
+
+  /* ---------- Miniaturas de plantilla ---------- */
+  function snapshot(tplOverride) {
+    var snap = JSON.parse(JSON.stringify(state));
+    if (tplOverride) snap.tpl = tplOverride;
+    return snap;
+  }
+  function thumbFor(tplId) {
+    var d = snapshot(tplId);
+    var size = SIZES[d.format] || SIZES['4x5'];
+    var tw = 160;
+    var th = Math.round(tw * size[1] / size[0]);
+    var c = document.createElement('canvas');
+    paint(c, d, tw, th);
+    try { return c.toDataURL('image/png'); } catch (e) { return ''; }
+  }
+  var thumbsReady = false;
+  function renderThumbs() {
+    var box = $('igTemplates');
+    if (!box) return;
+    box.innerHTML = '';
+    TPLS.forEach(function (t) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ig-tpl' + (t.id === state.tpl ? ' active' : '');
+      b.title = t.nombre;
+      var img = document.createElement('img');
+      img.alt = t.nombre;
+      img.src = thumbFor(t.id);
+      var s = document.createElement('span');
+      s.textContent = t.nombre;
+      b.appendChild(img); b.appendChild(s);
+      b.addEventListener('click', function () { selectTpl(t.id); });
+      box.appendChild(b);
+    });
+    thumbsReady = true;
+  }
+  function refreshThumbs() {
+    if (!thumbsReady) return;
+    renderThumbs();
+  }
+
+  /* ---------- Campos de texto ---------- */
+  function renderFields() {
+    var t = BY_ID[state.tpl];
+    var box = $('igFields');
+    box.innerHTML = '';
+    t.fields.forEach(function (f) {
+      var w = document.createElement('div');
+      w.className = 'ig-field';
+      var lab = document.createElement('label');
+      lab.textContent = f.l;
+      var inp = document.createElement('input');
+      inp.type = 'text';
+      inp.value = state.fields[t.id][f.k];
+      inp.addEventListener('input', function () {
+        state.fields[t.id][f.k] = inp.value;
+        scheduleRender();
+        if (!captionEdited) updateCaption(false);
+        save();
+      });
+      w.appendChild(lab); w.appendChild(inp);
+      box.appendChild(w);
+    });
+  }
+
+  function selectTpl(id) {
+    if (!BY_ID[id]) return;
+    state.tpl = id;
+    Array.prototype.forEach.call($('igTemplates').children, function (el, i) {
+      el.classList.toggle('active', TPLS[i].id === id);
+    });
+    renderFields();
+    if (!captionEdited) updateCaption(false);
+    scheduleRender();
+    save();
+  }
+
+  /* ---------- Copy ---------- */
+  function buildCaption() {
+    var t = BY_ID[state.tpl];
+    try { return t.caption(state.fields[t.id]); } catch (e) { return ''; }
+  }
+  function updateCounter() {
+    var n = $('igCaption').value.length;
+    $('igCounter').textContent = n + ' / 2200 caracteres';
+    $('igCounterWrap').classList.toggle('over', n > 2200);
+  }
+  function updateCaption(markEdited) {
+    $('igCaption').value = buildCaption();
+    if (markEdited !== false) captionEdited = false;
+    updateCounter();
+    save();
+  }
+  function renderTags() {
+    var box = $('igTags');
+    box.innerHTML = '';
+    TAGS.forEach(function (tag) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ig-tag';
+      b.textContent = tag;
+      b.addEventListener('click', function () {
+        var ta = $('igCaption');
+        if (ta.value.indexOf(tag) >= 0) { toast('Ya está en el copy'); return; }
+        ta.value = ta.value.replace(/\s+$/, '') + '\n\n' + tag;
+        captionEdited = true;
+        updateCounter(); save();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  /* ---------- Cola de exportación ---------- */
+  var queue = [];
+  function renderQueue() {
+    var box = $('igQueue');
+    box.innerHTML = '';
+    if (!queue.length) {
+      var e = document.createElement('div');
+      e.className = 'ig-queue-empty';
+      e.textContent = 'Aún no has añadido diseños. Prepara un post y pulsa «Añadir a la cola»: al final exportas todos los PNG de una vez.';
+      box.appendChild(e);
+    } else {
+      queue.forEach(function (item, i) {
+        var row = document.createElement('div');
+        row.className = 'ig-queue-item';
+        var img = document.createElement('img');
+        img.alt = ''; img.src = item.thumb;
+        var info = document.createElement('div');
+        info.className = 'q-info';
+        info.innerHTML = '<strong>' + item.tpl + '</strong> · ' + item.format.replace('x', '×');
+        var del = document.createElement('button');
+        del.className = 'm-del'; del.type = 'button'; del.textContent = '✕'; del.title = 'Quitar';
+        del.addEventListener('click', function () { queue.splice(i, 1); renderQueue(); });
+        row.appendChild(img); row.appendChild(info); row.appendChild(del);
+        box.appendChild(row);
+      });
+    }
+    $('igQueueExport').disabled = !queue.length;
+    $('igQueueClear').disabled = !queue.length;
+    $('igQueueExport').textContent = '⬇ Exportar cola (' + queue.length + ')';
+  }
+
+  /* ---------- Descargas ---------- */
+  function downloadURL(url, name) {
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+  function downloadBlob(blob, name) {
+    var u = URL.createObjectURL(blob);
+    downloadURL(u, name);
+    setTimeout(function () { URL.revokeObjectURL(u); }, 5000);
+  }
+  function canvasBlob(canvas) {
+    return new Promise(function (res) {
+      try { canvas.toBlob(function (b) { res(b); }, 'image/png'); }
+      catch (e) { res(null); }
+    });
+  }
+
+  var toastEl = null, toastT = null;
+  function toast(msg) {
+    if (!toastEl) {
+      toastEl = document.createElement('div');
+      toastEl.className = 'ig-toast';
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 2300);
+  }
+
+  /* ---------- Eventos ---------- */
+  function wire() {
+    var drop = $('igDrop'), files = $('igFiles');
+    drop.addEventListener('click', function () { files.click(); });
+    drop.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); files.click(); }
+    });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); });
+    });
+    drop.addEventListener('drop', function (e) {
+      if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+    });
+    files.addEventListener('change', function () { addFiles(files.files); files.value = ''; });
+
+    Array.prototype.forEach.call($('igFormats').children, function (b) {
+      b.addEventListener('click', function () {
+        state.format = b.getAttribute('data-f');
+        syncControls(); scheduleRender(); save();
+      });
+    });
+
+    Array.prototype.forEach.call($('igAccents').children, function (b) {
+      b.addEventListener('click', function () {
+        state.accent = b.getAttribute('data-a');
+        syncControls(); scheduleRender(); refreshThumbs(); save();
+      });
+    });
+
+    $('igWatermark').addEventListener('change', function (e) {
+      state.watermark = e.target.checked;
+      scheduleRender(); refreshThumbs(); save();
+    });
+
+    $('igZoom').addEventListener('input', function (e) {
+      state.zoom = (parseInt(e.target.value, 10) || 100) / 100;
+      scheduleRender(); save();
+    });
+
+    $('igReset').addEventListener('click', function () {
+      state.zoom = 1; state.panX = 0; state.panY = 0;
+      syncControls(); scheduleRender(); save();
+      toast('Recorte reiniciado');
+    });
+
+    /* Arrastrar para recortar */
+    var dragging = false, lastX = 0, lastY = 0;
+    cv.addEventListener('pointerdown', function (e) {
+      dragging = true; lastX = e.clientX; lastY = e.clientY;
+      try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    cv.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      var r = cv.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      state.panX = clamp(state.panX + ((e.clientX - lastX) / r.width) * 2.2, -1, 1);
+      state.panY = clamp(state.panY + ((e.clientY - lastY) / r.height) * 2.2, -1, 1);
+      lastX = e.clientX; lastY = e.clientY;
+      scheduleRender();
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+      cv.addEventListener(ev, function () {
+        if (dragging) { dragging = false; save(); }
+      });
+    });
+
+    /* Video */
+    $('igFrame').addEventListener('input', function (e) {
+      var it = currentItem();
+      if (!it || it.type !== 'video' || !it.el || !it.el.duration) return;
+      it.el.currentTime = (parseInt(e.target.value, 10) / 1000) * it.el.duration;
+    });
+    $('igPlayBtn').addEventListener('click', function () {
+      var it = currentItem();
+      if (!it || it.type !== 'video' || !it.el) return;
+      var v = it.el;
+      if (v.paused) {
+        v.play().then(function () {
+          $('igPlayBtn').textContent = '⏸ Pausar';
+          playLoop();
+        }).catch(function () { toast('No se pudo reproducir el video'); });
+      } else {
+        v.pause();
+        $('igPlayBtn').textContent = '▶ Vista previa';
+      }
+    });
+    $('igDlVideo').addEventListener('click', function () {
+      var it = currentItem();
+      if (!it) return;
+      downloadURL(it.url, it.name || 'video.mp4');
+      toast('Video original descargado');
+    });
+
+    /* Exportar */
+    $('igExport').addEventListener('click', function () {
+      ensureFonts().then(function () {
+        render();
+        var it = currentItem();
+        var suffix = it && it.type === 'video' ? '_portada' : '';
+        var name = 'tbi_' + state.tpl + '_' + state.format + suffix + '.png';
+        return canvasBlob(cv).then(function (b) {
+          if (!b) { toast('No se pudo exportar'); return; }
+          downloadBlob(b, name);
+          toast('PNG descargado ✓');
+        });
+      });
+    });
+
+    $('igOpenIg').addEventListener('click', function () {
+      window.open('https://www.instagram.com/', '_blank', 'noopener');
+    });
+
+    /* Cola */
+    $('igQueueAdd').addEventListener('click', function () {
+      ensureFonts().then(function () {
+        var snap = snapshot();
+        var size = SIZES[snap.format] || SIZES['4x5'];
+        var tw = 110;
+        var th = Math.round(tw * size[1] / size[0]);
+        var c = document.createElement('canvas');
+        paint(c, snap, tw, th);
+        var thumb = '';
+        try { thumb = c.toDataURL('image/png'); } catch (e) {}
+        queue.push({
+          snap: snap, thumb: thumb,
+          tpl: BY_ID[snap.tpl].nombre, format: snap.format
+        });
+        renderQueue();
+        toast('Añadido a la cola ✓');
+      });
+    });
+
+    $('igQueueExport').addEventListener('click', function () {
+      if (!queue.length) return;
+      var btn = $('igQueueExport');
+      btn.disabled = true;
+      btn.textContent = 'Exportando…';
+      var keep = snapshot();
+      ensureFonts().then(function () {
+        var i = 0;
+        function step() {
+          if (i >= queue.length) {
+            toast('✓ ' + queue.length + ' PNG exportados');
+            restore(keep); renderFields(); syncControls(); render();
+            btn.disabled = false;
+            btn.textContent = '⬇ Exportar cola (' + queue.length + ')';
+            return;
+          }
+          var item = queue[i];
+          restore(item.snap);
+          render();
+          setTimeout(function () {
+            canvasBlob(cv).then(function (b) {
+              if (b) {
+                var n = String(i + 1);
+                while (n.length < 2) n = '0' + n;
+                downloadBlob(b, 'tbi_' + item.snap.tpl + '_' + item.snap.format + '_' + n + '.png');
+              }
+              i++;
+              setTimeout(step, 220);
+            });
+          }, 70);
+        }
+        step();
+      });
+    });
+
+    $('igQueueClear').addEventListener('click', function () {
+      queue = [];
+      renderQueue();
+      toast('Cola vaciada');
+    });
+
+    /* Copy */
+    $('igCaption').addEventListener('input', function () {
+      captionEdited = true;
+      updateCounter(); save();
+    });
+    $('igRegenCaption').addEventListener('click', function () {
+      updateCaption();
+      toast('Copy regenerado ✓');
+    });
+    $('igCopyCaption').addEventListener('click', function () {
+      var ta = $('igCaption');
+      var txt = ta.value;
+      var done = function () { toast('Copy copiado ✓'); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(done).catch(function () {
+          ta.select(); document.execCommand('copy'); done();
+        });
+      } else {
+        ta.select(); document.execCommand('copy'); done();
+      }
+    });
+  }
+
+  function restore(s) {
+    ['tpl', 'format', 'accent', 'watermark', 'zoom', 'panX', 'panY', 'mediaId'].forEach(function (k) {
+      if (s[k] !== undefined) state[k] = s[k];
+    });
+    if (s.fields) {
+      Object.keys(s.fields).forEach(function (t) {
+        if (!state.fields[t]) state.fields[t] = {};
+        Object.keys(s.fields[t]).forEach(function (k) { state.fields[t][k] = s.fields[t][k]; });
+      });
+    }
+  }
+
+  function syncControls() {
+    Array.prototype.forEach.call($('igFormats').children, function (b) {
+      b.classList.toggle('active', b.getAttribute('data-f') === state.format);
+    });
+    Array.prototype.forEach.call($('igAccents').children, function (b) {
+      b.classList.toggle('active', b.getAttribute('data-a') === state.accent);
+    });
+    $('igWatermark').checked = !!state.watermark;
+    $('igZoom').value = Math.round((state.zoom || 1) * 100);
+  }
+
+  /* ---------- Init ---------- */
+  function init() {
+    wire();
+    renderFields();
+    renderTags();
+    renderQueue();
+    renderMediaList();
+    syncControls();
+    updateVideoTools();
+    // Copy inicial: si no hay guardado, genera el de la plantilla activa
+    if (!$('igCaption').value && !captionEdited) updateCaption(false);
+    updateCounter();
+    render();
+    ensureFonts().then(function () {
+      renderThumbs();
+      render();
+    });
+    setTimeout(function () { if (!thumbsReady) renderThumbs(); }, 1500);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
 </script>
 
 </body>
