@@ -763,6 +763,190 @@
     flex-direction: column;
     gap: 8px;
   }
+
+  /* ===== Nuevos: preview simultáneo, recursos, programación, vista ===== */
+  .ig-mini-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  .ig-mini {
+    border: 2px solid var(--piedra);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    background: white;
+    transition: 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ig-mini:hover { border-color: var(--hoja); }
+  .ig-mini.active { border-color: var(--sol); box-shadow: 0 0 0 2px rgba(232,169,74,0.3); }
+  .ig-mini canvas { display: block; width: 72px; height: auto; }
+  .ig-mini span { font-size: 9px; padding: 2px 0 3px; color: rgba(42,36,30,0.7); font-weight: 600; }
+
+  .ig-coords {
+    font-size: 11px;
+    color: rgba(42,36,30,0.55);
+    font-variant-numeric: tabular-nums;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .ig-header-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+    align-items: center;
+  }
+  .ig-tool-btn {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 13px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--piedra);
+    background: white;
+    color: var(--bosque);
+    transition: 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .ig-tool-btn:hover { border-color: var(--bosque); background: var(--crema); }
+  .ig-tool-btn.active { background: var(--bosque); color: var(--crema); border-color: var(--bosque); }
+
+  .ig-upload-btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid var(--sol);
+    background: var(--sol);
+    color: var(--bosque);
+    transition: 0.15s;
+    animation: igPulse 0.5s ease;
+  }
+  .ig-upload-btn:hover { background: #d4963a; }
+  @keyframes igPulse { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+
+  .ig-resources {
+    background: white;
+    border: 1px solid var(--piedra);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 8px 24px rgba(31,61,43,0.06);
+  }
+  .ig-res-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .ig-res-card {
+    border: 1px solid var(--piedra);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    background: var(--crema);
+  }
+  .ig-res-card img { max-width: 100%; height: auto; max-height: 64px; margin-bottom: 8px; }
+  .ig-res-card .r-name { font-size: 11px; color: rgba(42,36,30,0.7); font-weight: 600; margin-bottom: 6px; }
+  .ig-res-card .r-dl { font-size: 10px; padding: 4px 8px; }
+  .ig-swatch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.12s;
+    font-size: 12px;
+  }
+  .ig-swatch:hover { background: rgba(143,181,115,0.15); }
+  .ig-swatch .swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 1px var(--piedra); flex-shrink: 0; }
+  .ig-swatch .s-hex { font-family: monospace; font-size: 11px; color: rgba(42,36,30,0.8); }
+  .ig-font-sample { text-align: left; }
+  .ig-font-sample .f-name { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cafe); font-weight: 600; margin-bottom: 4px; }
+  .ig-font-sample .f-sample { line-height: 1.3; }
+
+  .ig-schedule-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 12px;
+    color: rgba(42,36,30,0.75);
+  }
+  .ig-schedule-row select {
+    font-family: inherit;
+    font-size: 12px;
+    padding: 5px 8px;
+    border: 1px solid var(--piedra);
+    border-radius: 8px;
+    background: white;
+    color: var(--carbon);
+    cursor: pointer;
+  }
+  .ig-schedule-row select:focus { outline: 2px solid var(--sol); outline-offset: 1px; }
+  .ig-sched-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(143,181,115,0.18);
+    color: var(--bosque);
+    border: 1px solid var(--hoja);
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* Modo vista (solo lectura) */
+  #estudio.ig-viewmode .ig-fields,
+  #estudio.ig-viewmode .ig-opts,
+  #estudio.ig-viewmode .ig-actions-row,
+  #estudio.ig-viewmode .ig-slider-row,
+  #estudio.ig-viewmode .ig-drop,
+  #estudio.ig-viewmode .ig-media-list,
+  #estudio.ig-viewmode .ig-video-tools,
+  #estudio.ig-viewmode .ig-caption,
+  #estudio.ig-viewmode .ig-counter,
+  #estudio.ig-viewmode .ig-tags,
+  #estudio.ig-viewmode .ig-formats,
+  #estudio.ig-viewmode .ig-coords,
+  #estudio.ig-viewmode .ig-schedule-row,
+  #estudio.ig-viewmode .ig-hint,
+  #estudio.ig-viewmode .ig-queue-empty { display: none !important; }
+  #estudio.ig-viewmode .studio-panel { min-height: auto; }
+
+  /* Móvil */
+  @media (max-width: 767px) {
+    .studio { grid-template-columns: 1fr !important; gap: 14px; }
+    .studio-bottom { grid-template-columns: 1fr !important; gap: 14px; }
+    .ig-mini canvas { width: 56px; }
+    .ig-templates { grid-template-columns: repeat(4, 1fr); }
+    .ig-res-grid { grid-template-columns: repeat(2, 1fr); }
+    #igCanvas { max-height: 48vh; }
+    .ig-header-tools { gap: 6px; }
+    .ig-tool-btn { font-size: 11px; padding: 6px 10px; }
+    .ig-btn, .ig-btn-primary { font-size: 12px; padding: 9px 12px; }
+    .ig-formats { gap: 4px; }
+    .ig-format-btn { font-size: 11px; padding: 5px 8px; }
+    .ig-caption { min-height: 140px; }
+    .ig-actions-row { gap: 6px; }
+    .ig-actions-row .ig-btn, .ig-actions-row .ig-btn-primary { flex: 1; min-width: 120px; text-align: center; }
+  }
+
   .ig-toast {
     position: fixed;
     left: 50%;
@@ -2822,15 +3006,21 @@
       <div class="section-number reveal">13 · Estudio Instagram</div>
       <h2 class="section-title reveal">Crea tu<br><span class="italic">publicación</span></h2>
       <p class="text-lg reveal mb-5" style="color: rgba(42,36,30,0.7); max-width: 46rem;">
-        Importa tus fotos o videos, elige una de las 8 plantillas oficiales y ajusta los textos con la
+        Importa tus fotos o videos, elige una de las 9 plantillas oficiales y ajusta los textos con la
         paleta y tipografías de este manual. Al exportar obtienes un PNG de 1080 px listo para Instagram;
         el video se descarga tal cual, sin recodificar.
       </p>
       <div class="flex flex-wrap gap-3 reveal">
-        <div class="plan-chip"><strong class="text-bosque">8</strong> plantillas</div>
+        <div class="plan-chip"><strong class="text-bosque">9</strong> plantillas</div>
         <div class="plan-chip"><strong class="text-bosque">3</strong> formatos · 1:1 · 4:5 · 9:16</div>
         <div class="plan-chip"><strong class="text-bosque">100%</strong> local · nada se sube a internet</div>
         <div class="plan-chip"><a href="#plan-instagram" style="color: inherit;">Ver el feed de referencia ↓</a></div>
+      </div>
+      <div class="ig-header-tools reveal" id="igHeaderTools">
+        <button class="ig-tool-btn" id="igViewMode" type="button" aria-pressed="false">👁 Modo vista</button>
+        <button class="ig-tool-btn" id="igRestore" type="button" title="Recupera el último estado guardado en este equipo">⟲ Restaurar última edición</button>
+        <a class="ig-tool-btn" href="#gobernanza">🛡 Ver reglas de marca (14)</a>
+        <span class="ig-hint" style="margin:0;">Los cambios se guardan solos en este equipo.</span>
       </div>
 
       <div class="studio">
@@ -2874,11 +3064,17 @@
           <div class="ig-canvas-wrap">
             <canvas id="igCanvas" width="1080" height="1350" aria-label="Vista previa del post"></canvas>
           </div>
+          <div class="ig-mini-row" id="igMiniRow" title="Vista previa simultánea de los 3 formatos · haz clic para cambiar">
+            <button class="ig-mini" data-f="1x1" type="button"><canvas width="72" height="72"></canvas><span>1:1</span></button>
+            <button class="ig-mini active" data-f="4x5" type="button"><canvas width="72" height="90"></canvas><span>4:5</span></button>
+            <button class="ig-mini" data-f="9x16" type="button"><canvas width="51" height="90"></canvas><span>9:16</span></button>
+          </div>
           <div class="ig-slider-row">
             <span>Zoom</span>
             <input type="range" id="igZoom" min="100" max="260" value="100">
             <button class="ig-btn" id="igReset" type="button" style="padding:5px 10px;font-size:12px;">Reiniciar</button>
           </div>
+          <div class="ig-coords" id="igCoords" aria-live="polite">Recorte: x 0 · y 0 · zoom 100% · doble clic para reiniciar</div>
           <div class="ig-hint">
             📐 Arrastra la imagen dentro del lienzo para recortar · Instagram recomienda 1080 px de ancho
             y formato 4:5 para ocupar más pantalla.
@@ -2887,6 +3083,7 @@
             <button class="ig-btn-primary" id="igExport" type="button">⬇ Exportar PNG</button>
             <button class="ig-btn" id="igQueueAdd" type="button">＋ Añadir a la cola</button>
             <button class="ig-btn" id="igOpenIg" type="button">↗ Abrir Instagram</button>
+            <button class="ig-upload-btn" id="igUpload" type="button" hidden>🚀 Subir a Instagram</button>
           </div>
         </div>
 
@@ -2925,12 +3122,37 @@
           <div class="ig-tags" id="igTags"></div>
         </div>
         <div class="studio-panel reveal">
-          <div class="studio-label">5 · Cola de exportación</div>
+          <div class="studio-label" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <span>5 · Cola de exportación</span>
+            <span class="ig-sched-badge" id="igQueueCount" style="white-space:nowrap;">0 posts en cola</span>
+          </div>
           <div class="ig-queue" id="igQueue">
             <div class="ig-queue-empty">
               Aún no has añadido diseños. Prepara un post y pulsa «Añadir a la cola»:
               al final exportas todos los PNG de una vez.
             </div>
+          </div>
+          <div class="ig-schedule-row" id="igScheduleRow">
+            <span class="ig-sched-badge" id="igSchedBadge">🗓 Sin programar</span>
+            <label for="igScheduleDay">Día</label>
+            <select id="igScheduleDay">
+              <option value="">—</option>
+              <option value="Lun">Lunes</option>
+              <option value="Mar">Martes</option>
+              <option value="Mié">Miércoles</option>
+              <option value="Jue">Jueves</option>
+              <option value="Vie">Viernes</option>
+              <option value="Sáb">Sábado</option>
+              <option value="Dom">Domingo</option>
+            </select>
+            <label for="igScheduleHour">Hora</label>
+            <select id="igScheduleHour">
+              <option value="">—</option>
+              <option>08:00</option><option>10:00</option><option>12:00</option>
+              <option>14:00</option><option>16:00</option><option>18:00</option>
+              <option>20:00</option><option>21:00</option>
+            </select>
+            <span style="font-size:10px;opacity:.7;">programación simulada</span>
           </div>
           <div class="ig-actions-row">
             <button class="ig-btn-primary" id="igQueueExport" type="button" disabled>⬇ Exportar cola (0)</button>
@@ -2939,6 +3161,37 @@
           <div class="ig-note">
             📤 Cada diseño se descarga como <code>tbi_plantilla_formato.png</code> y se sube a Instagram
             desde el celular o la web. Para videos: sube el archivo original y usa el PNG como portada.
+          </div>
+        </div>
+      </div>
+
+      <!-- Recursos de marca -->
+      <div class="ig-resources reveal" id="igResources">
+        <div class="studio-label">Recursos de marca · a mano</div>
+        <p class="ig-hint" style="margin:6px 0 0;">
+          Logos, paleta y tipografías oficiales de este manual — clic en cualquier color o muestra para copiarlo.
+        </p>
+        <div class="ig-res-grid">
+          <div class="ig-res-card">
+            <img src="/tropical-logo.svg" alt="Logo Tropical Biohostel">
+            <div class="r-name">Logo principal</div>
+            <a class="ig-btn r-dl" href="/tropical-logo.svg" download>⬇ SVG</a>
+          </div>
+          <div class="ig-res-card" style="background: var(--bosque);">
+            <img src="/tropical-logo-claro.svg" alt="Logo Tropical Biohostel claro">
+            <div class="r-name" style="color: var(--crema);">Logo sobre fondo oscuro</div>
+            <a class="ig-btn r-dl" href="/tropical-logo-claro.svg" download>⬇ SVG</a>
+          </div>
+          <div class="ig-res-card">
+            <img src="/favicon.svg" alt="Emblema Tropical Biohostel" style="max-height:48px;">
+            <div class="r-name">Emblema / avatar</div>
+            <a class="ig-btn r-dl" href="/favicon.svg" download>⬇ SVG</a>
+          </div>
+          <div class="ig-res-card" id="igPalette" style="text-align:left;">
+            <div class="r-name">Paleta oficial · clic para copiar</div>
+          </div>
+          <div class="ig-res-card ig-font-sample" id="igFonts" style="text-align:left;">
+            <div class="r-name">Tipografías · clic para copiar</div>
           </div>
         </div>
       </div>
@@ -3351,6 +3604,18 @@
       caption: function (f) {
         return f.quote + '\n\n— ' + f.credit + '\n\n#FogataYConversacion #TropicalBiohostel #Comunidad';
       }
+    },
+    {
+      id: 'estacional', nombre: 'Estacional',
+      fields: [
+        { k: 'eyebrow', l: 'Antetítulo', d: 'TEMPORADA ESPECIAL' },
+        { k: 'title', l: 'Título', d: 'La cosecha de fin de año ya llegó' },
+        { k: 'sub', l: 'Bajada', d: 'Café recién recolectado, fogatas al anochecer y tarifas de temporada' },
+        { k: 'chip', l: 'Vigencia', d: 'Solo diciembre' }
+      ],
+      caption: function (f) {
+        return f.title + ' (' + f.chip + ').\n\n' + f.sub + '.\n\nReserva directa por WhatsApp antes de que se acabe 🎄\n\n#TropicalBiohostel #TemporadaDeCosecha #NocaimaSecreta #Nocaima';
+      }
     }
   ];
   var BY_ID = {};
@@ -3374,7 +3639,7 @@
     var raw = localStorage.getItem(LS);
     if (raw) {
       var s = JSON.parse(raw);
-      ['tpl', 'format', 'accent', 'watermark', 'zoom', 'panX', 'panY'].forEach(function (k) {
+      ['tpl', 'format', 'accent', 'watermark', 'zoom', 'panX', 'panY', 'schedDay', 'schedHour'].forEach(function (k) {
         if (s[k] !== undefined) state[k] = s[k];
       });
       if (s.fields) TPLS.forEach(function (t) {
@@ -4036,6 +4301,70 @@
     drawLines(c, credit.lines, W / 2, y + credit.size, 42, 'center');
   };
 
+  RENDER.estacional = function (c, W, H, d, el) {
+    fallbackGrad(c, W, H, P.bosque, P.hoja);
+    drawRegion(c, el, W, H, d);
+    var ov = c.createLinearGradient(0, 0, 0, H);
+    ov.addColorStop(0, 'rgba(31,61,43,0.30)');
+    ov.addColorStop(0.55, 'rgba(31,61,43,0.55)');
+    ov.addColorStop(1, 'rgba(62,47,35,0.88)');
+    c.fillStyle = ov; c.fillRect(0, 0, W, H);
+    topHandle(c, d, 'rgba(245,239,224,0.95)');
+    wmTR(c, d);
+
+    var f = d.fields.estacional, pad = 72, maxW = W - pad * 2;
+
+    /* Banda superior de temporada */
+    var bandH = 96;
+    c.fillStyle = accent(d);
+    c.fillRect(0, 150, W, bandH);
+    c.fillStyle = P.bosque;
+    c.font = '700 30px Inter, sans-serif';
+    c.textAlign = 'left';
+    tracking(c, 6);
+    c.fillText(String(f.eyebrow).toUpperCase(), pad, 150 + bandH / 2 + 11);
+    tracking(c, 0);
+
+    /* Chip de vigencia */
+    c.font = '600 26px Inter, sans-serif';
+    var chipW = Math.min(c.measureText(String(f.chip)).width + 44, maxW);
+    var cx0 = pad, cy0 = 150 + bandH + 36, cr = 27, cw = chipW, ch = 54;
+    c.beginPath();
+    c.moveTo(cx0 + cr, cy0);
+    c.lineTo(cx0 + cw - cr, cy0);
+    c.arcTo(cx0 + cw, cy0, cx0 + cw, cy0 + cr, cr);
+    c.lineTo(cx0 + cw, cy0 + ch - cr);
+    c.arcTo(cx0 + cw, cy0 + ch, cx0 + cw - cr, cy0 + ch, cr);
+    c.lineTo(cx0 + cr, cy0 + ch);
+    c.arcTo(cx0, cy0 + ch, cx0, cy0 + ch - cr, cr);
+    c.lineTo(cx0, cy0 + cr);
+    c.arcTo(cx0, cy0, cx0 + cr, cy0, cr);
+    c.closePath();
+    c.fillStyle = 'rgba(245,239,224,0.94)';
+    c.fill();
+    c.fillStyle = P.bosque;
+    c.textAlign = 'left';
+    c.fillText(String(f.chip), pad + 22, cy0 + 36);
+
+    /* Título + bajada abajo */
+    var title = fit(c, f.title, { fam: 'Fraunces, serif', weight: 600, maxW: maxW, maxLines: 3, start: 84, min: 44 });
+    var sub = fit(c, f.sub, { fam: 'Inter, sans-serif', weight: 400, maxW: maxW, maxLines: 3, start: 32, min: 22 });
+    var lhT = title.size * 1.08, lhS = sub.size * 1.45;
+    var total = title.lines.length * lhT + 20 + sub.lines.length * lhS;
+    var y = H - 84 - total;
+
+    c.fillStyle = accent(d);
+    c.fillRect(pad, y - 28, 90, 5);
+    c.fillStyle = P.crema;
+    c.font = '600 ' + title.size + 'px Fraunces, serif';
+    c.textAlign = 'left';
+    drawLines(c, title.lines, pad, y + title.size, lhT);
+    y += title.lines.length * lhT + 20;
+    c.fillStyle = 'rgba(245,239,224,0.88)';
+    c.font = '400 ' + sub.size + 'px Inter, sans-serif';
+    drawLines(c, sub.lines, pad, y + sub.size, lhS);
+  };
+
   /* ---------- Pintado ---------- */
   function paint(canvas, d, w, h) {
     canvas.width = w;
@@ -4056,7 +4385,7 @@
   function scheduleRender() {
     if (renderPending) return;
     renderPending = true;
-    requestAnimationFrame(function () { renderPending = false; render(); });
+    requestAnimationFrame(function () { renderPending = false; render(); renderMiniPreviews(); });
   }
   function render() {
     var size = SIZES[state.format] || SIZES['4x5'];
@@ -4066,6 +4395,32 @@
     var it = currentItem();
     cx.canvasLogicalW = cv.width;
     (RENDER[state.tpl] || RENDER.experiencia)(cx, cv.width, cv.height, state, it ? it.el : null);
+    var co = $('igCoords');
+    if (co) {
+      co.textContent = 'Recorte: x ' + Math.round((state.panX || 0) * 100) +
+        ' · y ' + Math.round((state.panY || 0) * 100) +
+        ' · zoom ' + Math.round((state.zoom || 1) * 100) + '%' +
+        ' · lienzo ' + cv.width + '×' + cv.height + ' px · doble clic para reiniciar';
+    }
+  }
+
+  /* ---------- Vista previa simultánea de los 3 formatos ---------- */
+  function renderMiniPreviews() {
+    var row = $('igMiniRow');
+    if (!row) return;
+    var snap;
+    try { snap = JSON.parse(JSON.stringify(state)); } catch (e) { return; }
+    Array.prototype.forEach.call(row.querySelectorAll('.ig-mini'), function (b) {
+      var f = b.getAttribute('data-f');
+      var mc = b.querySelector('canvas');
+      if (!mc) return;
+      var size = SIZES[f] || SIZES['4x5'];
+      var w = mc.width || 72;
+      var h = Math.round(w * size[1] / size[0]);
+      snap.format = f;
+      try { paint(mc, snap, w, h); } catch (e) {}
+      b.classList.toggle('active', f === state.format);
+    });
   }
 
   /* ---------- Miniaturas de plantilla ---------- */
@@ -4209,6 +4564,13 @@
     $('igQueueExport').disabled = !queue.length;
     $('igQueueClear').disabled = !queue.length;
     $('igQueueExport').textContent = '⬇ Exportar cola (' + queue.length + ')';
+    var qc = $('igQueueCount');
+    if (qc) {
+      qc.textContent = queue.length === 0
+        ? '0 posts en cola'
+        : (queue.length === 1 ? '1 post en cola' : queue.length + ' posts en cola');
+      qc.style.opacity = queue.length ? '1' : '0.55';
+    }
   }
 
   /* ---------- Descargas ---------- */
@@ -4242,6 +4604,31 @@
     toastEl.classList.add('show');
     clearTimeout(toastT);
     toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 2300);
+  }
+
+  /* ---------- Copiar al portapapeles ---------- */
+  function copyText(txt) {
+    var fallback = function () {
+      return new Promise(function (res, rej) {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = txt;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.top = '-1000px';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          ok ? res() : rej(new Error('copy'));
+        } catch (e) { rej(e); }
+      });
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(txt).catch(fallback);
+    }
+    return fallback();
   }
 
   /* ---------- Eventos ---------- */
@@ -4286,31 +4673,53 @@
       scheduleRender(); save();
     });
 
-    $('igReset').addEventListener('click', function () {
+    function resetCrop() {
       state.zoom = 1; state.panX = 0; state.panY = 0;
       syncControls(); scheduleRender(); save();
       toast('Recorte reiniciado');
-    });
+    }
+    $('igReset').addEventListener('click', resetCrop);
 
     /* Arrastrar para recortar */
-    var dragging = false, lastX = 0, lastY = 0;
+    var dragging = false, lastX = 0, lastY = 0, movedDist = 0, lastTapT = 0, downAt = 0;
     cv.addEventListener('pointerdown', function (e) {
       dragging = true; lastX = e.clientX; lastY = e.clientY;
+      movedDist = 0; downAt = Date.now();
       try { cv.setPointerCapture(e.pointerId); } catch (err) {}
     });
     cv.addEventListener('pointermove', function (e) {
       if (!dragging) return;
       var r = cv.getBoundingClientRect();
       if (!r.width || !r.height) return;
-      state.panX = clamp(state.panX + ((e.clientX - lastX) / r.width) * 2.2, -1, 1);
-      state.panY = clamp(state.panY + ((e.clientY - lastY) / r.height) * 2.2, -1, 1);
+      var dx = ((e.clientX - lastX) / r.width) * 2.2;
+      var dy = ((e.clientY - lastY) / r.height) * 2.2;
+      movedDist += Math.abs(e.clientX - lastX) + Math.abs(e.clientY - lastY);
+      state.panX = clamp(state.panX + dx, -1, 1);
+      state.panY = clamp(state.panY + dy, -1, 1);
       lastX = e.clientX; lastY = e.clientY;
       scheduleRender();
     });
-    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+    /* pointerup propio: guarda y detecta doble clic/tap sin arrastrar */
+    cv.addEventListener('pointerup', function () {
+      if (dragging) { dragging = false; save(); }
+      if (downAt && movedDist < 8) {
+        var now = Date.now();
+        if (now - lastTapT < 340 && now - downAt < 700) {
+          lastTapT = 0; downAt = 0; resetCrop();
+          return;
+        }
+        lastTapT = now;
+      }
+      downAt = 0;
+    });
+    ['pointercancel', 'pointerleave'].forEach(function (ev) {
       cv.addEventListener(ev, function () {
         if (dragging) { dragging = false; save(); }
       });
+    });
+    /* Red de seguridad: doble clic del ratón (desktop) */
+    cv.addEventListener('dblclick', function () {
+      if ((state.zoom || 1) !== 1 || state.panX || state.panY) resetCrop();
     });
 
     /* Video */
@@ -4350,13 +4759,37 @@
         return canvasBlob(cv).then(function (b) {
           if (!b) { toast('No se pudo exportar'); return; }
           downloadBlob(b, name);
-          toast('PNG descargado ✓');
+          var txt = $('igCaption') ? $('igCaption').value : '';
+          var up = $('igUpload');
+          if (up) up.hidden = false;
+          if (txt && navigator.clipboard && navigator.clipboard.writeText) {
+            copyText(txt).then(function () {
+              toast('PNG descargado ✓ · copy copiado — pega al subir');
+            }).catch(function () {
+              toast('PNG descargado ✓ · copia el copy con ⧉ Copiar copy');
+            });
+          } else {
+            toast('PNG descargado ✓ · usa «⧉ Copiar copy» antes de subir');
+          }
         });
       });
     });
 
     $('igOpenIg').addEventListener('click', function () {
       window.open('https://www.instagram.com/', '_blank', 'noopener');
+    });
+
+    $('igUpload').addEventListener('click', function () {
+      var txt = $('igCaption') ? $('igCaption').value : '';
+      var go = function () {
+        toast('Copy listo en el portapapeles ✓ abriendo Instagram…');
+        window.open('https://www.instagram.com/', '_blank', 'noopener');
+      };
+      var warn = function () {
+        toast('Abriendo Instagram — usa «⧉ Copiar copy» para la leyenda');
+        window.open('https://www.instagram.com/', '_blank', 'noopener');
+      };
+      if (txt) copyText(txt).then(go, warn); else warn();
     });
 
     /* Cola */
@@ -4431,22 +4864,85 @@
     });
     $('igCopyCaption').addEventListener('click', function () {
       var ta = $('igCaption');
-      var txt = ta.value;
-      var done = function () { toast('Copy copiado ✓'); };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(txt).then(done).catch(function () {
-          ta.select(); document.execCommand('copy'); done();
-        });
-      } else {
-        ta.select(); document.execCommand('copy'); done();
-      }
+      copyText(ta.value).then(function () { toast('Copy copiado ✓'); },
+        function () { ta.select(); document.execCommand('copy'); toast('Copy copiado ✓'); });
     });
+
+    /* Vista previa simultánea: clic en un mini formato cambia el formato activo */
+    var miniRow = $('igMiniRow');
+    if (miniRow) {
+      Array.prototype.forEach.call(miniRow.querySelectorAll('.ig-mini'), function (b) {
+        b.addEventListener('click', function () {
+          state.format = b.getAttribute('data-f');
+          syncControls(); scheduleRender(); save();
+        });
+      });
+    }
+
+    /* Modo vista (solo lectura) */
+    var vm = $('igViewMode');
+    if (vm) {
+      vm.addEventListener('click', function () {
+        var sec = $('estudio');
+        if (!sec) return;
+        var on = sec.classList.toggle('ig-viewmode');
+        vm.classList.toggle('active', on);
+        vm.setAttribute('aria-pressed', on ? 'true' : 'false');
+        vm.textContent = on ? '✎ Salir de vista' : '👁 Modo vista';
+        toast(on ? 'Modo vista: solo lectura' : 'Modo edición activado');
+        scheduleRender();
+      });
+    }
+
+    /* Restaurar última edición (snapshot de la sesión anterior) */
+    var rs = $('igRestore');
+    if (rs) {
+      rs.addEventListener('click', function () {
+        var raw = null;
+        try { raw = localStorage.getItem(LS + '_prev'); } catch (e) {}
+        if (!raw) { toast('No hay una edición anterior en este equipo'); return; }
+        try {
+          var s = JSON.parse(raw);
+          restore(s);
+          if (s.caption !== undefined) {
+            $('igCaption').value = s.caption;
+            captionEdited = !!s.captionEdited;
+          }
+          renderFields(); syncControls(); updateCounter(); render(); renderMiniPreviews(); save();
+          toast('Última edición restaurada ✓');
+        } catch (e) { toast('No se pudo restaurar la edición'); }
+      });
+    }
+
+    /* Programación simulada de publicación */
+    function updateSched() {
+      var day = $('igScheduleDay'), hour = $('igScheduleHour');
+      if (!day || !hour) return;
+      state.schedDay = day.value;
+      state.schedHour = hour.value;
+      updateSchedBadge();
+      save();
+    }
+    if ($('igScheduleDay') && $('igScheduleHour')) {
+      $('igScheduleDay').addEventListener('change', updateSched);
+      $('igScheduleHour').addEventListener('change', updateSched);
+    }
+  }
+
+  function updateSchedBadge() {
+    var badge = $('igSchedBadge');
+    if (!badge) return;
+    var d = state.schedDay || '', h = state.schedHour || '';
+    badge.textContent = (d && h) ? ('🗓 ' + d + ' ' + h + ' · simulado') : '🗓 Sin programar';
   }
 
   function restore(s) {
-    ['tpl', 'format', 'accent', 'watermark', 'zoom', 'panX', 'panY', 'mediaId'].forEach(function (k) {
+    ['tpl', 'format', 'accent', 'watermark', 'zoom', 'panX', 'panY', 'mediaId', 'schedDay', 'schedHour'].forEach(function (k) {
       if (s[k] !== undefined) state[k] = s[k];
     });
+    /* Si el snapshot no trae programación, limpia la actual */
+    if (s.schedDay === undefined) state.schedDay = '';
+    if (s.schedHour === undefined) state.schedHour = '';
     if (s.fields) {
       Object.keys(s.fields).forEach(function (t) {
         if (!state.fields[t]) state.fields[t] = {};
@@ -4464,10 +4960,90 @@
     });
     $('igWatermark').checked = !!state.watermark;
     $('igZoom').value = Math.round((state.zoom || 1) * 100);
+    if ($('igScheduleDay') && $('igScheduleHour')) {
+      $('igScheduleDay').value = state.schedDay || '';
+      $('igScheduleHour').value = state.schedHour || '';
+      updateSchedBadge();
+    }
+    renderMiniPreviews();
+  }
+
+  /* ---------- Recursos de marca (paleta + tipografías) ---------- */
+  function renderResources() {
+    var pal = $('igPalette');
+    if (pal && !pal.dataset.done) {
+      pal.dataset.done = '1';
+      var names = {
+        bosque: 'Bosque', cafe: 'Café', sol: 'Sol', hoja: 'Hoja',
+        tierra: 'Tierra', crema: 'Crema', piedra: 'Piedra', carbon: 'Carbón'
+      };
+      Object.keys(P).forEach(function (k) {
+        var row = document.createElement('div');
+        row.className = 'ig-swatch';
+        row.setAttribute('role', 'button');
+        row.tabIndex = 0;
+        row.title = 'Clic para copiar ' + P[k];
+        var sw = document.createElement('span');
+        sw.className = 'swatch';
+        sw.style.background = P[k];
+        var nm = document.createElement('span');
+        nm.textContent = names[k] || k;
+        var hx = document.createElement('span');
+        hx.className = 's-hex';
+        hx.textContent = P[k];
+        row.appendChild(sw); row.appendChild(nm); row.appendChild(hx);
+        var doCopy = function () {
+          copyText(P[k]).then(function () { toast('Color copiado: ' + P[k]); },
+            function () { toast('No se pudo copiar ' + P[k]); });
+        };
+        row.addEventListener('click', doCopy);
+        row.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doCopy(); }
+        });
+        pal.appendChild(row);
+      });
+    }
+    var fonts = $('igFonts');
+    if (fonts && !fonts.dataset.done) {
+      fonts.dataset.done = '1';
+      [
+        { n: 'Fraunces · títulos', css: "font-family:'Fraunces',serif;font-size:20px;font-weight:600;", sample: 'El bosque despierta', val: 'Fraunces' },
+        { n: 'Inter · cuerpo', css: "font-family:'Inter',sans-serif;font-size:15px;", sample: 'Guía práctica para tu visita', val: 'Inter' },
+        { n: 'Caveat · citas', css: "font-family:'Caveat',cursive;font-size:24px;", sample: 'La vida se siente mejor aquí', val: 'Caveat' }
+      ].forEach(function (f) {
+        var box = document.createElement('div');
+        box.style.marginBottom = '10px';
+        box.style.cursor = 'pointer';
+        box.setAttribute('role', 'button');
+        box.tabIndex = 0;
+        box.title = 'Clic para copiar «' + f.val + '»';
+        var fn = document.createElement('div');
+        fn.className = 'f-name';
+        fn.textContent = f.n;
+        var fs = document.createElement('div');
+        fs.className = 'f-sample';
+        fs.setAttribute('style', f.css);
+        fs.textContent = f.sample;
+        box.appendChild(fn); box.appendChild(fs);
+        var cp = function () {
+          copyText(f.val).then(function () { toast('Fuente copiada: ' + f.val); });
+        };
+        box.addEventListener('click', cp);
+        box.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cp(); }
+        });
+        fonts.appendChild(box);
+      });
+    }
   }
 
   /* ---------- Init ---------- */
   function init() {
+    /* Snapshot de apertura: permite «Restaurar última edición» */
+    try {
+      var cur = localStorage.getItem(LS);
+      if (cur) localStorage.setItem(LS + '_prev', cur);
+    } catch (e) { /* sin storage */ }
     wire();
     renderFields();
     renderTags();
@@ -4475,13 +5051,16 @@
     renderMediaList();
     syncControls();
     updateVideoTools();
+    renderResources();
     // Copy inicial: si no hay guardado, genera el de la plantilla activa
     if (!$('igCaption').value && !captionEdited) updateCaption(false);
     updateCounter();
     render();
+    renderMiniPreviews();
     ensureFonts().then(function () {
       renderThumbs();
       render();
+      renderMiniPreviews();
     });
     setTimeout(function () { if (!thumbsReady) renderThumbs(); }, 1500);
   }
