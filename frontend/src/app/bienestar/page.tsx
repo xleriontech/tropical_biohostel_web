@@ -23,7 +23,7 @@ export default function BienestarPage() {
       <div className="mt-6 rounded-2xl border border-primary/30 bg-gradient-to-br from-secondary to-accent p-5 text-sm leading-relaxed">
         En <strong>Cosmic Bungalow</strong>, una vez realizada tu reserva podrás programar —según disponibilidad— sesiones de
         Yoga, Chi Kung o Tai Chi para complementar tu descanso.
-        <a href="/cosmic-bungalo" className="ml-1 font-medium text-primary hover:underline">Conocer el refugio →</a>
+        <a href="/cosmic-bungalow" className="ml-1 font-medium text-primary hover:underline">Conocer el refugio →</a>
       </div>
 
       {/* El bosque como escenario de bienestar */}

@@ -12,7 +12,7 @@ export default function AdminPropertiesPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch(`"http://localhost:3001/api"/admin/properties?limit=500`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"}/admin/properties?limit=500`, {
       headers: { Authorization: `Bearer ${token || ""}` },
     })
       .then((res) => (res.ok ? res.json() : { items: [] }))

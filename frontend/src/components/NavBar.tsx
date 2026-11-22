@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSearch } from "@/lib/SearchContext";
 import { Brain, BookOpen, ChevronDown, Coffee, Compass, Flower2, HeartHandshake, Leaf, Menu, MoonStar, UtensilsCrossed, X } from "lucide-react";
-import ThemePicker from "./ThemePicker";
 import SiteBrand from "./SiteBrand";
 
 const EXPLORAR_LINKS = [
-  { href: "/cosmic-bungalo", label: "Cosmic Bungalow", Icon: MoonStar },
+  { href: "/cosmic-bungalow", label: "Cosmic Bungalow", Icon: MoonStar },
   { href: "/territorio", label: "Territorio", Icon: Leaf },
   { href: "/gastronomia", label: "Gastronomía", Icon: UtensilsCrossed },
   { href: "/comidas", label: "Menús y Comidas", Icon: UtensilsCrossed },
@@ -90,7 +89,7 @@ export default function NavBar() {
                 <Brain className="h-4 w-4" />
                 Zemisqua
               </a>
-              <a href="/cosmic-bungalo" className="nav-link text-sm font-semibold">
+              <a href="/cosmic-bungalow" className="nav-link text-sm font-semibold">
                 Cosmic Bungalow
               </a>
               <a href="/categoria/hostales" className="nav-link text-sm">
@@ -119,7 +118,13 @@ export default function NavBar() {
                 </div>
               </div>
             </div>
-            <ThemePicker />
+            <a
+              href="/donaciones"
+              className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg sm:inline-flex"
+              title="Donar · Siembra y carbono"
+            >
+              <HeartHandshake className="h-4 w-4" /> Donar 🌳
+            </a>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="nav-box rounded-lg border p-2 transition-colors md:hidden"
@@ -163,10 +168,10 @@ export default function NavBar() {
                 <Brain className="h-4 w-4" /> Zemisqua · Buscador ancestral
               </a>
               {[
-                { href: "/cosmic-bungalo", label: "Cosmic Bungalow" },
+                { href: "/cosmic-bungalow", label: "Cosmic Bungalow" },
                 { href: "/categoria/hostales", label: "Hospedaje" },
                 ...EXPLORAR_LINKS.filter(
-                  (l) => l.href !== "/cosmic-bungalo" && l.href !== "/categoria/actividades"
+                  (l) => l.href !== "/cosmic-bungalow" && l.href !== "/categoria/actividades"
                 ).map((l) => ({ href: l.href, label: l.label })),
                 { href: "/categoria/actividades", label: "Actividades y tours" },
               ].map((l) => (

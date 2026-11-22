@@ -75,6 +75,11 @@ export const HOSPEDAJE = {
       "Más que una habitación, es un punto de partida para vivir Tropical Biohostel: despertar entre sonidos de aves, caminar entre plantas y cultivos, disfrutar de una alimentación consciente, leer, escribir, pintar o simplemente dejar que el paisaje inspire nuevas ideas. También encontrarás espacios donde puedes trabajar o desarrollar proyectos personales en contacto con la naturaleza, haciendo de la tranquilidad y el entorno parte de tu experiencia.",
     cierre:
       "Despertar con los sonidos del campo, caminar entre los cultivos, observar el paisaje y dejar que el ritmo del lugar marque el día hacen parte de una estadía pensada para volver a lo esencial.",
+    tarifas: [
+      { nombre: "Hostal · por persona / noche", precio: "$120.000" },
+      { nombre: "Cosmic Bungalow · por noche (pareja)", precio: "$360.000" },
+      { nombre: "Cosmic Bungalow · persona adicional", precio: "$150.000" },
+    ],
   },
   en: {
     titulo: "Staying in the heart of nature",
@@ -88,6 +93,11 @@ export const HOSPEDAJE = {
       "More than a room, it is a starting point for living Tropical Biohostel: waking up to the sounds of birds, walking among plants and crops, enjoying conscious food, reading, writing, painting or simply letting the landscape inspire new ideas. You will also find spaces where you can work or develop personal projects in contact with nature, making the tranquility and the setting part of your experience.",
     cierre:
       "Waking up to the sounds of the countryside, walking among the crops, taking in the landscape, and letting the rhythm of the place shape your day are all part of a stay designed to bring you back to what truly matters.",
+    tarifas: [
+      { nombre: "Hostel · per person / night", precio: "$120,000" },
+      { nombre: "Cosmic Bungalow · per night (couple)", precio: "$360,000" },
+      { nombre: "Cosmic Bungalow · additional person", precio: "$150,000" },
+    ],
   },
 };
 
@@ -277,14 +287,12 @@ export const FICAL = {
     subtitulo:
       "La historia de una abuela, una finca y un café que sigue creciendo entre los árboles.",
     parrafos: [
-      "Mi abuela me contaba que en tierra de paches, frondosos bosques llenos de biodiversidad, guardaban en su corazón la planta de FIQUE. Los lejanos abuelos de mi abuela la utilizaban para crear la “cabuya” y con ella costales para empaques agrícolas.",
-      "El tiempo pasó, las familias llegaron y el “fique” se convirtió en FICAL, las fincas diversificaron sus cultivos y la de mis abuelos se convirtió en una gran extensión de café que crecía como crecían las plantas de fique en el bosque.",
-      "Con mi abuela recogimos el fruto maduro, lo secamos al sol y, cuando llegaba el momento, lo tostamos juntas para sentir su sabor y aroma a bosque, ese que con tanto cariño cuidábamos.",
-      "Hoy hago la misma experiencia con cada uno de nuestros huéspedes y viajeros, para recordarles que crecer, florecer y saber, toman tiempo.",
-      "En honor a la abuela, hoy siembro mi café en medio de los árboles de mi pequeño bosque tropical, recojo sus frutos, los seco al sol y lo tuesto en mi olla como lo hacía ella.",
-      "Hoy conservo esta tradición con cada uno de los visitantes que llegan a Tropical Biohostel, y al igual que la abuela, hoy comparto esta experiencia con el mundo.",
+      "Mi abuela me contaba que, en tierra de panches, frondosos bosques llenos de biodiversidad guardaban en su corazón la planta de fique. Sus antepasados la utilizaban para crear la «cabuya» y fabricar costales destinados a los empaques agrícolas. Con ella también amarraban los lomillos del aparejo para cargar la caña, y tejían la clineja con la que hacían cinchas para sujetar las retrancas de los caballos.",
+      "El tiempo pasó, las familias y la zona donde abundaba el fique pasó a llamarse FICAL. Las fincas diversificaron sus cultivos y la de mis abuelos se convirtió en una gran extensión de café que crecía como las plantas de fique, en el bosque.",
+      "De niña, junto a mi abuela, recogíamos el fruto maduro del café, lo secábamos al sol y, llegado el momento, lo tostábamos para despertar su sabor y aroma a bosque.",
+      "En su honor, siembro hoy mi propio café bajo la sombra de este bosque tropical, siguiendo el ritual de la siembra, la cosecha y el tostado. Cada huésped y viajero que llega a Tropical Biohostel está invitado a vivir esta experiencia, a descubrir el mundo desde nuestras raíces y a reconectar con los ritmos de la naturaleza, recordándoles que crecer, florecer y saber, toman tiempo.",
     ],
-    cierre: "De una taza de café con la abuela, a una taza de café en Tropical Biohostel.",
+    cierre: "“Porque lo que se siembra con amor, sabe mejor”",
     proceso: [
       {
         paso: "01",
@@ -300,7 +308,7 @@ export const FICAL = {
       },
       {
         paso: "03",
-        titulo: "La despulpado",
+        titulo: "El despulpado",
         texto: "Retiramos la pulpa seca y obtenemos el grano: el mismo que mi abuela guardaba en costales de cabuya.",
         imagen: "/fotos/sitio/tropical-cafe2.jpg",
       },
@@ -422,23 +430,23 @@ export const CIERRE = {
 export const COSMIC = {
   es: {
     nombre: "Cosmic Bungalow",
-    eslogan: "Un refugio donde la naturaleza, el arte y la energía del lugar se encuentran.",
+    eslogan: "Una experiencia inmersiva en el trópico, donde la naturaleza, el arte y la energía del lugar se encuentran.",
     intro:
       "Bienvenida a Cosmic Bungalow, un espacio íntimo y especial de aproximadamente cinco metros cuadrados, diseñado para vivir una experiencia de conexión profunda con la naturaleza y contigo misma.",
     habitacion:
       "Dentro de este entorno se encuentra nuestro BUNGALOW, una habitación cómoda y acogedora para descansar y disfrutar de la naturaleza sin renunciar al confort. Es un lugar ideal para parejas o viajeros que buscan tranquilidad, inspiración y una experiencia diferente, rodeados de verde y lejos del ruido.",
-    precio: "$250.000 COP",
+    precio: "$360.000 COP",
     precioDetalle: "por noche para pareja",
-    precioAdicional: "Persona adicional: $80.000 COP por noche",
+    precioAdicional: "Persona adicional: $150.000 COP por noche",
     arquitecturaTitulo: "Arquitectura sagrada y hexagonal",
     arquitectura:
       "Inspirado en principios de arquitectura sagrada y geometría hexagonal, este pequeño refugio ha sido construido artesanalmente con ladrillo prensado y materiales naturales de la finca. Cada detalle tiene una historia: mandalas, símbolos rúnicos, texturas, matices y acabados hechos a mano que crean una atmósfera cálida, auténtica y llena de personalidad. Sus pisos rústicos y sus paredes llenas de color y textura conservan ese carácter artesanal que hace que cada estancia se sienta única.",
     descansoTitulo: "Diseñado para el descanso",
     descanso:
       "El bungaló cuenta con una cama confortable, sillas acogedoras, iluminación cálida y una privilegiada vista del trópico. Aquí no vienes simplemente a hospedarte. Vienes a desconectarte del ruido y sumergirte en la naturaleza. Te sentirás cobijada por la madre naturaleza.",
-    exteriorTitulo: "Baño con ducha y pileta natural al aire libre",
+    exteriorTitulo: "Baño con ducha rodeado de vegetación",
     exterior:
-      "En el exterior encontrarás un baño con ducha y una pileta natural al aire libre, rodeados completamente de vegetación. La flora y la fauna son parte de la experiencia: mariposas, colibríes, ranas y pequeñas criaturas del bosque pueden convertirse en inesperados compañeros durante tu estadía.",
+      "Encontrarás un baño con ducha rodeado de vegetación. La flora y la fauna son parte de la experiencia: mariposas, colibríes, ranas y pequeñas criaturas del bosque pueden convertirse en inesperados compañeros durante tu estadía.",
     entornoTitulo: "Espacios para el esparcimiento y la contemplación",
     entorno:
       "Los alrededores invitan a caminar, contemplar, leer, escribir, pintar o simplemente no hacer nada. Encontrarás espacios para leer, escribir, pintar o trabajar en tus propios proyectos, permitiéndole a la naturaleza ser parte de tu inspiración. También encontrarás rincones especiales para observar el cielo y dejarte sorprender por las estrellas en la noche.",
@@ -446,7 +454,7 @@ export const COSMIC = {
     bienestar:
       "Una vez realizada tu reserva podrás conocer y programar, según disponibilidad, experiencias como yoga, Chi Kung y Tai Chi, ideales para complementar tus momentos de descanso, presencia y bienestar. Es un espacio de inmersión total, pensado para regalarte una pausa y recuperar el ritmo lento.",
     cierre:
-      "Aquí puedes venir a descansar, crear, contemplar o simplemente respirar. Deja que la naturaleza te cobije, que el silencio te encuentre y que tu imaginación vuelva a tener espacio. Cosmic Bungalow: un pequeño refugio, una gran experiencia.",
+      "Ven a descansar, crear, contemplar o simplemente respirar. Deja que la naturaleza te cobije, que el silencio te encuentre y que tu imaginación vuele a tener espacio. Cosmic Bungalow: un pequeño refugio, una gran experiencia.",
     datos: [
       { valor: "~5 m²", etiqueta: "cabaña hexagonal" },
       { valor: "Sagrada", etiqueta: "geometría + mandalas y runas" },
@@ -458,23 +466,23 @@ export const COSMIC = {
   },
   en: {
     nombre: "Cosmic Bungalow",
-    eslogan: "A shelter where nature, art, and the energy of the place meet.",
+    eslogan: "An immersive experience in the tropics, where nature, art, and the energy of the place meet.",
     intro:
       "Welcome to Cosmic Bungalow, an intimate and special space of about five square meters, designed for a deep connection with nature and yourself.",
     habitacion:
       "Within this setting you will find our BUNGALOW, a comfortable and welcoming room to rest and enjoy the nature without giving up comfort. It is an ideal place for couples or travelers looking for tranquility, inspiration and a different experience, surrounded by green and far from the noise.",
-    precio: "$250,000 COP",
+    precio: "$360,000 COP",
     precioDetalle: "per night for a couple",
-    precioAdicional: "Additional person: $80,000 COP per night",
+    precioAdicional: "Additional person: $150,000 COP per night",
     arquitecturaTitulo: "Sacred, hexagonal architecture",
     arquitectura:
       "Inspired by sacred architecture and hexagonal geometry, this small shelter was handcrafted with pressed brick and natural materials from the farm. Every detail tells a story: mandalas, runic symbols, textures, tones, and handmade finishes that create a warm, authentic atmosphere full of personality. Rustic floors and colorful textured walls keep the artisanal character that makes each stay unique.",
     descansoTitulo: "Designed for rest",
     descanso:
       "The bungalow offers a comfortable bed, cozy chairs, warm lighting, and a privileged view of the tropics. You don't just come here to sleep — you come to disconnect from noise and immerse yourself in nature, sheltered by mother nature.",
-    exteriorTitulo: "Outdoor bathroom with shower and natural pool",
+    exteriorTitulo: "Bathroom with shower, surrounded by vegetation",
     exterior:
-      "Outside you will find a bathroom with shower and a natural open-air pool, fully surrounded by vegetation. Flora and fauna are part of the experience: butterflies, hummingbirds, frogs, and small forest creatures may become unexpected companions during your stay.",
+      "You will find a bathroom with shower surrounded by vegetation. Flora and fauna are part of the experience: butterflies, hummingbirds, frogs, and small forest creatures may become unexpected companions during your stay.",
     entornoTitulo: "Spaces for leisure and contemplation",
     entorno:
       "The surroundings invite you to walk, contemplate, read, write, paint, or simply do nothing. You will find corners to read, write, paint, or work on your own projects — letting nature become part of your inspiration — plus special spots to watch the sky and be surprised by the stars at night.",

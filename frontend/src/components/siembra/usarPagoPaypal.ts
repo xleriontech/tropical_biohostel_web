@@ -36,7 +36,7 @@ export function usarPagoPaypal({ moneda, clave, crearOrden, alAprobar, alCancela
   vivos.current = { crearOrden, alAprobar, alCancelar, alError };
 
   useEffect(() => {
-    fetch(`${"http://localhost:3001/api"}/donaciones/paypal-public`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"}/donaciones/paypal-public`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
         const id = d?.clientId || "";

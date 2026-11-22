@@ -13,7 +13,7 @@ export default function DonacionesPage() {
   const [proyectos, setProyectos] = useState<any[] | null>(null);
 
   useEffect(() => {
-    fetch(`"http://localhost:3001/api"/donaciones/proyectos`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"}/donaciones/proyectos`)
       .then((r) => (r.ok ? r.json() : []))
       .then((d) => setProyectos(Array.isArray(d) ? d : []))
       .catch(() => setProyectos([]));

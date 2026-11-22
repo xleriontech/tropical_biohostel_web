@@ -40,7 +40,7 @@ export default function Footer() {
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Recorrer</p>
           <div className="mt-3 flex flex-col items-start gap-2 text-sm">
-            <a href="/cosmic-bungalo" className="font-medium hover:underline">Cosmic Bungalow</a>
+            <a href="/cosmic-bungalow" className="font-medium hover:underline">Cosmic Bungalow</a>
             <a href="/territorio" className="hover:underline">Territorio</a>
             <a href="/gastronomia" className="hover:underline">Gastronomía</a>
             <a href="/experiencias" className="hover:underline">Experiencias</a>

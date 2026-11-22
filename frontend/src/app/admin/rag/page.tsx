@@ -419,13 +419,13 @@ export default function RagPage() {
           />
           <div className="mt-2 rounded-lg bg-secondary/40 p-2.5 text-xs leading-relaxed text-muted-foreground">
             Para enlazar secciones usa <strong>rutas relativas</strong> que funcionan en cualquier servidor:{" "}
-            <code>[donar](/donaciones)</code>, <code>[Cosmic](/cosmic-bungalo)</code>. Si necesitas la URL
+            <code>[donar](/donaciones)</code>, <code>[Cosmic](/cosmic-bungalow)</code>. Si necesitas la URL
             completa usa el token <code>{"{{baseUrl}}"}</code> (ej: <code>{"{{baseUrl}}"}/donaciones</code>) y se
             reemplaza solo al responder.
             <div className="mt-1.5 flex flex-wrap gap-1.5">
               {[
                 ["Donaciones", "/donaciones"],
-                ["Cosmic", "/cosmic-bungalo"],
+                ["Cosmic", "/cosmic-bungalow"],
                 ["Territorio", "/territorio"],
                 ["Gastronomía", "/gastronomia"],
                 ["Experiencias", "/experiencias"],

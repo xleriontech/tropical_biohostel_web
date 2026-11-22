@@ -320,27 +320,63 @@ async function sembrarResenasGoogle() {
  * a mano desde el panel de administración, no se tocan.
  */
 async function ajustarBase() {
-  // Precio del Cosmic Bungalow: antes $120.000 → ahora $250.000 por pareja.
-  const bung = await prisma.propiedad.findUnique({ where: { slug: "cosmic-bungalo" } });
-  if (bung && bung.precioNoche.toNumber() === 120000) {
+  // Slug/URL corregido: "cosmic-bungalo" → "cosmic-bungalow" (modificación #11).
+  let bung = await prisma.propiedad.findUnique({ where: { slug: "cosmic-bungalo" } });
+  if (bung) {
     await prisma.propiedad.update({
-      where: { slug: "cosmic-bungalo" },
-      data: { precioNoche: 250000 },
+      where: { id: bung.id },
+      data: { slug: "cosmic-bungalow" },
     });
-    console.log("   - precio del Cosmic Bungalow actualizado a $250.000");
+    bung = { ...bung, slug: "cosmic-bungalow" };
+    console.log('   - slug y URL del Cosmic Bungalow actualizados a "cosmic-bungalow"');
+  } else {
+    bung = await prisma.propiedad.findUnique({ where: { slug: "cosmic-bungalow" } });
+  }
+
+  // Tarifa unificada del Cosmic Bungalow: $360.000 por noche por pareja
+  // (modificación #10). Solo se toca si sigue en un valor placeholder.
+  if (bung && [120000, 250000].includes(bung.precioNoche.toNumber())) {
+    await prisma.propiedad.update({
+      where: { id: bung.id },
+      data: { precioNoche: 360000 },
+    });
+    console.log("   - precio del Cosmic Bungalow actualizado a $360.000");
+  }
+
+  // Tarifa del hostal: $120.000 por persona por noche (modificación #17).
+  const hostal = await prisma.propiedad.findUnique({ where: { slug: "tropical-biohostel" } });
+  if (hostal && hostal.precioNoche.toNumber() === 150000) {
+    await prisma.propiedad.update({
+      where: { id: hostal.id },
+      data: { precioNoche: 120000 },
+    });
+    console.log("   - tarifa del hostal actualizada a $120.000 por persona/noche");
   }
 
   // Ortografía del nombre: el documento de textos escribe "Bungalow" (sin tilde).
-  // El slug y la URL (cosmic-bungalo) no cambian.
   if (bung && bung.nombre.includes("Bungaló")) {
     await prisma.propiedad.update({
-      where: { slug: "cosmic-bungalo" },
+      where: { id: bung.id },
       data: {
         nombre: bung.nombre.replace(/Bungaló/g, "Bungalow"),
         descripcion: bung.descripcion?.replace(/Bungaló/g, "Bungalow") ?? null,
       },
     });
     console.log('   - nombre actualizado a "Cosmic Bungalow"');
+  }
+
+  // El baño NO está en el exterior: se corrige el texto (modificación #12).
+  if (bung && bung.descripcion?.includes("Baño con ducha y pileta natural al aire libre")) {
+    await prisma.propiedad.update({
+      where: { id: bung.id },
+      data: {
+        descripcion: bung.descripcion.replace(
+          "Baño con ducha y pileta natural al aire libre entre vegetación",
+          "Baño con ducha rodeado de vegetación y pileta natural al aire libre entre la vegetación",
+        ),
+      },
+    });
+    console.log("   - texto del baño del Cosmic Bungalow actualizado");
   }
 
   // Portadas de los proyectos de donación (solo si están vacías).
@@ -580,7 +616,7 @@ async function main() {
       tieneParqueadero: true,
       tieneWifi: true,
       admiteMascotas: true, // cabañas y zonas comunes sí; Cosmic Bungalow no
-      precioNoche: 150000,
+      precioNoche: 120000, // tarifa hostal por persona/noche (modificación #17)
       actividades: ["senderismo", "avistamiento", "yoga", "cafe", "cacao", "gastronomia", "bienestar"],
       horarioCheckIn: "15:00",
       horarioCheckOut: "12:00",
@@ -590,7 +626,7 @@ async function main() {
         create: [
           { url: "/fotos/BioHostel5.jpg", orden: 0, esPrincipal: true },
           { url: "/fotos/BioHostel6.jpg", orden: 1, esPrincipal: false },
-          ...img(["Hostel1.jpeg", "hostel2.jpeg", "hostel3.jpeg", "hostel4.jpeg", "Hostal5.jpeg", "Hostal6.jpeg", "Hostal7.jpeg"]).map((o, i) => ({ ...o, orden: o.orden + 2, esPrincipal: false })),
+          ...img(["Hostel1.jpeg", "hostel2.jpeg", "Hostal5.jpeg", "Hostal6.jpeg", "Hostal7.jpeg"]).map((o, i) => ({ ...o, orden: o.orden + 2, esPrincipal: false })),
         ],
       },
     },
@@ -600,11 +636,11 @@ async function main() {
   await crearPropiedad({
     data: {
       nombre: "Cosmic Bungalow",
-      slug: "cosmic-bungalo",
+      slug: "cosmic-bungalow",
       tipo: "glamping",
       estado: "PUBLICADO",
       descripcion:
-        "Cosmic Bungalow: un refugio donde la naturaleza, el arte y la energía del lugar se encuentran. Cabaña íntima de aproximadamente cinco metros cuadrados, inspirada en arquitectura sagrada y geometría hexagonal, construida artesanalmente con ladrillo prensado y materiales naturales de la finca. Mándalas, símbolos rúnicos, matices, pisos rústicos y acabados hechos a mano. Cama confortable, sillas acogedoras, luz cálida y gran vista del trópico. Baño con ducha y pileta natural al aire libre entre vegetación. Flora y fauna presentes: ranas, mariposas, colibríes y criaturas del bosque. Espacios para el esparcimiento y la contemplación, rincón para observar estrellas, y para leer, escribir, pintar o trabajar con la naturaleza como inspiración. Tras tu reserva podrás programar según disponibilidad Yoga, Chi Kung y Tai Chi.",
+        "Cosmic Bungalow: un refugio donde la naturaleza, el arte y la energía del lugar se encuentran. Cabaña íntima de aproximadamente cinco metros cuadrados, inspirada en arquitectura sagrada y geometría hexagonal, construida artesanalmente con ladrillo prensado y materiales naturales de la finca. Mándalas, símbolos rúnicos, matices, pisos rústicos y acabados hechos a mano. Cama confortable, sillas acogedoras, luz cálida y gran vista del trópico. Baño con ducha rodeado de vegetación y pileta natural al aire libre entre la vegetación. Flora y fauna presentes: ranas, mariposas, colibríes y criaturas del bosque. Espacios para el esparcimiento y la contemplación, rincón para observar estrellas, y para leer, escribir, pintar o trabajar con la naturaleza como inspiración. Tras tu reserva podrás programar según disponibilidad Yoga, Chi Kung y Tai Chi.",
       ubicacion: "Finca Tropical Biohostel, zona rural a 10 minutos de Nocaima",
       ciudad: "Nocaima",
       telefono: "3118371264",

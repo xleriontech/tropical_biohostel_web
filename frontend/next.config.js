@@ -17,6 +17,15 @@ const nextConfig = {
     ],
   },
 
+  // La URL del Cosmic se corrigió de "cosmic-bungalo" a "cosmic-bungalow"
+  // (modificación #11): las URLs viejas redirigen para no romper enlaces.
+  async redirects() {
+    return [
+      { source: "/cosmic-bungalo", destination: "/cosmic-bungalow", permanent: true },
+      { source: "/property/cosmic-bungalo", destination: "/property/cosmic-bungalow", permanent: true },
+    ];
+  },
+
   // El service worker nunca debe quedar cacheado: si no, los dispositivos con
   // la PWA instalada seguirían sirviendo una versión antigua.
   async headers() {

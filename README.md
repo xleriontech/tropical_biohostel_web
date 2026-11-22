@@ -134,7 +134,7 @@ inglés de cada sección) y una **galería real de la finca** en `frontend/publi
 | `/` | Portada con fotos reales de territorio, hospedaje, gastronomía, experiencias y bienestar |
 | `/territorio` | Bosque nativo, cultivos, frutales, huerta, fauna |
 | `/gastronomia` | Del territorio a la mesa, con la cocina y los postres de la finca |
-| `/cosmic-bungalo` | El refugio, su arquitectura y el precio del Bungalow |
+| `/cosmic-bungalow` | El refugio, su arquitectura y el precio del Bungalow |
 | `/rutas` | Las tres rutas del café (Del bosque a tu taza, Respira el bosque, Café y raíces colombianas) |
 | `/fical-y-el-cafe` | La historia de la abuela: del fruto a la taza, paso a paso |
 | `/bienestar` | Yoga, Chi Kung y Tai Chi en el bosque |

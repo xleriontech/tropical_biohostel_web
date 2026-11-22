@@ -498,7 +498,7 @@ Entrada: “Quiero el Cosmic Bungalow con mi perro.”
   "intent": "BOOKING_CREATE",
   "confidence": 0.97,
   "booking_intent": {
-    "property_slug": "cosmic-bungalo",
+    "property_slug": "cosmic-bungalow",
     "unit_id": null,
     "check_in": null,
     "check_out": null,
