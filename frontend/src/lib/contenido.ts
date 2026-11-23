@@ -5,19 +5,19 @@
 export const HERO = {
   es: {
     kicker: "Nocaima, Cundinamarca · a 10 minutos del casco urbano",
-    titulo: "Naturaleza que se vive, sabores que se descubren, experiencias que permanecen.",
+    titulo: "Tu refugio privado en medio de la naturaleza",
     subtitulo:
-      "Tropical Biohostel es un destino de naturaleza, bienestar y experiencias en zona rural de fácil acceso, donde el paisaje, la biodiversidad y la vida del campo son protagonistas.",
-    ctaHospedaje: "Ver hospedaje",
-    ctaCosmic: "Conocer Cosmic Bungalow",
+      "Desconéctate del ruido en una reserva natural privada de 14.000 m². Solo tres alojamientos exclusivos, rodeados de árboles frutales, flora nativa y espacios diseñados para el descanso y el bienestar.",
+    ctaHospedaje: "Reserva tu estadía",
+    ctaCosmic: "Consulta disponibilidad",
   },
   en: {
     kicker: "Nocaima, Cundinamarca · 10 minutes from town",
-    titulo: "Nature you can experience. Flavors you can discover. Experiences that stay with you.",
+    titulo: "Your private refuge in the heart of nature",
     subtitulo:
-      "Tropical Biohostel is a nature, wellness and experience destination in an easily accessible rural setting, where landscape, biodiversity and country life take center stage.",
-    ctaHospedaje: "See lodging",
-    ctaCosmic: "Meet Cosmic Bungalow",
+      "Disconnect from the noise in a private 14,000 m² nature reserve. Only three exclusive accommodations, surrounded by fruit trees, native flora, and spaces designed for rest and wellbeing.",
+    ctaHospedaje: "Book your stay",
+    ctaCosmic: "Check availability",
   },
 };
 
@@ -193,7 +193,7 @@ export const EXPERIENCIAS_CATALOGO = {
         icono: "droplet",
         categoria: "Bienestar y Nutrición",
         imagen: "/fotos/sitio/tropical-mandarinas.jpg",
-        titulo: "Nutrición Consciente: Reeducción Alimenticia desde la Tierra",
+        titulo: "Nutrición Consciente: Reeducación Alimenticia desde la Tierra",
         tagline: "Transforma tus hábitos desde el origen",
         desc: "Aprende a nutrir tu cuerpo con criterio: exploramos las propiedades reales y el impacto biológico de 3 frutas, 3 verduras y 3 suplementos o proteínas vegetales clave. Una guía tangible para traer el bienestar de la huerta a tu mesa.",
         incluye: [
@@ -257,6 +257,22 @@ export const EXPERIENCIAS_CATALOGO = {
         mod: [
           { label: "Plan Inmersión Completa", precio: "$300.000 COP", detalle: "Incluye alojamiento + desayuno, almuerzo y cena (Mejor valor: captura el amanecer y atardecer)" },
           { label: "Plan Explorador", precio: "$100.000 COP", detalle: "Solo ingreso y guía, sin alimentación ni alojamiento" },
+        ],
+      },
+      {
+        id: "danzaterapia",
+        icono: "heart",
+        categoria: "Movimiento y Bienestar",
+        imagen: "/fotos/sitio/tropical-gente4.jpg",
+        titulo: "Danzaterapia: Movimiento Consciente e Integración Emocional",
+        tagline: "Un espacio seguro para sentir, soltar y armonizar",
+        desc: "No necesitas saber bailar; solo necesitas permitirte sentir. Durante una sesión guiada de 1 hora estructurada en cuatro momentos —precalentamiento suave, exploración introspectiva, movimiento libre y cierre de integración—, lograrás armonizar tu cuerpo con tus emociones, ganando confianza y ligereza mental.",
+        incluye: [
+          "Sesión personalizada de danzaterapia de 1 hora (4 fases)",
+        ],
+        mod: [
+          { label: "Plan Descanso y Conexión", precio: "$300.000 COP", detalle: "Incluye alojamiento y desayuno (Más elegido — integra lo vivido con descanso)" },
+          { label: "Plan Sesión Única", precio: "$150.000 COP", detalle: "Sin alojamiento ni alimentación" },
         ],
       },
       {
@@ -405,6 +421,22 @@ export const EXPERIENCIAS_CATALOGO = {
         ],
       },
       {
+        id: "danzaterapia",
+        icono: "heart",
+        categoria: "Movement & Wellbeing",
+        imagen: "/fotos/sitio/tropical-gente4.jpg",
+        titulo: "Dance Therapy: Conscious Movement & Emotional Integration",
+        tagline: "A safe space to feel, release, and harmonize",
+        desc: "You don’t need to know how to dance; you just need to allow yourself to feel. During a 1-hour guided session structured in four moments — gentle warm-up, introspective exploration, free movement, and integration closure — you will harmonize your body with your emotions, gaining confidence and mental lightness.",
+        incluye: [
+          "Personalized 1-hour dance therapy session (4 phases)",
+        ],
+        mod: [
+          { label: "Rest & Connection Plan", precio: "$300.000 COP", detalle: "Includes lodging and breakfast (Most chosen — integrate what you lived with rest)" },
+          { label: "Single Session Plan", precio: "$150.000 COP", detalle: "No lodging or meals" },
+        ],
+      },
+      {
         id: "ritmos-latinos",
         icono: "zap",
         categoria: "Movement & Joy",
@@ -449,7 +481,7 @@ export const RUTAS = {
       "Tres experiencias para descubrir el café, compartir nuestras raíces y regalarte una pausa en el bosque. Todas inician con una caminata desde el casco urbano y se viven a paso lento, entre cafetales, cacao y frutales.",
     notas:
       "Los precios de las experiencias incluyen la alimentación correspondiente a cada actividad. Para preparar cada visita de acuerdo con tus preferencias, el menú debe seleccionarse y confirmarse antes de la llegada.",
-    contacto: "311 837 1264",
+    contacto: "320 907 9174",
     medioPago: "Nequi",
     guiaPdf: "/guia-cafe-tropical.pdf",
     rutas: [
@@ -514,7 +546,7 @@ export const RUTAS = {
       "Three experiences to discover coffee, share our roots, and gift yourself a pause in the forest. All begin with a walk from the town center and unfold at a slow pace among coffee, cacao and fruit trees.",
     notas:
       "Experience prices include the meal corresponding to each activity. To prepare each visit according to your preferences, the menu must be selected and confirmed before arrival.",
-    contacto: "311 837 1264",
+    contacto: "320 907 9174",
     medioPago: "Nequi",
     guiaPdf: "/guia-cafe-tropical.pdf",
     rutas: [
@@ -725,7 +757,7 @@ export const COSMIC = {
     nombre: "Cosmic Bungalow",
     eslogan: "Una experiencia inmersiva en el trópico, donde la naturaleza, el arte y la energía del lugar se encuentran.",
     intro:
-      "Bienvenida a Cosmic Bungalow, un espacio íntimo y especial de aproximadamente cinco metros cuadrados, diseñado para vivir una experiencia de conexión profunda con la naturaleza y contigo misma.",
+      "Bienvenida a Cosmic Bungalow, un espacio íntimo y especial de aproximadamente 25 metros cuadrados, diseñado para vivir una experiencia de conexión profunda con la naturaleza y contigo misma. Una pieza de arquitectura orgánica con diseño hexagonal (5 × 5 m), construida artesanalmente en guadua y ladrillo. Totalmente equipada para una estadía sin preocupaciones, cuenta con un baño amplio y una pileta al aire libre privada para refrescarte bajo el cielo abierto.",
     habitacion:
       "Dentro de este entorno se encuentra nuestro BUNGALOW, una habitación cómoda y acogedora para descansar y disfrutar de la naturaleza sin renunciar al confort. Es un lugar ideal para parejas o viajeros que buscan tranquilidad, inspiración y una experiencia diferente, rodeados de verde y lejos del ruido.",
     precio: "$360.000 COP",
@@ -749,7 +781,7 @@ export const COSMIC = {
     cierre:
       "Ven a descansar, crear, contemplar o simplemente respirar. Deja que la naturaleza te cobije, que el silencio te encuentre y que tu imaginación vuele a tener espacio. Cosmic Bungalow: un pequeño refugio, una gran experiencia.",
     datos: [
-      { valor: "~5 m²", etiqueta: "cabaña hexagonal" },
+      { valor: "25 m²", etiqueta: "cabaña hexagonal" },
       { valor: "Sagrada", etiqueta: "geometría + mandalas y runas" },
       { valor: "Aire libre", etiqueta: "ducha y pileta natural" },
       { valor: "Total", etiqueta: "inmersión en flora y fauna" },
@@ -761,7 +793,7 @@ export const COSMIC = {
     nombre: "Cosmic Bungalow",
     eslogan: "An immersive experience in the tropics, where nature, art, and the energy of the place meet.",
     intro:
-      "Welcome to Cosmic Bungalow, an intimate and special space of about five square meters, designed for a deep connection with nature and yourself.",
+      "Welcome to Cosmic Bungalow, an intimate and special space of about 25 square meters, designed for a deep connection with nature and yourself. An organic piece of architecture with a hexagonal design (5 × 5 m), handcrafted in guadua and brick. Fully equipped for a worry-free stay, it features a spacious bathroom and a private open-air pool to refresh under the open sky.",
     habitacion:
       "Within this setting you will find our BUNGALOW, a comfortable and welcoming room to rest and enjoy the nature without giving up comfort. It is an ideal place for couples or travelers looking for tranquility, inspiration and a different experience, surrounded by green and far from the noise.",
     precio: "$360,000 COP",
@@ -785,7 +817,7 @@ export const COSMIC = {
     cierre:
       "Here you can rest, create, contemplate, or simply breathe. Let nature shelter you, let silence find you, and let your imagination have room again. Cosmic Bungalow: a small shelter, a great experience.",
     datos: [
-      { valor: "~5 m²", etiqueta: "hexagonal cabin" },
+      { valor: "25 m²", etiqueta: "hexagonal cabin" },
       { valor: "Sacred", etiqueta: "geometry + mandalas & runes" },
       { valor: "Open air", etiqueta: "shower & natural pool" },
       { valor: "Total", etiqueta: "immersion in flora & fauna" },

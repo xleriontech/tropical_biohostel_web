@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSearch } from "@/lib/SearchContext";
-import { Brain, BookOpen, ChevronDown, Coffee, Compass, Flower2, HeartHandshake, Leaf, Menu, MoonStar, ScrollText, UtensilsCrossed, X } from "lucide-react";
+import { Brain, BookOpen, ChevronDown, Coffee, Compass, Flower2, HeartHandshake, Leaf, Menu, Moon, MoonStar, ScrollText, Tent, UtensilsCrossed, X } from "lucide-react";
 import SiteBrand from "./SiteBrand";
 
 const EXPLORAR_LINKS = [
   { href: "/territorio", label: "Territorio", Icon: Leaf },
   { href: "/gastronomia", label: "Gastronomía", Icon: UtensilsCrossed },
   { href: "/comidas", label: "Menús y Comidas", Icon: UtensilsCrossed },
-  { href: "/experiencias", label: "Experiencias", Icon: Compass },
   { href: "/rutas", label: "Rutas del café", Icon: Coffee },
   { href: "/fical-y-el-cafe", label: "Fical y el café", Icon: BookOpen },
   { href: "/bienestar", label: "Bienestar", Icon: Flower2 },
@@ -92,16 +91,36 @@ export default function NavBar() {
                 <div className="invisible absolute left-0 top-full z-50 w-52 translate-y-1 pt-2 opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                   <div className="themed-drop overflow-hidden rounded-xl border bg-white shadow-lg">
                     <a
+                      href="/categoria/hostales"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:text-foreground"
+                    >
+                      Nuestros alojamientos
+                    </a>
+                    <a
                       href="/cosmic-bungalow"
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:text-foreground"
                     >
                       <MoonStar className="h-4 w-4" />
                       Cosmic Bungalow
                     </a>
+                    <a
+                      href="/cabana-de-la-luna"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:text-foreground"
+                    >
+                      <Moon className="h-4 w-4" />
+                      Cabaña de la Luna
+                    </a>
+                    <a
+                      href="/glamping"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:text-foreground"
+                    >
+                      <Tent className="h-4 w-4" />
+                      Glamping
+                    </a>
                   </div>
                 </div>
               </div>
-              <a href="/categoria/actividades" className="nav-link text-sm">
+              <a href="/experiencias" className="nav-link text-sm">
                 Experiencias
               </a>
               <div className="group relative">
@@ -176,9 +195,9 @@ export default function NavBar() {
             <div className="grid gap-1">
               {[
                 { href: "/categoria/hostales", label: "Hospedaje" },
-                { href: "/categoria/actividades", label: "Experiencias" },
+                { href: "/experiencias", label: "Experiencias" },
                 ...EXPLORAR_LINKS.filter(
-                  (l) => l.href !== "/categoria/actividades"
+                  (l) => l.href !== "/experiencias"
                 ).map((l) => ({ href: l.href, label: l.label })),
               ].map((l) => (
                 <a

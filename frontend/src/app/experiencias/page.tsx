@@ -61,7 +61,7 @@ export default function ExperienciasPage() {
           auténtico y creativo.
         </p>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 md:grid-cols-3">
+        <div className="mt-10 grid items-start gap-5 sm:grid-cols-2 md:grid-cols-3">
           {items.map((i) => {
             const Icon = CATALOGO_ICONOS[i.icono] ?? UtensilsCrossed;
             const primary = i.mod[0];

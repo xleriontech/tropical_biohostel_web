@@ -338,7 +338,7 @@ export default function HomePage() {
             <div className="flex flex-col justify-center gap-3 bg-black/20 p-8 sm:p-10">
               <p className="text-xs uppercase tracking-[0.2em] text-white/60">Lo que lo hace único</p>
               {[
-                "Cabaña hexagonal de ~5 m² · ladrillo prensado y materiales de la finca",
+                "Cabaña hexagonal de 25 m² (5 × 5 m) · ladrillo prensado y materiales de la finca",
                 "Mándalas, runas, matices y pisos rústicos hechos a mano",
                 "Baño con ducha + pileta natural al aire libre entre vegetación",
                 "Ranas, mariposas, colibríes y criaturas del bosque",

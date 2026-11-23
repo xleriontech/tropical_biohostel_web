@@ -773,3 +773,12 @@ details[open] > .card-inner { background: var(--crema); }
 [data-seccion="siembra"] .btn-sol:hover {
   background: hsl(var(--sol) / 0.88);
 }
+
+@keyframes butterfly-flap-left { 0%,100% { transform: rotateY(0deg); } 50% { transform: rotateY(55deg); } }
+@keyframes butterfly-flap-right { 0%,100% { transform: rotateY(0deg); } 50% { transform: rotateY(-55deg); } }
+.butterfly-wing { transform-origin: 32px 34px; }
+.butterfly-wing-left { animation: butterfly-flap-left .28s ease-in-out infinite; }
+.butterfly-wing-right { animation: butterfly-flap-right .28s ease-in-out infinite; }
+.has-butterfly-cursor, .has-butterfly-cursor * { cursor: none !important; }
+@media (prefers-reduced-motion: reduce) { .butterfly-wing-left, .butterfly-wing-right { animation: none; } }
+@media (pointer: coarse) { .butterfly-cursor { display: none !important; } }

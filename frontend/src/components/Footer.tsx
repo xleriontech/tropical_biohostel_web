@@ -24,6 +24,13 @@ export default function Footer() {
             <a href="/en" className="text-primary hover:underline">Read in English</a>
           </p>
           <div className="mt-5">
+            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Contacto</p>
+            <div className="mt-2 flex flex-col gap-2 text-sm">
+              <a href="tel:+573209079174" className="font-medium text-foreground hover:text-primary hover:underline">+57 320 907 9174</a>
+              <a href="https://wa.me/573209079174" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:text-primary hover:underline">WhatsApp: +57 320 907 9174</a>
+            </div>
+          </div>
+          <div className="mt-5">
             <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Síguenos</p>
             <a
               href={INSTAGRAM_URL}
@@ -83,7 +90,7 @@ export default function Footer() {
         <p className="mt-1.5">
           Sitio desarrollado por{" "}
           <a href="/xlerion" className="font-semibold text-primary hover:underline">
-            Xlerion Disruptive Tech - Colombia
+            Xlerion - Colombia
           </a>
           {" · "}
           <a

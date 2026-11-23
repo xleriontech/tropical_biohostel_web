@@ -1,8 +1,8 @@
 import { Brain, Code2, Cpu, Leaf, Mail, Phone } from "lucide-react";
 
 export const metadata = {
-  title: "Xlerion Disruptive Tech - Colombia · Quiénes hicieron este sitio",
-  description: "Xlerion Disruptive Tech - Colombia: empresa de tecnología que desarrolló la plataforma de Tropical Biohostel.",
+  title: "Xlerion - Colombia · Quiénes hicieron este sitio",
+  description: "Xlerion - Colombia: empresa de tecnología que desarrolló la plataforma de Tropical Biohostel.",
 };
 
 const PILARES = [
@@ -47,7 +47,7 @@ export default function XlerionPage() {
           <Cpu className="mr-1 inline h-4 w-4" /> Quiénes hicieron este sitio
         </p>
         <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">
-          Xlerion Disruptive Tech - Colombia
+          Xlerion - Colombia
         </h1>
         <p className="mt-3 max-w-2xl text-lg text-white/85">
           Empresa colombiana de tecnología disruptiva. Diseñamos y desarrollamos esta plataforma
@@ -71,7 +71,7 @@ export default function XlerionPage() {
       <section className="mt-8 rounded-2xl border bg-white p-6 shadow-sm sm:p-8">
         <h2 className="font-display text-2xl font-semibold">Fundadores</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Las personas detrás de Xlerion Disruptive Tech - Colombia.
+          Las personas detrás de Xlerion - Colombia.
         </p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {[

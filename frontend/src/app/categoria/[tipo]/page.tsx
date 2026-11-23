@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import AdCarousel from "@/components/AdCarousel";
 import { TipoIcon } from "@/components/icons";
@@ -78,8 +78,13 @@ const RATING_OPTIONS = [
 
 export default function CategoryPage() {
   const params = useParams();
+  const router = useRouter();
   const tipoSlug = params?.tipo as string;
   const category = CATEGORY_MAP[tipoSlug];
+
+  useEffect(() => {
+    if (tipoSlug === "actividades") router.replace("/experiencias");
+  }, [tipoSlug, router]);
 
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -174,6 +179,40 @@ export default function CategoryPage() {
 
       {/* Content Section */}
       <div className="mx-auto max-w-7xl px-4 py-8">
+        {tipoSlug === "hostales" && (
+          <section className="mb-12">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-primary">Nuestros Alojamientos</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              Tres formas de habitar la naturaleza
+            </h2>
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
+              <a href="/cosmic-bungalow" className="group rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+                <h3 className="font-display text-xl font-semibold text-foreground group-hover:text-primary">Cosmic Bungalow</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Una pieza de arquitectura orgánica con diseño hexagonal (5 × 5 m), construida artesanalmente en guadua y ladrillo. Totalmente equipada para una estadía sin preocupaciones, cuenta con un baño amplio y una pileta al aire libre privada para refrescarte bajo el cielo abierto.
+                </p>
+                <p className="mt-4 text-sm font-semibold text-primary">$360.000 / noche</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary">Ver alojamiento <ArrowRight className="h-3.5 w-3.5" /></span>
+              </a>
+              <a href="/cabana-de-la-luna" className="group rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+                <h3 className="font-display text-xl font-semibold text-foreground group-hover:text-primary">Cabaña de la Luna</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Un espacio cálido y acogedor de 5 × 5 m, completamente equipado y pensado para el máximo confort. Dispone de un amplio baño y un cómodo vestier, ideal para desconectarte con todas las comodidades a tu alcance. (Capacidad conjunta entre ambas cabañas: hasta 7 personas).
+                </p>
+                <p className="mt-4 text-sm font-semibold text-primary">$360.000 / noche</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary">Ver alojamiento <ArrowRight className="h-3.5 w-3.5" /></span>
+              </a>
+              <a href="/glamping" className="group rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+                <h3 className="font-display text-xl font-semibold text-foreground group-hover:text-primary">Glamping</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  La combinación perfecta entre aventura y confort. Diseñado para grupos o familias de hasta 4 personas que desean dormir inmersos en los sonidos del bosque sin renunciar a una estadía placentera.
+                </p>
+                <p className="mt-4 text-sm font-semibold text-primary">$120.000 por persona / noche</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary">Ver alojamiento <ArrowRight className="h-3.5 w-3.5" /></span>
+              </a>
+            </div>
+          </section>
+        )}
         {/* Search & Filters */}
         <div className="mb-8 rounded-xl border bg-white p-4 sm:p-6 shadow-sm">
           <div className="flex flex-col sm:flex-row gap-4">
@@ -190,27 +229,29 @@ export default function CategoryPage() {
               />
             </div>
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground mr-1">Calificación:</span>
-            {RATING_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setCalificacionMin(opt.value)}
-                className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
-                  calificacionMin === opt.value
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "border border-input bg-secondary/50 text-muted-foreground hover:text-foreground hover:border-foreground/20"
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-            {searchQuery && (
-              <span className="ml-auto text-xs text-muted-foreground">
-                {filteredProperties.length} de {total} resultados
-              </span>
-            )}
-          </div>
+          {!(tipoSlug === "actividades" && properties.length === 0) && (
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground mr-1">Calificación:</span>
+              {RATING_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setCalificacionMin(opt.value)}
+                  className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
+                    calificacionMin === opt.value
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "border border-input bg-secondary/50 text-muted-foreground hover:text-foreground hover:border-foreground/20"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+              {searchQuery && (
+                <span className="ml-auto text-xs text-muted-foreground">
+                  {filteredProperties.length} de {total} resultados
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Ad Banner */}

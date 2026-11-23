@@ -50,6 +50,7 @@ export default function CosmicBungalowPage() {
           <div className="mx-auto mt-8 max-w-xl rounded-2xl border border-white/25 bg-white/10 p-6 backdrop-blur-sm">
             <p className="font-display text-3xl font-semibold text-white">{t.precio}</p>
             <p className="mt-1 text-sm text-white/75">{t.precioDetalle}</p>
+            <p className="mt-1 text-sm font-medium text-emerald-200">{lang === "es" ? "Incluido el Desayuno" : "Breakfast included"}</p>
             <p className="mt-2 text-sm text-emerald-200">{t.precioAdicional}</p>
           </div>
 
