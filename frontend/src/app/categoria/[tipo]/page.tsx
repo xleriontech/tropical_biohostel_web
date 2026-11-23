@@ -5,7 +5,8 @@ import { useParams } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import AdCarousel from "@/components/AdCarousel";
 import { TipoIcon } from "@/components/icons";
-import { Home, Search } from "lucide-react";
+import { Home, Search, ArrowRight } from "lucide-react";
+import { EXPERIENCIAS_CATALOGO } from "@/lib/contenido";
 
 export const runtime = "edge";
 
@@ -225,31 +226,62 @@ export default function CategoryPage() {
             ))}
           </div>
         ) : filteredProperties.length === 0 ? (
-          <div className="py-16 text-center">
-            <p className="mb-4 flex justify-center">
-              {searchQuery ? (
-                <Search className="h-12 w-12 text-muted-foreground/40" />
-              ) : (
-                <Home className="h-12 w-12 text-muted-foreground/40" />
+          tipoSlug === "actividades" && !searchQuery && calificacionMin === 0 ? (
+            <div>
+              <p className="mb-6 text-sm text-muted-foreground">
+                Explora nuestras experiencias en la finca. Para ver el catálogo completo, visita{" "}
+                <a href="/experiencias" className="font-semibold text-primary hover:underline">Experiencias</a>.
+              </p>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {EXPERIENCIAS_CATALOGO.es.items.map((item) => (
+                  <a
+                    key={item.id}
+                    href="/experiencias"
+                    className="group overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md"
+                  >
+                    <div className="h-48 overflow-hidden">
+                      <img src={item.imagen} alt={item.titulo} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    </div>
+                    <div className="p-5">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-primary">{item.categoria}</p>
+                      <p className="mt-1 font-semibold text-foreground">{item.titulo}</p>
+                      <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{item.desc}</p>
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className="text-sm font-semibold text-sol">{item.mod[0]?.precio}</span>
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-primary">Ver más <ArrowRight className="h-3.5 w-3.5" /></span>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="py-16 text-center">
+              <p className="mb-4 flex justify-center">
+                {searchQuery ? (
+                  <Search className="h-12 w-12 text-muted-foreground/40" />
+                ) : (
+                  <Home className="h-12 w-12 text-muted-foreground/40" />
+                )}
+              </p>
+              <h3 className="text-lg font-semibold text-foreground mb-1">
+                {searchQuery ? "Sin resultados" : "No hay propiedades disponibles"}
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                {searchQuery
+                  ? `No encontramos propiedades en "${category.label}" que coincidan con "${searchQuery}". Intenta con otros términos.`
+                  : `Actualmente no hay propiedades disponibles en ${category.label}${calificacionMin > 0 ? " con la calificación seleccionada" : ""}.`}
+              </p>
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-input px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Limpiar búsqueda
+                </button>
               )}
-            </p>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
-              {searchQuery ? "Sin resultados" : "No hay propiedades disponibles"}
-            </h3>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              {searchQuery
-                ? `No encontramos propiedades en "${category.label}" que coincidan con "${searchQuery}". Intenta con otros términos.`
-                : `Actualmente no hay propiedades disponibles en ${category.label}${calificacionMin > 0 ? " con la calificación seleccionada" : ""}.`}
-            </p>
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-input px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Limpiar búsqueda
-              </button>
-            )}
-          </div>
+            </div>
+          )
         ) : (
           <>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

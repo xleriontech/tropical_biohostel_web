@@ -7,7 +7,6 @@ import { Brain, BookOpen, ChevronDown, Coffee, Compass, Flower2, HeartHandshake,
 import SiteBrand from "./SiteBrand";
 
 const EXPLORAR_LINKS = [
-  { href: "/cosmic-bungalow", label: "Cosmic Bungalow", Icon: MoonStar },
   { href: "/territorio", label: "Territorio", Icon: Leaf },
   { href: "/gastronomia", label: "Gastronomía", Icon: UtensilsCrossed },
   { href: "/comidas", label: "Menús y Comidas", Icon: UtensilsCrossed },
@@ -86,16 +85,22 @@ export default function NavBar() {
           </a>
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-3 mr-4 border-r pr-4 nav-divide">
-              <a href="/busqueda-inteligente" title="Zemisqua · Buscador ancestral" className="flex items-center gap-1.5 text-sm font-medium text-[hsl(var(--menu))] hover:opacity-85">
-                <Brain className="h-4 w-4" />
-                Zemisqua
-              </a>
-              <a href="/cosmic-bungalow" className="nav-link text-sm font-semibold">
-                Cosmic Bungalow
-              </a>
-              <a href="/categoria/hostales" className="nav-link text-sm">
-                Hospedaje
-              </a>
+              <div className="group relative">
+                <button className="nav-link flex items-center gap-1 text-sm">
+                  Hospedaje <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+                </button>
+                <div className="invisible absolute left-0 top-full z-50 w-52 translate-y-1 pt-2 opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                  <div className="themed-drop overflow-hidden rounded-xl border bg-white shadow-lg">
+                    <a
+                      href="/cosmic-bungalow"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:text-foreground"
+                    >
+                      <MoonStar className="h-4 w-4" />
+                      Cosmic Bungalow
+                    </a>
+                  </div>
+                </div>
+              </div>
               <a href="/categoria/actividades" className="nav-link text-sm">
                 Experiencias
               </a>
@@ -118,6 +123,10 @@ export default function NavBar() {
                   </div>
                 </div>
               </div>
+              <a href="/busqueda-inteligente" title="Zemisqua · Buscador ancestral" className="flex items-center gap-1.5 text-sm font-medium text-[hsl(var(--menu))] hover:opacity-85">
+                <Brain className="h-4 w-4" />
+                Zemisqua
+              </a>
             </div>
             <a
               href="/donaciones"
@@ -165,16 +174,12 @@ export default function NavBar() {
         {menuOpen && (
           <div className="border-t px-4 py-3 md:hidden">
             <div className="grid gap-1">
-              <a href="/busqueda-inteligente" className="m-active flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium">
-                <Brain className="h-4 w-4" /> Zemisqua · Buscador ancestral
-              </a>
               {[
-                { href: "/cosmic-bungalow", label: "Cosmic Bungalow" },
                 { href: "/categoria/hostales", label: "Hospedaje" },
+                { href: "/categoria/actividades", label: "Experiencias" },
                 ...EXPLORAR_LINKS.filter(
-                  (l) => l.href !== "/cosmic-bungalow" && l.href !== "/categoria/actividades"
+                  (l) => l.href !== "/categoria/actividades"
                 ).map((l) => ({ href: l.href, label: l.label })),
-                { href: "/categoria/actividades", label: "Actividades y tours" },
               ].map((l) => (
                 <a
                   key={l.href}
@@ -184,6 +189,9 @@ export default function NavBar() {
                   {l.label}
                 </a>
               ))}
+              <a href="/busqueda-inteligente" className="m-active flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium">
+                <Brain className="h-4 w-4" /> Zemisqua · Buscador ancestral
+              </a>
               {user ? (
                 <>
                   {(user.role === "admin" || user.role === "propietario") && (
