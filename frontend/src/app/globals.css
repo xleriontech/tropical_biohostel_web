@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fuente manuscrita/hand usada por el manual de imagen (Caveat) para toques creativos */
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap");
+
 :root {
   --background: 43 50% 92%;
   --foreground: 27 33% 11%;
@@ -220,6 +223,26 @@
 .font-display {
   font-family: var(--font-nido-serif), "Fraunces", ui-serif, Georgia, serif;
 }
+
+/* Tipografía manuscrita/hand para toques creativos del manual (Caveat) */
+.font-hand {
+  font-family: "Caveat", cursive, var(--font-nido-serif), Georgia, serif;
+  font-weight: 400;
+}
+
+/* Markers de details ocultos y apertura resaltada */
+details summary::-webkit-details-marker { display: none; }
+details summary::marker { display: none; }
+details[open] summary .chevron { transform: rotate(180deg); }
+details[open] { position: relative; }
+
+/* Cursores y estados de cards */
+details[open] .card-inner { border-color: var(--sol); }
+details[open] .card-inner { box-shadow: 0 20px 40px -8px rgb(232 169 74 / 0.18); }
+details[open] { z-index: 1; }
+
+/* Hover translúcido en las tarjetas (estilo manual: activación sin saturación) */
+details[open] > .card-inner { background: var(--crema); }
 
 /* Distribución de superficies por tema */
 [data-theme="colombia"] {

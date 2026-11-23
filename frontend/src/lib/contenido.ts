@@ -147,6 +147,299 @@ export const EXPERIENCIAS = {
   },
 };
 
+export const EXPERIENCIAS_CATALOGO = {
+  es: {
+    items: [
+      {
+        id: "cafe-artesanoal",
+        icono: "utensils",
+        categoria: "Gastronomía y Café",
+        imagen: "/fotos/sitio/tropical-cafe2.jpg",
+        titulo: "El ritual del café artesanal (De la cosecha a la taza)",
+        tagline: "Conversión con la tradición campesina",
+        desc: "Vive el verdadero oficio cafetero con tus propias manos: trilla, selección, tostado artesanal y molienda fresca bajo la guía de la finca.",
+        incluye: [
+          "Taller práctico completo (trilla, selección, tueste y molienda)",
+          "Refrigerios de la finca",
+          "Almuerzo tradicional",
+        ],
+        mod: [
+          { label: "Plan Estadía Total", precio: "$300.000 COP", detalle: "Incluye alojamiento — Mejor valor: quédate a descansar por solo $150.000 adicionales" },
+          { label: "Plan Pasadía", precio: "$150.000 COP", detalle: "Sin alojamiento" },
+        ],
+      },
+      {
+        id: "alquimia-cafe",
+        icono: "sprout",
+        categoria: "Gastronomía y Café",
+        imagen: "/fotos/sitio/tropical-granos-cafe.jpg",
+        titulo: "Alquimia y Ciencia del Café: Genética, Cata y Creaciones",
+        tagline: "Conoce el grano desde sus genes hasta tu bebida",
+        desc: "Descubre la genética del café orgánico, las diferencias reales con el químico y catarás 3 variedades. Termina preparando 2 creaciones exclusivas de café: bebidas de autor o postres.",
+        incluye: [
+          "Taller de tueste y molienda artesanal",
+          "Cata comparativa de 3 variedades",
+          "Charla de genética y cultivo orgánico",
+          "Preparación de 2 recetas con café",
+          "Refrigerios y almuerzo",
+        ],
+        mod: [
+          { label: "Plan Estadía Total", precio: "$300.000 COP", detalle: "Más elegido: extiende tu experiencia con una noche de alojamiento" },
+          { label: "Plan Pasadía", precio: "$150.000 COP", detalle: "Sin alojamiento" },
+        ],
+      },
+      {
+        id: "nutricion-conciente",
+        icono: "droplet",
+        categoria: "Bienestar y Nutrición",
+        imagen: "/fotos/sitio/tropical-mandarinas.jpg",
+        titulo: "Nutrición Consciente: Reeducción Alimenticia desde la Tierra",
+        tagline: "Transforma tus hábitos desde el origen",
+        desc: "Aprende a nutrir tu cuerpo con criterio: exploramos las propiedades reales y el impacto biológico de 3 frutas, 3 verduras y 3 suplementos o proteínas vegetales clave. Una guía tangible para traer el bienestar de la huerta a tu mesa.",
+        incluye: [
+          "Taller práctico de reeducación alimenticia",
+          "Guía de propiedades nutricionales",
+          "Refrigerios saludables y almuerzo balanceado",
+        ],
+        mod: [
+          { label: "Plan Estadía Total", precio: "$300.000 COP", detalle: "Mejor valor: transforma tus hábitos sin afán de regreso" },
+          { label: "Plan Pasadía", precio: "$150.000 COP", detalle: "Sin alojamiento" },
+        ],
+      },
+      {
+        id: "banos-ancestrales",
+        icono: "flame",
+        categoria: "Relajación y Bienestar",
+        imagen: "/fotos/sitio/tropical-naturaleza.jpg",
+        titulo: "Baños Ancestrales y Ritual de Calma Nocturna",
+        tagline: "Silencio, aromaterapia y privacidad total",
+        desc: "Escape perfecto para liberar el estrés acumulado: ritual de jacuzzi iluminado, kit de plantas medicinales, kit de aceites esenciales y ambientación pensada para consentir todos tus sentidos en la oscuridad.",
+        incluye: [
+          "Kit personalizado de plantas medicinales",
+          "Kit de aceites esenciales",
+          "Ritual de jacuzzi iluminado con velas",
+          "Uso de bata y toallas",
+          "1 noche de alojamiento exclusivo y desayuno",
+        ],
+        mod: [
+          { label: "Experiencia inmersiva todo incluido", precio: "$370.000 COP", detalle: "" },
+        ],
+      },
+      {
+        id: "arte-sanador",
+        icono: "sparkles",
+        categoria: "Arte y Espiritualidad",
+        imagen: "/fotos/sitio/tropical-gente2.jpg",
+        titulo: "Arte Sanador en la Piel: Jagua, Achiote y Limpieza Energética",
+        tagline: "Pintura corporal, chakras y alimentación consciente",
+        desc: "Profunda introspección: ritual de pintura corporal con pigmentos sagrados (jagua y achiote) en puntos energéticos, limpieza energética y alimentación limpia y vegana en medio de la naturaleza.",
+        incluye: [
+          "Ritual de pintura corporal con jagua y achiote en puntos energéticos",
+          "Sesión de limpieza energética",
+          "Alimentación completa sana y vegana (desayuno, almuerzo y cena)",
+          "1 noche de alojamiento",
+        ],
+        mod: [
+          { label: "Retiro todo incluido", precio: "$450.000 COP", detalle: "" },
+        ],
+      },
+      {
+        id: "expedicion-silenciosa",
+        icono: "map",
+        categoria: "Observación Natural",
+        imagen: "/fotos/sitio/tropical-flores2.jpg",
+        titulo: "Expedición Silenciosa: Avistamiento Autónomo de Aves",
+        tagline: "Camina a tu ritmo y descubre la fauna de la finca",
+        desc: "Pasea por la reserva natural a tu propio ritmo con nuestra guía estacional: identifica y contempla las especies nativas entre frutales y bosques, incluyendo el mirador de 360°.",
+        incluye: [
+          "Acceso exclusivo a la finca durante todo el día y guía estacional de aves local",
+        ],
+        mod: [
+          { label: "Plan Inmersión Completa", precio: "$300.000 COP", detalle: "Incluye alojamiento + desayuno, almuerzo y cena (Mejor valor: captura el amanecer y atardecer)" },
+          { label: "Plan Explorador", precio: "$100.000 COP", detalle: "Solo ingreso y guía, sin alimentación ni alojamiento" },
+        ],
+      },
+      {
+        id: "ritmos-latinos",
+        icono: "zap",
+        categoria: "Movimiento y Alegría",
+        imagen: "/fotos/sitio/tropical-cocina2.jpg",
+        titulo: "Ritmos Latinos al Natural: Sabor, Coordinación y Alegría",
+        tagline: "Energía positiva en medio del bosque",
+        desc: "Disfruta de una hora llena de energía positiva. Elige el ritmo latinoamericano que siempre quisiste y domina sus pasos básicos a través de una metodología progresiva: calentamiento, ritmo y movimiento, calma/refuerzo e integración final.",
+        incluye: [
+          "Clase práctica de 1 hora en el ritmo latino de tu elección",
+        ],
+        mod: [
+          { label: "Plan Escapada con Ritmo", precio: "$300.000 COP", detalle: "Incluye alojamiento y desayuno (Mejor valor: convierte tu clase en una escapada)" },
+          { label: "Plan Clase Única", precio: "$150.000 COP", detalle: "Sin alojamiento ni alimentación" },
+        ],
+      },
+      {
+        id: "yoga-terapetico",
+        icono: "heart",
+        categoria: "Salud y Terapia",
+        imagen: "/fotos/sitio/tropical-vegetal.jpg",
+        titulo: "Yoga Terapéutico a la Medida (Jornada de 3 Horas)",
+        tagline: "Atención personalizada al servicio de la salud física",
+        desc: "Jornada intensiva de 3 horas alrededor de tus necesidades: técnicas profundas de respiración (pranayama), movimientos conscientes y estiramientos restaurativos en nuestro mandala central rodeado de naturaleza.",
+        incluye: [
+          "Jornada terapéutica personalizada de 3 horas (respiración, postura y estiramiento)",
+        ],
+        mod: [
+          { label: "Plan Retiro Restaurativo", precio: "$350.000 COP", detalle: "Incluye alojamiento, desayuno y cena (Más elegido: alojamiento y 2 comidas por +$150.000)" },
+          { label: "Plan Jornada Terapéutica", precio: "$200.000 COP", detalle: "Sin alojamiento ni alimentación" },
+        ],
+      },
+    ],
+  },
+  en: {
+    items: [
+      {
+        id: "cafe-artesanoal",
+        icono: "utensils",
+        categoria: "Coffee & Gastronomy",
+        imagen: "/fotos/sitio/tropical-cafe2.jpg",
+        titulo: "Artisan Coffee Ritual (From harvest to cup)",
+        tagline: "Connection with peasant tradition",
+        desc: "Live the true coffee craft with your own hands: threshing, selection, roasting and fresh grinding led by the farm.",
+        incluye: [
+          "Full hands-on workshop (threshing, selection, roasting and grinding)",
+          "Farm snacks",
+          "Traditional lunch",
+        ],
+        mod: [
+          { label: "Stay Package", precio: "$300.000 COP", detalle: "Includes lodging — Best value: stay for just $150.000 more" },
+          { label: "Day Trip", precio: "$150.000 COP", detalle: "No lodging" },
+        ],
+      },
+      {
+        id: "alquimia-cafe",
+        icono: "sprout",
+        categoria: "Coffee & Gastronomy",
+        imagen: "/fotos/sitio/tropical-granos-cafe.jpg",
+        titulo: "Coffee Alchemy: Genetics, Tasting & Creations",
+        tagline: "Know the grain from its genes to your drink",
+        desc: "Discover coffee genetics, organic vs chemical differences, and taste 3 varieties. Wrap up creating 2 exclusive coffee creations: house beverages or pastries.",
+        incluye: [
+          "Artisan roasting and grinding workshop",
+          "Tasting comparison of 3 varieties",
+          "Talk on genetics and organic farming",
+          "Preparation of 2 coffee recipes",
+          "Snacks and lunch",
+        ],
+        mod: [
+          { label: "Stay Package", precio: "$300.000 COP", detalle: "Lodging available" },
+          { label: "Day Trip", precio: "$150.000 COP", detalle: "No lodging" },
+        ],
+      },
+      {
+        id: "nutricion-conciente",
+        icono: "droplet",
+        categoria: "Wellness & Nutrition",
+        imagen: "/fotos/sitio/tropical-mandarinas.jpg",
+        titulo: "Conscious Nutrition: Re-education from the Earth",
+        tagline: "Transform your habits from the source",
+        desc: "Learn to fuel your body: exploring real properties of 3 fruits, 3 vegetables and 3 plant proteins. A tangible guide to bring the well-being of our garden to your daily table.",
+        incluye: [
+          "Hands-on nutrition re-education workshop",
+          "Nutritional properties guide",
+          "Healthy snacks and balanced lunch",
+        ],
+        mod: [
+          { label: "Stay Package", precio: "$300.000 COP", detalle: "Best value: transform your habits" },
+          { label: "Day Trip", precio: "$150.000 COP", detalle: "No lodging" },
+        ],
+      },
+      {
+        id: "banos-ancestrales",
+        icono: "flame",
+        categoria: "Relaxation & Wellness",
+        imagen: "/fotos/sitio/tropical-naturaleza.jpg",
+        titulo: "Ancestral Baths & Night Calm Ritual",
+        tagline: "Silence, aromatherapy and total privacy",
+        desc: "Perfect escape to release accumulated stress with illuminated jacuzzi ritual, medicinal plants kit and essential oils kit, in total senses immersion during the night.",
+        incluye: [
+          "Personalized medicinal plants kit",
+          "Essential oils kit",
+          "Illuminated jacuzzi ritual with candles",
+          "Robe and towels",
+          "1 exclusive night with breakfast",
+        ],
+        mod: [
+          { label: "Immersive Stay Package", precio: "$370.000 COP", detalle: "" },
+        ],
+      },
+      {
+        id: "arte-sanador",
+        icono: "sparkles",
+        categoria: "Art & Spirituality",
+        imagen: "/fotos/sitio/tropical-gente2.jpg",
+        titulo: "Skin Healer: Jagua, Achiote & Energetic Cleansing",
+        tagline: "Body painting, chakras and conscious eating",
+        desc: "Deep introspection: ritual of body painting with sacred natural pigments (jagua and achiote) on chakra points, energetic cleansing and clean vegan meals in the wild.",
+        incluye: [
+          "Body painting ritual with jagua and achiote",
+          "Energetic cleansing session",
+          "Healthy vegan and clean meals",
+          "1 night with lodging",
+        ],
+        mod: [
+          { label: "All-Inclusive Retreat", precio: "$450.000 COP", detalle: "" },
+        ],
+      },
+      {
+        id: "expedicion-silenciosa",
+        icono: "map",
+        categoria: "Nature Observation",
+        imagen: "/fotos/sitio/tropical-flores2.jpg",
+        titulo: "Silent Expedition: Autonomous Bird Watching",
+        tagline: "Walk at your own pace and discover the farm fauna",
+        desc: "Guided bird watch using our seasonal guide; explore the 14.000 m² of nature reserve, including the 360° mirador. Identify and contemplate the native species.",
+        incluye: [
+          "Full-day exclusive access and local bird guide calendar",
+        ],
+        mod: [
+          { label: "Full Immersion Package", precio: "$300.000 COP", detalle: "Includes lodging, breakfast, lunch and dinner (Best value: sunrise & sunset included)" },
+          { label: "Explorer Package", precio: "$100.000 COP", detalle: "Guide and access only, no meals or lodging" },
+        ],
+      },
+      {
+        id: "ritmos-latinos",
+        icono: "zap",
+        categoria: "Movement & Joy",
+        imagen: "/fotos/sitio/tropical-cocina2.jpg",
+        titulo: "Latin Rhythms Naturally: Flavor, Coordination & Joy",
+        tagline: "Positive energy in the middle of the forest",
+        desc: "A dynamic hour learning the basic steps of your chosen latin rhythm, through a progressive methodology: warm-up, rhythm & movement, cool down and final integration.",
+        incluye: [
+          "1-hour practical latin class of your choice",
+        ],
+        mod: [
+          { label: "Stay & Rhythm Package", precio: "$300.000 COP", detalle: "Includes lodging and breakfast (Best value: turn your class into a getaway)" },
+          { label: "Single Class Package", precio: "$150.000 COP", detalle: "No lodging or meals" },
+        ],
+      },
+      {
+        id: "yoga-terapetico",
+        icono: "heart",
+        categoria: "Health & Therapy",
+        imagen: "/fotos/sitio/tropical-vegetal.jpg",
+        titulo: "Therapeutic Yoga (3-Hour Session)",
+        tagline: "Personalized care for your physical health",
+        desc: "Intensive 3-hour session tailored to your needs: deep breathing (pranayama), conscious movements and restorative stretches in our central mandala, surrounded by nature.",
+        incluye: [
+          "Personalized 3-hour therapeutic session (breathing, posture, stretch)",
+        ],
+        mod: [
+          { label: "Restorative Retreat Package", precio: "$350.000 COP", detalle: "Includes lodging, breakfast and dinner (Plus $150.000 for 2 meals)" },
+          { label: "Therapeutic Session Package", precio: "$200.000 COP", detalle: "No lodging or meals" },
+        ],
+      },
+    ],
+  },
+};
+
 // Rutas del café — contenido tomado de docs/TropicalGuiaCafe.pdf (Guía Café Tropical Biohostel).
 export const RUTAS = {
   es: {
