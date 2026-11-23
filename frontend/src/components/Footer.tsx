@@ -51,6 +51,7 @@ export default function Footer() {
             <a href="/busqueda-inteligente" className="hover:underline">Zemisqua · Buscador ancestral</a>
             <a href="/guardados" className="hover:underline">Guardados</a>
             <a href="/privacidad" className="hover:underline text-xs">Política de privacidad</a>
+            <a href="/terminos" className="hover:underline text-xs">Términos y condiciones</a>
           </div>
         </div>
         <div>
