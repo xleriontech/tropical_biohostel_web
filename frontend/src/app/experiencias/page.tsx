@@ -77,12 +77,12 @@ export default function ExperienciasPage() {
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-tierra/55 via-tierra/10 to-transparent transition-opacity duration-300 group-hover:opacity-90" />
-                  <div className="absolute bottom-0 left-0 right-0 p-5 text-crema">
-                    <Icon className="h-5 w-5 text-sol" />
-                    <h3 className="mt-2 font-display text-lg font-semibold sm:text-xl">{i.titulo}</h3>
-                    <p className="mt-1 font-hand text-sm text-sol">{i.tagline}</p>
-                    <p className="mt-2 font-display text-2xl font-semibold sm:text-3xl text-sol">{primary.precio}</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent transition-opacity duration-300 group-hover:opacity-95" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5 text-crema drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                    <Icon className="h-5 w-5 text-sol drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" />
+                    <h3 className="mt-2 font-display text-lg font-semibold leading-snug sm:text-xl">{i.titulo}</h3>
+                    <p className="mt-1 font-hand text-base text-sol drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{i.tagline}</p>
+                    <p className="mt-2 font-display text-2xl font-semibold sm:text-3xl text-sol drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{primary.precio}</p>
                   </div>
                   <ChevronDown className="chevron absolute bottom-4 right-4 h-6 w-6 text-sol" />
                 </summary>
@@ -90,7 +90,7 @@ export default function ExperienciasPage() {
                   <p className="text-sm leading-relaxed text-foreground sm:text-base">{i.desc}</p>
                   <ul className="space-y-2">
                     {i.incluye.map((x, k) => (
-                      <li key={k} className="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground">
+                      <li key={k} className="flex items-start gap-2 text-sm leading-relaxed text-foreground/80">
                         <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-sol" />
                         {x}
                       </li>
@@ -102,7 +102,7 @@ export default function ExperienciasPage() {
                         <span className="font-semibold text-foreground">{m.label}</span>
                         <span className="text-right font-display font-semibold text-sol">{m.precio}</span>
                       </p>
-                      {m.detalle && <p className="text-xs text-muted-foreground/80">{m.detalle}</p>}
+                      {m.detalle && <p className="text-xs text-foreground/70">{m.detalle}</p>}
                     </div>
                   ))}
                 </div>
