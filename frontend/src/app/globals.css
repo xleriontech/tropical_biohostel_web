@@ -774,11 +774,11 @@ details[open] > .card-inner { background: var(--crema); }
   background: hsl(var(--sol) / 0.88);
 }
 
-@keyframes butterfly-flap-left { 0%,100% { transform: rotateY(0deg); } 50% { transform: rotateY(55deg); } }
-@keyframes butterfly-flap-right { 0%,100% { transform: rotateY(0deg); } 50% { transform: rotateY(-55deg); } }
-.butterfly-wing { transform-origin: 32px 34px; }
-.butterfly-wing-left { animation: butterfly-flap-left .28s ease-in-out infinite; }
-.butterfly-wing-right { animation: butterfly-flap-right .28s ease-in-out infinite; }
-.has-butterfly-cursor, .has-butterfly-cursor * { cursor: none !important; }
-@media (prefers-reduced-motion: reduce) { .butterfly-wing-left, .butterfly-wing-right { animation: none; } }
-@media (pointer: coarse) { .butterfly-cursor { display: none !important; } }
+@keyframes hb-flap-left { 0%,100% { transform: rotateY(0deg) rotateZ(0deg); } 50% { transform: rotateY(70deg) rotateZ(-10deg); } }
+@keyframes hb-flap-right { 0%,100% { transform: rotateY(0deg) rotateZ(0deg); } 50% { transform: rotateY(-70deg) rotateZ(10deg); } }
+.hb-wing { transform-origin: 32px 28px; }
+.hb-wing-left { animation: hb-flap-left .08s linear infinite; }
+.hb-wing-right { animation: hb-flap-right .08s linear infinite; }
+.has-hummingbird-cursor, .has-hummingbird-cursor * { cursor: none !important; }
+@media (prefers-reduced-motion: reduce) { .hb-wing-left, .hb-wing-right { animation: none; } }
+@media (pointer: coarse) { .hummingbird-cursor { display: none !important; } }

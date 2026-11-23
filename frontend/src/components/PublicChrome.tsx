@@ -7,7 +7,7 @@ import MobileNav from "./MobileNav";
 import SearchModal from "./SearchModal";
 import ChatWidget from "./ChatWidget";
 import DonarFloat from "./DonarFloat";
-import ButterflyCursor from "./ButterflyCursor";
+import HummingbirdCursor from "./HummingbirdCursor";
 
 /** Chrome público. En /admin* se oculta para no chocar con el panel fijo. */
 export default function PublicChrome({ slot }: { slot: "top" | "bottom" }) {
@@ -21,7 +21,7 @@ export default function PublicChrome({ slot }: { slot: "top" | "bottom" }) {
       <SearchModal />
       <ChatWidget />
       <DonarFloat />
-      <ButterflyCursor />
+      <HummingbirdCursor />
     </>
   );
 }
