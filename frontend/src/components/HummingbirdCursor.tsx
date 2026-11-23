@@ -9,6 +9,7 @@ export default function HummingbirdCursor() {
     const el = ref.current;
     if (!el) return;
     const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (coarse) return;
 
     let x = window.innerWidth / 2;
@@ -25,6 +26,37 @@ export default function HummingbirdCursor() {
     const onLeave = () => { el.style.opacity = "0"; };
     const onEnter = () => { el.style.opacity = "1"; };
 
+    const spawnFeathers = (cx: number, cy: number) => {
+      if (reduce) return;
+      const colors = ["#2A9D8F", "#34A0A4", "#E9C46A", "#F4A261", "#1B4332"];
+      const count = 14;
+      for (let i = 0; i < count; i++) {
+        const f = document.createElement("span");
+        f.className = "hb-feather";
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.6;
+        const dist = 40 + Math.random() * 55;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist;
+        const rot = Math.random() * 540 - 270;
+        const size = 10 + Math.random() * 8;
+        f.style.cssText = `left:${cx}px;top:${cy}px;--dx:${dx}px;--dy:${dy}px;--rot:${rot}deg;width:${size}px;height:${size * 1.9}px;background:${colors[i % colors.length]};`;
+        document.body.appendChild(f);
+        f.addEventListener("animationend", () => f.remove(), { once: true });
+      }
+    };
+
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      const termLink = target?.closest('a[href="/terminos"], a[href*="terminos"]') as HTMLAnchorElement | null;
+      if (!termLink) return;
+      spawnFeathers(e.clientX, e.clientY);
+      if (e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+        e.preventDefault();
+        const href = termLink.href;
+        window.setTimeout(() => { window.location.href = href; }, 650);
+      }
+    };
+
     const tick = () => {
       x += (tx - x) * 0.2;
       y += (ty - y) * 0.2;
@@ -37,6 +69,7 @@ export default function HummingbirdCursor() {
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseenter", onEnter);
+    document.addEventListener("click", onClick);
     raf = requestAnimationFrame(tick);
     document.documentElement.classList.add("has-hummingbird-cursor");
 
@@ -44,6 +77,7 @@ export default function HummingbirdCursor() {
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("mouseenter", onEnter);
+      document.removeEventListener("click", onClick);
       cancelAnimationFrame(raf);
       document.documentElement.classList.remove("has-hummingbird-cursor");
     };
