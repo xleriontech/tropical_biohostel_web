@@ -95,6 +95,10 @@ $router->add('POST', '/admin/ingestion/actualizaciones/{id}/resolver', [$h, 'ing
 $router->add('POST', '/admin/ingestion/google', [$h, 'ingestionGoogle']);
 $router->add('POST', '/admin/ingestion/enriquecer', [$h, 'ingestionEnriquecer']);
 $router->add('GET', '/admin/claves/estado', [$h, 'getClavesEstado']);
+$router->add('GET', '/admin/claves', [$h, 'getClaves']);
+$router->add('PUT', '/admin/claves/{clave}', [$h, 'saveClave']);
+$router->add('DELETE', '/admin/claves/{clave}', [$h, 'deleteClave']);
+$router->add('POST', '/admin/claves/{clave}/probar', [$h, 'probarClave']);
 
 // Auth básico (admin por token configurado)
 $router->add('GET', '/auth/me', [$h, 'authMe']);

@@ -1725,6 +1725,10 @@ final class Handlers
             $rows = is_array($body['rows'] ?? null) ? $body['rows'] : [];
             $apiKey = trim((string)($body['apiKey'] ?? ''));
             if ($apiKey === '') { $apiKey = trim((string)($this->getConfigValue('googlePlacesKey', ''))); }
+            if ($apiKey === '') {
+                $cl = $this->clavesApiAll();
+                foreach (['google_places','maps','google_maps'] as $k) { if (!empty($cl[$k]['valor'])) { $apiKey = trim((string)$cl[$k]['valor']); break; } }
+            }
             if ($apiKey === '' || strlen($apiKey) < 10) {
                 Response::error('Falta una API key válida de Google Places. Habilita "Places API (New)" en Google Cloud y pega la key.', 400); return;
             }
@@ -1784,11 +1788,105 @@ final class Handlers
             Response::json(['total'=>count($out),'enriquecidos'=>0,'rows'=>$out]);
         });
     }
+    private function clavesApiAll(): array
+    {
+        $all = $this->getConfigValue('clavesApi', []);
+        return is_array($all) ? $all : [];
+    }
+
     public function getClavesEstado(): void
     {
         $this->safe(function () {
             if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
-            Response::json(['google_places'=>false]);
+            $all = $this->clavesApiAll();
+            $hasGoogle = !empty($all['google_places']['valor']) || !empty($all['maps']['valor']) || !empty($all['google_maps']['valor']);
+            Response::json(['google_places' => $hasGoogle]);
+        });
+    }
+
+    public function getClaves(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $all = $this->clavesApiAll();
+            $defaults = [
+                'google_places' => ['nombre'=>'Google Places / Maps', 'descripcion'=>'Enriquece sitios con teléfono, web, dirección y rating desde Google.', 'webUrl'=>'https://console.cloud.google.com/apis/credentials'],
+                'maps' => ['nombre'=>'Google Maps', 'descripcion'=>'Clave para mapas/integraciones de Google Maps.', 'webUrl'=>'https://console.cloud.google.com/apis/credentials'],
+            ];
+            foreach ($defaults as $k=>$d) { if (!isset($all[$k])) $all[$k] = array_merge($d, ['valor'=>'']); }
+            $out = [];
+            foreach ($all as $clave => $v) {
+                $valor = (string)($v['valor'] ?? '');
+                $out[] = [
+                    'id' => $clave,
+                    'clave' => $clave,
+                    'nombre' => (string)($v['nombre'] ?? $clave),
+                    'descripcion' => $v['descripcion'] ?? null,
+                    'webUrl' => $v['webUrl'] ?? null,
+                    'configurada' => $valor !== '',
+                    'pista' => $valor !== '' ? ('••••' . substr($valor, -4)) : null,
+                ];
+            }
+            usort($out, fn($a,$b)=>strcmp($a['clave'],$b['clave']));
+            Response::json($out);
+        });
+    }
+
+    public function saveClave(array $params): void
+    {
+        $this->safe(function () use ($params) {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $clave = preg_replace('/[^a-z0-9_]+/', '_', strtolower(trim((string)($params['clave'] ?? ''))));
+            if ($clave === '') { Response::error('Clave inválida', 400); return; }
+            $body = $this->body();
+            $all = $this->clavesApiAll();
+            $cur = is_array($all[$clave] ?? null) ? $all[$clave] : [];
+            $valor = trim((string)($body['valor'] ?? ''));
+            $all[$clave] = [
+                'nombre' => trim((string)($body['nombre'] ?? $cur['nombre'] ?? $clave)),
+                'descripcion' => array_key_exists('descripcion',$body) ? $body['descripcion'] : ($cur['descripcion'] ?? null),
+                'webUrl' => trim((string)($body['webUrl'] ?? $cur['webUrl'] ?? '')) ?: ($cur['webUrl'] ?? null),
+                'valor' => $valor !== '' ? $valor : (string)($cur['valor'] ?? ''),
+            ];
+            $this->setConfigValue('clavesApi', $all);
+            Response::json(['ok'=>true, 'clave'=>$clave, 'configurada'=>!empty($all[$clave]['valor'])]);
+        });
+    }
+
+    public function deleteClave(array $params): void
+    {
+        $this->safe(function () use ($params) {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $clave = preg_replace('/[^a-z0-9_]+/', '_', strtolower(trim((string)($params['clave'] ?? ''))));
+            $all = $this->clavesApiAll();
+            if (isset($all[$clave])) { $all[$clave]['valor'] = ''; $this->setConfigValue('clavesApi', $all); }
+            Response::json(['ok'=>true]);
+        });
+    }
+
+    public function probarClave(array $params): void
+    {
+        $this->safe(function () use ($params) {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $clave = preg_replace('/[^a-z0-9_]+/', '_', strtolower(trim((string)($params['clave'] ?? ''))));
+            $all = $this->clavesApiAll();
+            $valor = (string)($all[$clave]['valor'] ?? '');
+            if ($valor === '') { Response::json(['ok'=>false,'mensaje'=>'No hay key configurada.']); return; }
+            if (in_array($clave, ['google_places','maps','google_maps'], true)) {
+                $ch = curl_init('https://places.googleapis.com/v1/places:searchText');
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER=>true, CURLOPT_POST=>true,
+                    CURLOPT_HTTPHEADER=>['Content-Type: application/json','X-Goog-Api-Key: '.$valor,'X-Goog-FieldMask: places.id'],
+                    CURLOPT_POSTFIELDS=>json_encode(['textQuery'=>'Nocaima Cundinamarca','maxResultCount'=>1]),
+                    CURLOPT_TIMEOUT=>15, CURLOPT_CONNECTTIMEOUT=>8,
+                ]);
+                $raw = curl_exec($ch); $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE); $err = curl_error($ch); curl_close($ch);
+                if ($err) { Response::json(['ok'=>false,'mensaje'=>'Error de conexión: '.$err]); return; }
+                if ($status >= 200 && $status < 300) { Response::json(['ok'=>true,'mensaje'=>'Key válida. Places API (New) respondió correctamente.']); return; }
+                Response::json(['ok'=>false,'mensaje'=>'Google respondió HTTP '.$status.'. Verifica que "Places API (New)" esté habilitada y la key no tenga restricciones bloqueantes.']);
+                return;
+            }
+            Response::json(['ok'=>true,'mensaje'=>'Key guardada. No hay prueba automática para este tipo; se usará cuando la integración la requiera.']);
         });
     }
 }
