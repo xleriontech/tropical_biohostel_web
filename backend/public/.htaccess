@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Servir archivos/directorios existentes
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Todo lo demás va al front controller
+  RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# Bloquear acceso a archivos sensibles si alguien llega aquí
+<FilesMatch "(^\.env|config\.php|\.sql|\.md)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>

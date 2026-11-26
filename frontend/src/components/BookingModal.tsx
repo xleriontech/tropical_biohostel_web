@@ -106,16 +106,14 @@ export default function BookingModal({
     }
 
     const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Debes iniciar sesión para reservar.");
-      return;
-    }
 
     setSubmitting(true);
     try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token) headers.Authorization = `Bearer ${token}`;
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"}/reservas`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        headers,
         body: JSON.stringify({
           propiedadId,
           nombre: form.nombre,

@@ -1,8 +1,28 @@
-import { api } from "@/lib/api";
-import { Property } from "@/types";
-import PropertyDetailClient from "./PropertyDetailClient";
+import PropertyPageClient from "./PropertyPageClient";
 
-export const runtime = "edge";
+// Slugs conocidos; en build sin API se usa esta lista mínima.
+const FALLBACK_SLUGS = ["cosmic-bungalow", "_"];
+
+export async function generateStaticParams() {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
+  if (apiUrl) {
+    try {
+      const res = await fetch(`${apiUrl}/properties?limit=100`, { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        const items = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
+        const slugs = items
+          .map((p: any) => p?.slug)
+          .filter((s: any): s is string => typeof s === "string" && s.length > 0);
+        const unique = Array.from(new Set([...slugs, ...FALLBACK_SLUGS]));
+        if (unique.length > 0) return unique.map((slug) => ({ slug }));
+      }
+    } catch {
+      // Sin API en build: usar fallback.
+    }
+  }
+  return FALLBACK_SLUGS.map((slug) => ({ slug }));
+}
 
 export default async function PropertyPage({
   params,
@@ -10,27 +30,5 @@ export default async function PropertyPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  let property: Property;
-  try {
-    property = await api.getProperty(slug);
-  } catch {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <h1 className="font-display text-3xl font-semibold text-foreground">No se pudo cargar esta propiedad</h1>
-        <p className="mt-4 text-muted-foreground">
-          En este momento no podemos mostrar la información de reserva. Puedes volver a intentarlo en unos minutos o contactarnos directamente.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <a href={slug === "cosmic-bungalow" ? "/cosmic-bungalow" : "/"} className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
-            {slug === "cosmic-bungalow" ? "Volver a Cosmic Bungalow" : "Volver al inicio"}
-          </a>
-          <a href="https://wa.me/573209079174" target="_blank" rel="noopener noreferrer" className="rounded-full border border-input px-6 py-3 text-sm font-semibold text-foreground hover:bg-secondary">
-            Contactar por WhatsApp
-          </a>
-        </div>
-      </div>
-    );
-  }
-
-  return <PropertyDetailClient property={property} />;
+  return <PropertyPageClient slug={slug} />;
 }

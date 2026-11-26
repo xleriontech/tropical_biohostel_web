@@ -8,10 +8,10 @@
  * **Al actualizar la marca: sube `VERSION` aquí y en los archivos estáticos**
  * (`public/manifest.webmanifest`, `public/offline.html`, `public/sw.js`).
  */
-export const VERSION = 4;
+export const VERSION = 5;
 
 /** Icono principal (emblema de marca) con la versión de caché. */
-export const ICONO = `/icons/icon-192.png?v=${VERSION}`;
+export const ICONO = `/favicon.svg?v=${VERSION}`;
 
 /** Emblema de marca en formato vectorial, para el favicon. */
 export const MANDALA = `/favicon.svg?v=${VERSION}`;

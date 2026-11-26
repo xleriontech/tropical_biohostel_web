@@ -28,6 +28,9 @@ export default function Footer() {
             <div className="mt-2 flex flex-col gap-2 text-sm">
               <a href="tel:+573209079174" className="font-medium text-foreground hover:text-primary hover:underline">+57 320 907 9174</a>
               <a href="https://wa.me/573209079174" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:text-primary hover:underline">WhatsApp: +57 320 907 9174</a>
+              <a href="mailto:reservas@tropicalbiohostel.com" className="font-medium text-foreground hover:text-primary hover:underline">reservas@tropicalbiohostel.com</a>
+              <a href="mailto:hola@tropicalbiohostel.com" className="text-muted-foreground hover:text-primary hover:underline">hola@tropicalbiohostel.com</a>
+              <a href="mailto:luna@tropicalbiohostel.com" className="text-muted-foreground hover:text-primary hover:underline">luna@tropicalbiohostel.com</a>
             </div>
           </div>
           <div className="mt-5">
@@ -89,7 +92,7 @@ export default function Footer() {
         <p>Tropical Biohostel · Nocaima, Cundinamarca · Naturaleza que se vive · Sabores que se descubren · Experiencias que permanecen</p>
         <p className="mt-1.5">
           Sitio desarrollado por{" "}
-          <a href="/xlerion" className="font-semibold text-primary hover:underline">
+          <a href="/xlerion/" className="font-semibold text-primary hover:underline">
             Xlerion - Colombia
           </a>
           {" · "}

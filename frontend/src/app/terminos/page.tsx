@@ -201,7 +201,7 @@ export default function TerminosPage() {
             únicamente para gestionar su estadía, cumplir con los reportes legales obligatorios ante
             las autoridades migratorias y turísticas, facturación y envío de información
             relacionada con su servicio. El titular podrá ejercer sus derechos de consulta, actualización,
-            rectificación y supresión escribiendo al correo electrónico [tropicalbiohostel@gmail.com].
+            rectificación y supresión escribiendo al correo electrónico <a href="mailto:hola@tropicalbiohostel.com" className="font-medium text-primary hover:underline">hola@tropicalbiohostel.com</a>.
           </p>
         </section>
       </div>

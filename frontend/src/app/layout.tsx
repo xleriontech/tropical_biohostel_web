@@ -12,8 +12,8 @@ import InstallPrompt from "@/components/InstallPrompt";
 const inter = Inter({ subsets: ["latin"] });
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-nido-serif", style: ["normal", "italic"] });
 
-// Cloudflare Pages (Workers): todo el render dinámico corre en el edge runtime
-export const runtime = "edge";
+// Para despliegue en Cloudflare Pages descomenta la línea siguiente.
+// export const runtime = "edge";
 
 export const metadata: Metadata = {
   title: "Tropical Biohostel — Naturaleza que se vive | Nocaima",
@@ -40,15 +40,9 @@ export const metadata: Metadata = {
   },
   formatDetection: { telephone: false, address: false, email: false },
   icons: {
-    icon: [
-      { url: "/favicon.svg?v=4", type: "image/svg+xml" },
-      { url: "/icons/icon-192.png?v=4", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png?v=4", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [
-      { url: "/icons/apple-touch-icon-180.png?v=4", sizes: "180x180", type: "image/png" },
-    ],
-    shortcut: ["/icons/icon-192.png?v=4"],
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    shortcut: ["/favicon.svg"],
   },
   other: {
     "mobile-web-app-capable": "yes",

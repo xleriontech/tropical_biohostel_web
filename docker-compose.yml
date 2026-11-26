@@ -27,15 +27,15 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: ./backend-nestjs
       dockerfile: Dockerfile.dev
     ports:
       - "3001:3001"
     env_file:
-      - ./backend/.env.docker
+      - ./backend-nestjs/.env.docker
     volumes:
-      - ./backend/src:/app/src
-      - ./backend/prisma:/app/prisma
+      - ./backend-nestjs/src:/app/src
+      - ./backend-nestjs/prisma:/app/prisma
     depends_on:
       postgres:
         condition: service_healthy

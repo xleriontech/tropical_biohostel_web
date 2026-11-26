@@ -33,7 +33,7 @@ Esto levanta PostgreSQL (con pgvector) y Redis.
 
 ```bash
 cp .env.example .env
-cp backend/.env.example backend/.env
+cp backend-nestjs/.env.example backend-nestjs/.env
 cp frontend/.env.local.example frontend/.env.local
 ```
 

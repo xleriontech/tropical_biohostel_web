@@ -6,7 +6,7 @@ import Link from "next/link";
 import { MessageCircle, X, Send, Sparkles } from "lucide-react";
 import SafeImage from "./SafeImage";
 
-const API_URL = "http://localhost:3001/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 interface Tarjeta {
   slug: string;
@@ -27,7 +27,8 @@ interface Mensaje {
 const fmtCOP = (v: number) => "$" + v.toLocaleString("es-CO");
 
 /** Mini-markdown seguro para Nati: [texto](url), **negrita** y saltos de línea. */
-function renderRico(texto: string, claro: boolean) {
+function renderRico(texto: string | undefined | null, claro: boolean) {
+  const txt = texto ?? "";
   const linkCls = claro
     ? "font-medium text-emerald-200 underline decoration-emerald-300/60 underline-offset-2 hover:text-white"
     : "font-medium text-emerald-700 underline decoration-emerald-500/50 underline-offset-2";
@@ -69,8 +70,8 @@ function renderRico(texto: string, claro: boolean) {
     });
     k++;
   };
-  while ((m = reLink.exec(texto)) !== null) {
-    if (m.index > ultimo) pushTexto(texto.slice(ultimo, m.index));
+  while ((m = reLink.exec(txt)) !== null) {
+    if (m.index > ultimo) pushTexto(txt.slice(ultimo, m.index));
     const [_, etiqueta, url] = m;
     if (url.startsWith("/") || url.startsWith("#")) {
       partes.push(
@@ -89,7 +90,7 @@ function renderRico(texto: string, claro: boolean) {
     }
     ultimo = m.index + m[0].length;
   }
-  if (ultimo < texto.length) pushTexto(texto.slice(ultimo));
+  if (ultimo < txt.length) pushTexto(txt.slice(ultimo));
   return <span className="whitespace-pre-line">{partes}</span>;
 }
 
@@ -138,7 +139,11 @@ export default function ChatWidget() {
     if (mensajes.length > 0) return;
     try {
       const r = await fetch(`${API_URL}/chat/saludo`).then((r) => r.json());
-      setMensajes([{ rol: "nati", texto: r.reply, sugerencias: r.sugerencias }]);
+      setMensajes([{
+        rol: "nati",
+        texto: r.reply || "¡Hola! Soy Nati 🪷, tu anfitriona en Tropical Biohostel. ¿En qué te ayudo?",
+        sugerencias: Array.isArray(r.sugerencias) ? r.sugerencias : [],
+      }]);
     } catch {
       setMensajes([{ rol: "nati", texto: "¡Hola! Soy Nati 🪷, tu anfitriona en Tropical Biohostel. ¿En qué te ayudo?" }]);
     }
@@ -164,7 +169,13 @@ export default function ChatWidget() {
       }
       setMensajes((m) => [
         ...m,
-        { rol: "nati", texto: r.reply, tarjetas: r.propiedades, ubicacion: r.ubicacion || null, sugerencias: r.sugerencias },
+        {
+          rol: "nati",
+          texto: r.reply || "Uy, me enredé un momento 😅. ¿Me repites qué buscas?",
+          tarjetas: Array.isArray(r.propiedades) ? r.propiedades : [],
+          ubicacion: r.ubicacion || null,
+          sugerencias: Array.isArray(r.sugerencias) ? r.sugerencias : [],
+        },
       ]);
     } catch {
       setMensajes((m) => [...m, { rol: "nati", texto: "Uy, me enredé un momento 😅. ¿Me repites qué buscas?" }]);
