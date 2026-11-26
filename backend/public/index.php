@@ -81,6 +81,8 @@ $router->add('GET', '/notificaciones', [$h, 'getNotificaciones']);
 $router->add('GET', '/admin/dashboard', [$h, 'getAdminDashboard']);
 $router->add('GET', '/admin/chat-ai-config', [$h, 'getChatAiConfigAdmin']);
 $router->add('PUT', '/admin/chat-ai-config', [$h, 'saveChatAiConfigAdmin']);
+$router->add('GET', '/admin/chat-ai-models', [$h, 'getChatAiModelsAdmin']);
+$router->add('POST', '/admin/chat-ai-models', [$h, 'getChatAiModelsAdmin']);
 
 // Auth básico (admin por token configurado)
 $router->add('GET', '/auth/me', [$h, 'authMe']);

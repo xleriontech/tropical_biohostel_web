@@ -1232,4 +1232,45 @@ final class Handlers
             Response::json(['ok' => true, 'has_key' => !empty($next['api_key'])]);
         });
     }
+
+    public function getChatAiModelsAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $c = $this->chatAiConfig();
+            $body = $this->body();
+            $baseUrl = rtrim(trim((string)($body['base_url'] ?? $this->query('base_url', $c['base_url'] ?? 'https://api.openai.com/v1'))), '/');
+            $apiKey = trim((string)($body['api_key'] ?? $this->query('api_key', '')));
+            if ($apiKey === '') $apiKey = (string)($c['api_key'] ?? '');
+            if ($baseUrl === '' || $apiKey === '') {
+                Response::json(['models' => [], 'message' => 'Falta base URL o API key']);
+                return;
+            }
+
+            $ch = curl_init($baseUrl . '/models');
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $apiKey],
+                CURLOPT_TIMEOUT => 15,
+                CURLOPT_CONNECTTIMEOUT => 8,
+            ]);
+            $raw = curl_exec($ch);
+            $err = curl_error($ch);
+            $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            if ($raw === false || $err || $status < 200 || $status >= 300) {
+                Response::json(['models' => [], 'message' => 'No se pudieron cargar modelos (' . ($err ?: ('HTTP ' . $status)) . ')']);
+                return;
+            }
+            $json = json_decode((string)$raw, true);
+            $data = is_array($json['data'] ?? null) ? $json['data'] : (is_array($json['models'] ?? null) ? $json['models'] : []);
+            $models = [];
+            foreach ($data as $m) {
+                $id = is_array($m) ? (string)($m['id'] ?? $m['name'] ?? '') : '';
+                if ($id !== '') $models[] = ['id' => $id, 'name' => $id];
+            }
+            usort($models, fn($a,$b) => strcmp($a['id'], $b['id']));
+            Response::json(['models' => array_values($models)]);
+        });
+    }
 }
