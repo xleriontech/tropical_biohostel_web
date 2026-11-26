@@ -33,7 +33,12 @@ export default function LoginPage() {
     localStorage.setItem("user", JSON.stringify(data.user));
     window.dispatchEvent(new Event("auth-change"));
 
-    router.push("/");
+    const role = data?.user?.role;
+    if (role === "admin" || role === "propietario") {
+      router.push("/admin/");
+    } else {
+      router.push("/");
+    }
     router.refresh();
   };
 
