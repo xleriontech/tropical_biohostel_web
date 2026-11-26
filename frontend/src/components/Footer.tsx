@@ -92,7 +92,7 @@ export default function Footer() {
         <p>Tropical Biohostel · Nocaima, Cundinamarca · Naturaleza que se vive · Sabores que se descubren · Experiencias que permanecen</p>
         <p className="mt-1.5">
           Sitio desarrollado por{" "}
-          <a href="/xlerion/" className="font-semibold text-primary hover:underline">
+          <a href="https://xlerion.com.co" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
             Xlerion - Colombia
           </a>
           {" · "}

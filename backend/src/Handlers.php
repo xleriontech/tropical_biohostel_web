@@ -725,39 +725,78 @@ final class Handlers
     {
         $this->safe(function () {
             $body = $this->body();
-            $msg = mb_strtolower(trim((string) ($body['mensaje'] ?? '')));
+            $msgRaw = trim((string) ($body['mensaje'] ?? ''));
+            $msg = mb_strtolower($msgRaw);
             $sessionId = trim((string) ($body['sessionId'] ?? ''));
             if ($sessionId === '') $sessionId = $this->uuid();
 
             $reply = "Gracias por escribirnos. Puedo ayudarte con información general del Tropical Biohostel. Para atención personalizada, escríbenos por WhatsApp al +57 320 907 9174 o al correo reservas@tropicalbiohostel.com.";
             $sugerencias = ['Hospedaje', 'Experiencias', 'Donar', 'Contacto'];
+            $propiedades = [];
+
+            $buscarProps = function (string $tipo = '', string $q = '', int $limit = 4): array {
+                try {
+                    $where = ['estado = "PUBLICADO"'];
+                    $params = [];
+                    if ($tipo !== '') { $where[] = 'tipo = ?'; $params[] = $tipo; }
+                    if ($q !== '') {
+                        $like = '%' . $q . '%';
+                        $where[] = '(nombre LIKE ? OR descripcion LIKE ? OR ubicacion LIKE ? OR ciudad LIKE ? OR actividades LIKE ?)';
+                        array_push($params, $like, $like, $like, $like, $like);
+                    }
+                    $sql = 'SELECT * FROM properties WHERE ' . implode(' AND ', $where) . ' ORDER BY calificacion DESC, created_at DESC LIMIT ?';
+                    $stmt = $this->pdo()->prepare($sql);
+                    $i = 1;
+                    foreach ($params as $p) { $stmt->bindValue($i++, $p); }
+                    $stmt->bindValue($i, $limit, PDO::PARAM_INT);
+                    $stmt->execute();
+                    return array_map([$this, 'normalizeProperty'], $stmt->fetchAll());
+                } catch (Throwable $e) { return []; }
+            };
 
             if ($msg !== '') {
                 if (preg_match('/reserv|disponib|fecha|llegad|salid/', $msg)) {
-                    $reply = "Para reservas y disponibilidad, escríbenos a reservas@tropicalbiohostel.com o por WhatsApp al +57 320 907 9174. Con gusto te confirmamos fechas y opciones.";
-                    $sugerencias = ['WhatsApp reservas', 'Ver hospedaje', 'Experiencias'];
+                    $reply = "Para reservas y disponibilidad, escríbenos a reservas@tropicalbiohostel.com o por WhatsApp al +57 320 907 9174. Con gusto te confirmamos fechas y opciones. También puedes abrir una propiedad y usar el botón Reservar.";
+                    $sugerencias = ['Ver hospedaje', 'Experiencias', 'Contacto'];
+                    $propiedades = $buscarProps('', '', 3);
                 } elseif (preg_match('/don|arbol|siembra|carbono/', $msg)) {
-                    $reply = "Puedes apoyar nuestros proyectos de siembra y carbono en la sección Donar. Si necesitas ayuda, escríbenos a hola@tropicalbiohostel.com.";
-                    $sugerencias = ['Ir a donaciones', 'Siembra un árbol', 'Contacto'];
-                } elseif (preg_match('/hosped|caba|glamping|cosmic|bungal|habitaci/', $msg)) {
-                    $reply = "Tenemos opciones de hospedaje como Cosmic Bungalow, Cabaña de la Luna y Glamping. Puedes verlas en la sección Hospedaje o escribirnos para ayudarte a elegir.";
-                    $sugerencias = ['Ver hospedaje', 'Reservar por WhatsApp', 'Experiencias'];
-                } elseif (preg_match('/experienc|actividad|tour|cafe|ruta/', $msg)) {
-                    $reply = "Tenemos experiencias de naturaleza, café, bienestar y territorio. Puedes explorarlas en la sección Experiencias.";
-                    $sugerencias = ['Ver experiencias', 'Reservar por WhatsApp', 'Hospedaje'];
+                    $reply = "Puedes apoyar nuestros proyectos de siembra y carbono en la sección Donar 🌱. Si necesitas ayuda, escríbenos a hola@tropicalbiohostel.com.";
+                    $sugerencias = ['Ver donaciones', 'Siembra un árbol', 'Contacto'];
+                } elseif (preg_match('/hosped|caba|glamping|cosmic|bungal|habitaci|dormir|aloj/', $msg)) {
+                    $propiedades = $buscarProps('', '', 4);
+                    // priorizar tipos de hospedaje
+                    $hosp = array_values(array_filter($propiedades, fn($p) => in_array($p['tipo'] ?? '', ['glamping','hotel','hostal','centro_turistico','finca'])));
+                    if ($hosp) $propiedades = $hosp;
+                    $reply = $propiedades
+                        ? "Estas son algunas opciones de hospedaje que tenemos en Tropical Biohostel 🌿. Toca una para ver detalles y reservar."
+                        : "Tenemos opciones de hospedaje como Cosmic Bungalow, Cabaña de la Luna y Glamping. Escríbenos por WhatsApp al +57 320 907 9174 y te ayudamos a elegir.";
+                    $sugerencias = ['Reservar por WhatsApp', 'Experiencias', 'Donar'];
+                } elseif (preg_match('/experienc|actividad|tour|cafe|ruta|sender|naturalez/', $msg)) {
+                    $propiedades = $buscarProps('actividad', '', 4);
+                    $reply = $propiedades
+                        ? "Mira estas experiencias y actividades disponibles 🌿."
+                        : "Tenemos experiencias de naturaleza, café, bienestar y territorio. Puedes explorarlas en la sección Experiencias o escribirnos por WhatsApp.";
+                    $sugerencias = ['Ver hospedaje', 'Reservar por WhatsApp', 'Donar'];
                 } elseif (preg_match('/contact|whatsapp|correo|email|telefono|llamar/', $msg)) {
                     $reply = "Puedes contactarnos por WhatsApp al +57 320 907 9174, por reservas@tropicalbiohostel.com, hola@tropicalbiohostel.com o luna@tropicalbiohostel.com.";
                     $sugerencias = ['Reservar por WhatsApp', 'Ver hospedaje', 'Donar'];
-                } elseif (preg_match('/hola|buen|gracias/', $msg)) {
-                    $reply = "¡Hola! 🌿 Con gusto te oriento. ¿Te interesa hospedaje, experiencias, donaciones o reservas?";
+                } elseif (preg_match('/hola|buen|gracias|hey/', $msg)) {
+                    $reply = "¡Hola! 🌿 Soy Nati. Con gusto te oriento. ¿Te interesa hospedaje, experiencias, donaciones o reservas?";
                     $sugerencias = ['Hospedaje', 'Experiencias', 'Donar', 'Reservar por WhatsApp'];
+                } else {
+                    // búsqueda libre en propiedades
+                    $propiedades = $buscarProps('', $msgRaw, 4);
+                    if ($propiedades) {
+                        $reply = "Encontré estas opciones relacionadas con tu búsqueda:";
+                        $sugerencias = ['Ver hospedaje', 'Experiencias', 'Reservar por WhatsApp'];
+                    }
                 }
             }
 
             Response::json([
                 'reply' => $reply,
                 'sessionId' => $sessionId,
-                'propiedades' => [],
+                'propiedades' => $propiedades,
                 'ubicacion' => null,
                 'sugerencias' => $sugerencias,
             ]);
