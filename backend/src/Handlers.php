@@ -83,6 +83,15 @@ final class Handlers
         return $default;
     }
 
+    private function setConfigValue(string $key, mixed $value): void
+    {
+        $json = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $stmt = $this->pdo()->prepare(
+            'INSERT INTO site_config (config_key, value_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE value_json = VALUES(value_json), updated_at = CURRENT_TIMESTAMP'
+        );
+        $stmt->execute([$key, $json]);
+    }
+
     // ---------- Properties ----------
     public function getProperties(): void
     {
@@ -714,9 +723,28 @@ final class Handlers
     }
 
     // ---------- Chat (Nati básico / IA opcional) ----------
+    private function chatAiConfig(): array
+    {
+        $defaults = [
+            'enabled' => false,
+            'provider' => 'openai-compatible',
+            'base_url' => 'https://api.openai.com/v1',
+            'api_key' => '',
+            'model' => 'gpt-4o-mini',
+            'system_prompt' => 'Eres Nati, anfitriona virtual de Tropical Biohostel en Nocaima, Cundinamarca. Responde en español, cálida y clara. Ayuda con hospedaje, experiencias, reservas, donaciones y contacto. Si no sabes un dato exacto, dilo con honestidad y sugiere WhatsApp +57 320 907 9174 o reservas@tropicalbiohostel.com. No inventes precios ni disponibilidad.',
+        ];
+        $file = is_array($this->config['chat_ai'] ?? null) ? $this->config['chat_ai'] : [];
+        $db = $this->getConfigValue('chatAi', []);
+        if (!is_array($db)) $db = [];
+        $merged = array_merge($defaults, $file, $db);
+        // Si DB tiene enabled pero api_key vacío, conservar api_key de archivo
+        if (empty($merged['api_key']) && !empty($file['api_key'])) $merged['api_key'] = $file['api_key'];
+        return $merged;
+    }
+
     private function chatAiEnabled(): bool
     {
-        $c = $this->config['chat_ai'] ?? [];
+        $c = $this->chatAiConfig();
         return !empty($c['enabled']) && !empty($c['api_key']);
     }
 
@@ -743,7 +771,7 @@ final class Handlers
     private function chatAiReply(string $msg, string $sessionId): ?array
     {
         if (!$this->chatAiEnabled()) return null;
-        $c = $this->config['chat_ai'] ?? [];
+        $c = $this->chatAiConfig();
         $baseUrl = rtrim((string)($c['base_url'] ?? 'https://api.openai.com/v1'), '/');
         $apiKey = (string)($c['api_key'] ?? '');
         $model = (string)($c['model'] ?? 'gpt-4o-mini');
@@ -1163,6 +1191,45 @@ final class Handlers
                 // devolver stats vacíos
             }
             Response::json($stats);
+        });
+    }
+
+    public function getChatAiConfigAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $c = $this->chatAiConfig();
+            Response::json([
+                'enabled' => !empty($c['enabled']),
+                'provider' => (string)($c['provider'] ?? 'openai-compatible'),
+                'base_url' => (string)($c['base_url'] ?? ''),
+                'model' => (string)($c['model'] ?? ''),
+                'system_prompt' => (string)($c['system_prompt'] ?? ''),
+                'has_key' => !empty($c['api_key']),
+                'key_masked' => !empty($c['api_key']) ? ('••••' . substr((string)$c['api_key'], -4)) : '',
+            ]);
+        });
+    }
+
+    public function saveChatAiConfigAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $body = $this->body();
+            $current = $this->chatAiConfig();
+            $next = [
+                'enabled' => !empty($body['enabled']),
+                'provider' => trim((string)($body['provider'] ?? $current['provider'] ?? 'openai-compatible')),
+                'base_url' => rtrim(trim((string)($body['base_url'] ?? $current['base_url'] ?? 'https://api.openai.com/v1')), '/'),
+                'model' => trim((string)($body['model'] ?? $current['model'] ?? 'gpt-4o-mini')),
+                'system_prompt' => trim((string)($body['system_prompt'] ?? $current['system_prompt'] ?? '')),
+                'api_key' => $current['api_key'] ?? '',
+            ];
+            $newKey = trim((string)($body['api_key'] ?? ''));
+            if ($newKey !== '') $next['api_key'] = $newKey;
+            if (array_key_exists('clear_key', $body) && $body['clear_key']) $next['api_key'] = '';
+            $this->setConfigValue('chatAi', $next);
+            Response::json(['ok' => true, 'has_key' => !empty($next['api_key'])]);
         });
     }
 }
