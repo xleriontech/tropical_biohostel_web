@@ -2126,4 +2126,48 @@ final class Handlers
             Response::json(['ok'=>true,'mensaje'=>'Key guardada. No hay prueba automática para este tipo; se usará cuando la integración la requiera.']);
         });
     }
+
+    // ---------- Stubs admin (módulos no portados a PHP) ----------
+    public function getLeadsStats(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json(['total'=>0,'conNombre'=>0,'conContacto'=>0,'mensajesTotal'=>0,'activos7d'=>0,'topTemas'=>[],'topTipos'=>[]]);
+        });
+    }
+    public function getLeads(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json([]);
+        });
+    }
+    public function getLeadById(array $params): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json(['id'=>$params['id'] ?? null,'mensajes'=>[]]);
+        });
+    }
+    public function deleteLead(array $params): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json(['ok'=>true]);
+        });
+    }
+    public function getMenus(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json([]);
+        });
+    }
+    public function stubOk(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json(['ok'=>true,'message'=>'Este módulo aún no está implementado en el backend PHP.']);
+        });
+    }
 }

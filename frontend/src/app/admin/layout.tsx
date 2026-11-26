@@ -24,7 +24,7 @@ const ADMIN_LINKS = [
   { href: "/admin/reservas/", label: "Reservas" },
   { href: "/admin/config/", label: "Configuración" },
   // Panel de la finca: vive fuera de /admin porque tiene su propio login PHP.
-  { href: "/finca", label: "Siembra · finca" },
+  { href: "/finca/", label: "Siembra / finca" },
 ];
 
 export default function AdminLayout({
