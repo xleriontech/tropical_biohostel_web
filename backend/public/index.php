@@ -75,6 +75,11 @@ $router->add('PATCH', '/reservas/{id}/no-show', [$h, 'noShowReserva']);
 $router->add('GET', '/chat/saludo', [$h, 'chatSaludo']);
 $router->add('POST', '/chat/mensaje', [$h, 'chatMensaje']);
 
+// Admin / Notificaciones (stubs mínimos para panel PHP)
+$router->add('GET', '/notificaciones/count', [$h, 'getNotificacionesCount']);
+$router->add('GET', '/notificaciones', [$h, 'getNotificaciones']);
+$router->add('GET', '/admin/dashboard', [$h, 'getAdminDashboard']);
+
 // Auth básico (admin por token configurado)
 $router->add('GET', '/auth/me', [$h, 'authMe']);
 $router->add('POST', '/auth/signin', [$h, 'authSignin']);

@@ -990,4 +990,48 @@ final class Handlers
         }
         return false;
     }
+
+    // ---------- Admin / Notificaciones (stubs) ----------
+    public function getNotificacionesCount(): void
+    {
+        if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+        Response::json(['count' => 0]);
+    }
+
+    public function getNotificaciones(): void
+    {
+        if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+        Response::json([]);
+    }
+
+    public function getAdminDashboard(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $stats = [
+                'totalPropiedades' => 0,
+                'propiedadesPublicadas' => 0,
+                'propiedadesBorrador' => 0,
+                'totalReservas' => 0,
+                'reservasPendientes' => 0,
+                'totalUsuarios' => 1,
+                'ingresosPotenciales' => 0,
+                'propiedadesPorTipo' => [],
+            ];
+            try {
+                $pdo = $this->pdo();
+                $stats['totalPropiedades'] = (int) $pdo->query("SELECT COUNT(*) FROM properties")->fetchColumn();
+                $stats['propiedadesPublicadas'] = (int) $pdo->query("SELECT COUNT(*) FROM properties WHERE estado='PUBLICADO'")->fetchColumn();
+                $stats['propiedadesBorrador'] = (int) $pdo->query("SELECT COUNT(*) FROM properties WHERE estado='BORRADOR'")->fetchColumn();
+                $stats['totalReservas'] = (int) $pdo->query("SELECT COUNT(*) FROM reservas")->fetchColumn();
+                $stats['reservasPendientes'] = (int) $pdo->query("SELECT COUNT(*) FROM reservas WHERE estado='PENDIENTE'")->fetchColumn();
+                $rows = $pdo->query("SELECT tipo, COUNT(*) AS total FROM properties GROUP BY tipo ORDER BY total DESC")->fetchAll();
+                $stats['propiedadesPorTipo'] = array_map(fn($r) => ['tipo' => $r['tipo'], 'total' => (int)$r['total']], $rows);
+                $stats['ingresosPotenciales'] = (float) $pdo->query("SELECT COALESCE(SUM(precioNoche),0) FROM properties WHERE estado='PUBLICADO'")->fetchColumn();
+            } catch (Throwable $e) {
+                // devolver stats vacíos
+            }
+            Response::json($stats);
+        });
+    }
 }
