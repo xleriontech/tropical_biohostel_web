@@ -2228,7 +2228,7 @@ final class Handlers
                 $rows = $stmt->fetchAll() ?: [];
                 foreach ($rows as &$r) { $r['recaudado'] = 0 + ($r['recaudado'] ?? 0); $r['donantes'] = (int)($r['donantes'] ?? 0); }
                 Response::json($rows);
-            } catch (Throwable $e) { Response::json([]); }
+            } catch (Throwable $e) { Response::json([['_debug_error' => $e->getMessage()]]); }
         });
     }
 
