@@ -82,7 +82,7 @@ export default function NavBar() {
           <a href="/" className="no-dark nav-logo flex shrink-0 items-center gap-2 text-xl font-black tracking-tight text-primary">
             <SiteBrand />
           </a>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 lg:gap-4">
             <div className="hidden md:flex items-center gap-3 mr-4 border-r pr-4 nav-divide">
               <div className="group relative">
                 <button className="nav-link flex items-center gap-1 text-sm">
@@ -149,7 +149,7 @@ export default function NavBar() {
             </div>
             <a
               href="/donaciones/"
-              className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg sm:inline-flex"
+              className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg lg:inline-flex"
               title="Donar · Siembra y carbono"
             >
               <HeartHandshake className="h-4 w-4" /> Donar 🌳
@@ -163,26 +163,27 @@ export default function NavBar() {
             </button>
             <button onClick={() => setOpenSearch(true)} className="nav-box flex items-center gap-1.5 rounded-full border bg-muted px-3 py-1.5 text-sm transition-colors">
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-              <span className="hidden sm:inline">Buscar</span>
-              <kbd className="hidden md:inline-flex ml-1 items-center gap-0.5 rounded border border-input bg-white px-1.5 text-[10px] text-muted-foreground">Ctrl+K</kbd>
+              <span className="hidden lg:inline">Buscar</span>
+              <kbd className="hidden xl:inline-flex ml-1 items-center gap-0.5 rounded border border-input bg-white px-1.5 text-[10px] text-muted-foreground">Ctrl+K</kbd>
             </button>
             {user ? (
-              <div className="hidden items-center gap-4 sm:flex">
+              <div className="hidden items-center gap-2 lg:gap-3 md:flex">
                 {(user.role === "admin" || user.role === "propietario") && (
-                  <a href="/admin/" className="text-sm font-medium text-[hsl(var(--menu))] hover:opacity-85">
+                  <a href="/admin/" className="rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10">
                     Admin
                   </a>
                 )}
-                <span className="nav-link max-w-32 truncate text-sm">{user.nombre || user.email}</span>
+                <span className="nav-link hidden max-w-24 truncate text-xs xl:inline">{user.nombre || user.email}</span>
                 <button
                   onClick={handleLogout}
-                  className="nav-link text-sm"
+                  className="nav-link text-xs hover:text-destructive"
+                  title="Cerrar sesión"
                 >
-                  Cerrar Sesión
+                  Salir
                 </button>
               </div>
             ) : (
-              <a href="/auth/login/" className="nav-link hidden text-sm sm:inline">
+              <a href="/auth/login/" className="nav-link hidden text-sm md:inline">
                 Iniciar Sesión
               </a>
             )}
