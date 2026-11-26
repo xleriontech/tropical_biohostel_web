@@ -22,6 +22,8 @@ export default function AdminAIProvidersPage() {
   const [loading, setLoading] = useState(true);
   const [loadingModels, setLoadingModels] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState<any>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -84,6 +86,22 @@ export default function AdminAIProvidersPage() {
       if (apiKey) { loadModels(cfg.base_url, apiKey, true); setApiKey(""); }
     } catch (e: any) { setErr(e.message || "Error al guardar"); }
     finally { setSaving(false); }
+  };
+
+  const testAi = async () => {
+    setTesting(true); setTestResult(null); setErr(null);
+    try {
+      const res = await fetch(`${apiUrl()}/admin/chat-ai-test`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ base_url: cfg.base_url, model: cfg.model, api_key: apiKey }),
+      });
+      const data = await res.json().catch(() => ({}));
+      setTestResult(data);
+      if (!res.ok && !data.error) setTestResult({ ok: false, error: data.message || "No se pudo probar" });
+    } catch (e: any) {
+      setTestResult({ ok: false, error: e.message || "Error de conexión" });
+    } finally { setTesting(false); }
   };
 
   return (
@@ -150,10 +168,24 @@ export default function AdminAIProvidersPage() {
 
           {msg && <p className="text-sm text-green-700">{msg}</p>}
           {err && <p className="text-sm text-red-600">{err}</p>}
+          {testResult && (
+            <div className={`rounded-lg border p-3 text-sm ${testResult.ok ? "border-green-200 bg-green-50 text-green-800" : "border-red-200 bg-red-50 text-red-700"}`}>
+              {testResult.ok ? (
+                <p><strong>IA funcionando.</strong> Modelo: {testResult.model} · {testResult.ms} ms · Respuesta: “{testResult.reply}”</p>
+              ) : (
+                <p><strong>No funcionó.</strong> {testResult.error || "Error desconocido"} {testResult.model ? `· Modelo: ${testResult.model}` : ""}</p>
+              )}
+            </div>
+          )}
 
-          <button onClick={save} disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
-            <Save className="h-4 w-4" /> {saving ? "Guardando..." : "Guardar configuración"}
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={testAi} disabled={testing} className="inline-flex items-center gap-2 rounded-xl border border-input bg-white px-6 py-2.5 text-sm font-medium hover:bg-muted disabled:opacity-60">
+              <RefreshCw className={`h-4 w-4 ${testing ? "animate-spin" : ""}`} /> {testing ? "Probando..." : "Probar IA"}
+            </button>
+            <button onClick={save} disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
+              <Save className="h-4 w-4" /> {saving ? "Guardando..." : "Guardar configuración"}
+            </button>
+          </div>
         </div>
       )}
     </div>

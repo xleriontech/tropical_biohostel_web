@@ -1338,6 +1338,53 @@ final class Handlers
         });
     }
 
+    public function testChatAiConfigAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $body = $this->body();
+            $c = $this->chatAiConfig();
+            $baseUrl = rtrim(trim((string)($body['base_url'] ?? $c['base_url'] ?? 'https://api.openai.com/v1')), '/');
+            $apiKey = trim((string)($body['api_key'] ?? ''));
+            if ($apiKey === '') $apiKey = (string)($c['api_key'] ?? '');
+            $model = trim((string)($body['model'] ?? $c['model'] ?? 'gpt-4o-mini'));
+            if ($baseUrl === '' || $apiKey === '') { Response::json(['ok'=>false,'error'=>'Falta base URL o API key.']); return; }
+            $payload = [
+                'model' => $model,
+                'temperature' => 0,
+                'max_tokens' => 30,
+                'messages' => [
+                    ['role' => 'system', 'content' => 'Responde breve.'],
+                    ['role' => 'user', 'content' => 'Responde solo con: OK'],
+                ],
+            ];
+            $t0 = microtime(true);
+            $ch = curl_init($baseUrl . '/chat/completions');
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_HTTPHEADER => ['Content-Type: application/json','Authorization: Bearer ' . $apiKey],
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_TIMEOUT => 25,
+                CURLOPT_CONNECTTIMEOUT => 8,
+            ]);
+            $raw = curl_exec($ch);
+            $err = curl_error($ch);
+            $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            $ms = (int) round((microtime(true) - $t0) * 1000);
+            if ($raw === false || $err) { Response::json(['ok'=>false,'ms'=>$ms,'error'=>'Conexión fallida: '.$err,'model'=>$model]); return; }
+            $json = json_decode((string)$raw, true);
+            if ($status < 200 || $status >= 300) {
+                $msg = $json['error']['message'] ?? $json['message'] ?? ('HTTP ' . $status);
+                Response::json(['ok'=>false,'ms'=>$ms,'status'=>$status,'error'=>(string)$msg,'model'=>$model]); return;
+            }
+            $reply = trim((string)($json['choices'][0]['message']['content'] ?? ''));
+            if ($reply === '') { Response::json(['ok'=>false,'ms'=>$ms,'status'=>$status,'error'=>'Respuesta vacía del modelo','model'=>$model]); return; }
+            Response::json(['ok'=>true,'ms'=>$ms,'status'=>$status,'model'=>$model,'reply'=>$reply]);
+        });
+    }
+
     // ---------- Ingesta / Scraping ----------
     private function ingSlug(string $s): string
     {

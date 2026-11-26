@@ -84,6 +84,7 @@ $router->add('GET', '/admin/chat-ai-config', [$h, 'getChatAiConfigAdmin']);
 $router->add('PUT', '/admin/chat-ai-config', [$h, 'saveChatAiConfigAdmin']);
 $router->add('GET', '/admin/chat-ai-models', [$h, 'getChatAiModelsAdmin']);
 $router->add('POST', '/admin/chat-ai-models', [$h, 'getChatAiModelsAdmin']);
+$router->add('POST', '/admin/chat-ai-test', [$h, 'testChatAiConfigAdmin']);
 // Ingesta / scraping (PHP)
 $router->add('POST', '/admin/ingestion/preview', [$h, 'ingestionPreview']);
 $router->add('POST', '/admin/ingestion/scrape', [$h, 'ingestionScrape']);
