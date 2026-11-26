@@ -83,6 +83,17 @@ $router->add('GET', '/admin/chat-ai-config', [$h, 'getChatAiConfigAdmin']);
 $router->add('PUT', '/admin/chat-ai-config', [$h, 'saveChatAiConfigAdmin']);
 $router->add('GET', '/admin/chat-ai-models', [$h, 'getChatAiModelsAdmin']);
 $router->add('POST', '/admin/chat-ai-models', [$h, 'getChatAiModelsAdmin']);
+// Ingesta / scraping (PHP)
+$router->add('POST', '/admin/ingestion/preview', [$h, 'ingestionPreview']);
+$router->add('POST', '/admin/ingestion/scrape', [$h, 'ingestionScrape']);
+$router->add('POST', '/admin/ingestion/execute', [$h, 'ingestionExecute']);
+$router->add('GET', '/admin/ingestion/estado', [$h, 'ingestionEstado']);
+$router->add('GET', '/admin/ingestion/actualizaciones', [$h, 'ingestionActualizaciones']);
+$router->add('POST', '/admin/ingestion/verificar', [$h, 'ingestionVerificar']);
+$router->add('POST', '/admin/ingestion/actualizaciones/{id}/resolver', [$h, 'ingestionResolver']);
+$router->add('POST', '/admin/ingestion/google', [$h, 'ingestionGoogle']);
+$router->add('POST', '/admin/ingestion/enriquecer', [$h, 'ingestionEnriquecer']);
+$router->add('GET', '/admin/claves/estado', [$h, 'getClavesEstado']);
 
 // Auth básico (admin por token configurado)
 $router->add('GET', '/auth/me', [$h, 'authMe']);

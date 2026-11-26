@@ -1273,4 +1273,425 @@ final class Handlers
             Response::json(['models' => array_values($models)]);
         });
     }
+
+    // ---------- Ingesta / Scraping ----------
+    private function ingSlug(string $s): string
+    {
+        $s = mb_strtolower(trim($s));
+        $s = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s) ?: $s;
+        $s = preg_replace('/[^a-z0-9]+/', '-', $s);
+        $s = trim((string)$s, '-');
+        return substr($s, 0, 80);
+    }
+    private function ingNorm(string $s): string
+    {
+        $s = mb_strtolower(trim($s));
+        $s = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s) ?: $s;
+        return trim(preg_replace('/\s+/', ' ', $s));
+    }
+    private function ingToNumber($v): ?float
+    {
+        if (is_numeric($v)) return (float)$v;
+        $s = mb_strtolower(trim((string)$v));
+        if ($s === '') return null;
+        $mult = 1;
+        if (str_contains($s, 'millon')) $mult = 1000000;
+        elseif (preg_match('/\bmil\b|\bk\b/', $s)) $mult = 1000;
+        $s = preg_replace('/[\$\s]/', '', $s);
+        $s = preg_replace('/\bmil\b|\bk\b|millones?|pesos?/u', '', $s);
+        if (preg_match('/^\d{1,3}([.,]\d{3})+$/', $s)) return (float)(intval(str_replace([',','.'],'',$s)) * $mult);
+        $n = floatval(str_replace(',', '.', $s));
+        if (is_nan($n)) return null;
+        if ($mult === 1 && $n > 0 && $n < 1000) return round($n * 1000);
+        return round($n * $mult);
+    }
+    private function ingToBool($v): ?bool
+    {
+        if (is_bool($v)) return $v;
+        $s = $this->ingNorm((string)$v);
+        if (in_array($s, ['si','true','1','x','verdadero','incluido','permitido','permitidas'], true)) return true;
+        if (in_array($s, ['no','false','0','-','n/a','ninguno'], true)) return false;
+        return null;
+    }
+    private function ingMapTipo($raw): ?string
+    {
+        $t = $this->ingNorm((string)$raw);
+        if ($t === '') return null;
+        if (str_contains($t, 'hotel')) return 'hotel';
+        if (preg_match('/hostal|hostel|albergue/', $t)) return 'hostal';
+        if (preg_match('/glamping|domo|tipi|camp/', $t)) return 'glamping';
+        if (preg_match('/restaurante|pizzeria|parrilla|comida|gastronom/', $t)) return 'restaurante';
+        if (preg_match('/\bbar\b|bares|pub|cerveceria|coctel/', $t)) return 'bar';
+        if (str_contains($t, 'finca')) return 'finca';
+        if (preg_match('/tour|actividad|excursion|avistamiento|mariposario|ecoturismo/', $t)) return 'actividad';
+        if (str_contains($t, 'centro')) return 'centro_turistico';
+        return null;
+    }
+    private function ingSplitList($v): array
+    {
+        if (is_array($v)) return array_values(array_filter(array_map(fn($x)=>trim((string)$x), $v)));
+        return array_values(array_filter(array_map('trim', preg_split('/[,;|]/', (string)$v))));
+    }
+    private function ingClasificarWeb(string $url): string
+    {
+        $u = mb_strtolower($url);
+        if (str_contains($u, 'sites.google.com')) return 'Google Sites';
+        if (preg_match('/facebook\.com|instagram\.com|tiktok\.com|airbnb\.com|booking\.com|tripadvisor/', $u)) return 'Red social';
+        return 'Web propia';
+    }
+
+    private function ingNormalizeRow(int $index, array $crudo, ?string $municipio): array
+    {
+        $datos = [];
+        $errores = [];
+        $map = [
+            'nombre'=>'nombre','name'=>'nombre','titulo'=>'nombre','establecimiento'=>'nombre',
+            'tipo'=>'tipo','type'=>'tipo','categoria'=>'tipo',
+            'descripcion'=>'descripcion','description'=>'descripcion',
+            'direccion'=>'direccion','address'=>'direccion',
+            'ubicacion'=>'ubicacion','location'=>'ubicacion','vereda'=>'ubicacion','sector'=>'ubicacion',
+            'ciudad'=>'ciudad','city'=>'ciudad','municipio'=>'ciudad',
+            'departamento'=>'departamento',
+            'telefono'=>'telefono','phone'=>'telefono','tel'=>'telefono','celular'=>'telefono',
+            'email'=>'email','correo'=>'email',
+            'whatsapp'=>'whatsapp','website'=>'website','sitio'=>'website','web'=>'website',
+            'precio'=>'precioNoche','price'=>'precioNoche','precionoche'=>'precioNoche','tarifa'=>'precioNoche','valor'=>'precioNoche',
+            'capacidad'=>'capacidadMaxima','capacity'=>'capacidadMaxima','capacidadmaxima'=>'capacidadMaxima','huespedes'=>'capacidadMaxima','cupo'=>'capacidadMaxima',
+            'habitaciones'=>'numeroHabitaciones','rooms'=>'numeroHabitaciones','cuartos'=>'numeroHabitaciones','numerohabitaciones'=>'numeroHabitaciones',
+            'banos'=>'numeroBanos','bathrooms'=>'numeroBanos','numerobanos'=>'numeroBanos',
+            'mascotas'=>'admiteMascotas','pets'=>'admiteMascotas','admitemascotas'=>'admiteMascotas','petfriendly'=>'admiteMascotas',
+            'seguro'=>'seguroDisponible','insurance'=>'seguroDisponible','segurodisponible'=>'seguroDisponible',
+            'actividades'=>'actividades','activities'=>'actividades',
+        ];
+        if (isset($crudo['coordenadas']) && is_array($crudo['coordenadas']) && isset($crudo['coordenadas']['lat'],$crudo['coordenadas']['lng'])) {
+            $datos['coordenadas'] = ['lat'=>(float)$crudo['coordenadas']['lat'], 'lng'=>(float)$crudo['coordenadas']['lng']];
+        }
+        foreach ($crudo as $k => $v) {
+            $canon = $map[$this->ingNorm((string)$k)] ?? null;
+            if (!$canon) continue;
+            if ($canon === 'tipo') $datos['tipo'] = (string)$v;
+            elseif ($canon === 'precioNoche') { $n = $this->ingToNumber($v); if ($n !== null) $datos['precioNoche'] = $n; }
+            elseif (in_array($canon, ['capacidadMaxima','numeroHabitaciones','numeroBanos'], true)) { $n = $this->ingToNumber($v); if ($n !== null) $datos[$canon] = (int)round($n > 10000 ? $n/1000 : $n); }
+            elseif (in_array($canon, ['admiteMascotas','seguroDisponible'], true)) { $b = $this->ingToBool($v); if ($b !== null) $datos[$canon] = $b; }
+            elseif ($canon === 'actividades') $datos['actividades'] = $this->ingSplitList($v);
+            else { $val = trim((string)$v); if ($val !== '') $datos[$canon] = $val; }
+        }
+        if (empty($datos['nombre'])) $errores[] = 'Falta el nombre del sitio.';
+        $tipoFinal = $this->ingMapTipo($datos['tipo'] ?? '');
+        if (!$tipoFinal) $errores[] = 'Tipo no reconocido: "' . ($datos['tipo'] ?? '(vacío)') . '".';
+        else $datos['tipo'] = $tipoFinal;
+        if ($municipio && empty($datos['ciudad'])) $datos['ciudad'] = $municipio;
+        if (!empty($datos['ciudad']) && empty($datos['ubicacion'])) $datos['ubicacion'] = $datos['ciudad'];
+        if (empty($datos['capacidadMaxima'])) $datos['capacidadMaxima'] = 4;
+        if (!isset($datos['precioNoche'])) $errores[] = 'Falta el precio (se importará en 0, ajústalo luego).';
+        if (!empty($datos['website'])) $datos['fuenteWeb'] = $this->ingClasificarWeb($datos['website']);
+
+        $slug = !empty($datos['nombre']) ? $this->ingSlug($datos['nombre']) : null;
+        $existente = null; $accion = 'crear';
+        if ($slug) {
+            try {
+                $stmt = $this->pdo()->prepare('SELECT id,nombre,slug FROM properties WHERE slug = ? LIMIT 1');
+                $stmt->execute([$slug]);
+                $ex = $stmt->fetch();
+                if ($ex) { $existente = ['id'=>$ex['id'],'nombre'=>$ex['nombre'],'slug'=>$ex['slug']]; $accion = 'actualizar'; }
+                else {
+                    $nombreN = $this->ingNorm((string)$datos['nombre']);
+                    $cand = $this->pdo()->query('SELECT id,nombre,slug FROM properties LIMIT 150')->fetchAll();
+                    foreach ($cand as $c) {
+                        $cn = $this->ingNorm((string)$c['nombre']);
+                        if ($cn && (str_contains($cn,$nombreN) || str_contains($nombreN,$cn)) && min(mb_strlen($cn), mb_strlen($nombreN)) > 4) {
+                            $existente = ['id'=>$c['id'],'nombre'=>$c['nombre'],'slug'=>$c['slug']]; $accion = 'duplicado'; break;
+                        }
+                    }
+                }
+            } catch (Throwable $e) {}
+        }
+        return ['index'=>$index,'datos'=>$datos,'slug'=>$slug,'accion'=>$accion,'existente'=>$existente,'errores'=>$errores];
+    }
+
+    private function ingParseCsv(string $contenido): array
+    {
+        $lines = array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $contenido))));
+        if (count($lines) < 2) throw new RuntimeException('El CSV necesita encabezados y al menos una fila.');
+        $delim = substr_count($lines[0], ';') >= substr_count($lines[0], ',') ? ';' : ',';
+        $headers = array_map('trim', str_getcsv($lines[0], $delim));
+        $rows = [];
+        foreach (array_slice($lines, 1) as $line) {
+            $cells = str_getcsv($line, $delim);
+            $obj = [];
+            foreach ($headers as $i => $h) { if ($h !== '') $obj[$h] = $cells[$i] ?? ''; }
+            $rows[] = $obj;
+        }
+        return $rows;
+    }
+
+    private function ingGeocode(string $municipio, string $departamento): array
+    {
+        $q = urlencode($municipio . ', ' . $departamento . ', Colombia');
+        $url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q={$q}";
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_TIMEOUT=>15, CURLOPT_CONNECTTIMEOUT=>8, CURLOPT_HTTPHEADER=>['User-Agent: TropicalBiohostelBot/1.0 (hola@tropicalbiohostel.com)']]);
+        $raw = curl_exec($ch); $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+        $data = json_decode((string)$raw, true);
+        if ($status < 200 || $status >= 300 || !is_array($data) || empty($data[0])) throw new RuntimeException('No se encontró el municipio "' . $municipio . '".');
+        return ['lat'=>(float)$data[0]['lat'], 'lon'=>(float)$data[0]['lon'], 'nombre'=>(string)($data[0]['display_name'] ?? $municipio)];
+    }
+
+    private function ingOsmQuery(float $lat, float $lon, array $tipos): string
+    {
+        $radio = 12000; $t = array_fill_keys($tipos, true); $all = count($tipos) === 0;
+        $filtros = [];
+        if ($all || isset($t['hotel'])) $filtros[] = '["tourism"="hotel"]';
+        if ($all || isset($t['hostal'])) $filtros[] = '["tourism"~"^(hostel|guest_house|apartment)$"]';
+        if ($all || isset($t['glamping'])) $filtros[] = '["tourism"~"^(camp_site|caravan_site)$"]';
+        if ($all || isset($t['restaurante'])) $filtros[] = '["amenity"~"^(restaurant|fast_food|food_court)$"]';
+        if ($all || isset($t['bar'])) $filtros[] = '["amenity"~"^(bar|pub|biergarten|cafe)$"]';
+        if ($all || isset($t['finca'])) $filtros[] = '["tourism"="farm"]';
+        if ($all || isset($t['centro_turistico'])) $filtros[] = '["leisure"~"^(park|nature_reserve|water_park|resort)$"]';
+        if ($all || isset($t['actividad'])) $filtros[] = '["tourism"~"^(attraction|museum|viewpoint|gallery)$"]';
+        $lines = array_map(fn($f) => "  nwr{$f}(around:{$radio},{$lat},{$lon});", $filtros);
+        return "[out:json][timeout:60];(\n" . implode("\n", $lines) . "\n);out center tags;";
+    }
+
+    private function ingFetchOsm(float $lat, float $lon, array $tipos): array
+    {
+        $query = $this->ingOsmQuery($lat, $lon, $tipos);
+        $endpoints = [
+            'https://overpass-api.de/api/interpreter',
+            'https://overpass.private.coffee/api/interpreter',
+            'https://overpass.kumi.systems/api/interpreter',
+        ];
+        $lastError = 'sin respuesta';
+        foreach ($endpoints as $url) {
+            foreach ([0,5,15] as $espera) {
+                if ($espera > 0) sleep($espera);
+                $ch = curl_init($url);
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER=>true, CURLOPT_POST=>true, CURLOPT_POSTFIELDS=>$query,
+                    CURLOPT_TIMEOUT=>90, CURLOPT_CONNECTTIMEOUT=>10,
+                    CURLOPT_HTTPHEADER=>['User-Agent: TropicalBiohostelBot/1.0 (hola@tropicalbiohostel.com)','Content-Type: text/plain'],
+                ]);
+                $raw = curl_exec($ch); $err = curl_error($ch); $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+                if ($raw === false || $err) { $lastError = 'sin respuesta'; continue; }
+                if ($status === 400) { $lastError = 'consulta rechazada (HTTP 400)'; break; }
+                if ($status < 200 || $status >= 300) { $lastError = 'HTTP ' . $status; continue; }
+                $data = json_decode((string)$raw, true);
+                if (!is_array($data['elements'] ?? null)) { $lastError = 'respuesta vacía'; continue; }
+                $vistos = []; $out = [];
+                foreach ($data['elements'] as $e) {
+                    $tags = is_array($e['tags'] ?? null) ? $e['tags'] : [];
+                    if (empty($tags['name'])) continue;
+                    $la = $e['lat'] ?? ($e['center']['lat'] ?? null);
+                    $lo = $e['lon'] ?? ($e['center']['lon'] ?? null);
+                    if ($la === null || $lo === null) continue;
+                    $key = $this->ingNorm((string)$tags['name']) . '|' . number_format((float)$la,4,'.','') . '|' . number_format((float)$lo,4,'.','');
+                    if (isset($vistos[$key])) continue;
+                    $vistos[$key] = true; $out[] = $e;
+                    if (count($out) >= 120) break;
+                }
+                return $out;
+            }
+        }
+        throw new RuntimeException('Los servicios de mapas están saturados (' . $lastError . '). Espera unos minutos e intenta de nuevo.');
+    }
+
+    private function ingOsmTipo(array $tags): string
+    {
+        $tourism = $this->ingNorm((string)($tags['tourism'] ?? ''));
+        $amenity = $this->ingNorm((string)($tags['amenity'] ?? ''));
+        $leisure = $this->ingNorm((string)($tags['leisure'] ?? ''));
+        if ($tourism === 'hotel') return 'hotel';
+        if (in_array($tourism, ['hostel','guest_house','apartment'], true)) return 'hostal';
+        if (in_array($tourism, ['camp_site','caravan_site'], true)) return 'glamping';
+        if ($tourism === 'farm') return 'finca';
+        if (in_array($amenity, ['restaurant','fast_food','food_court'], true)) return 'restaurante';
+        if (in_array($amenity, ['bar','pub','biergarten','cafe'], true)) return 'bar';
+        if (in_array($tourism, ['attraction','museum','viewpoint','gallery'], true)) return 'actividad';
+        if (in_array($leisure, ['park','nature_reserve','water_park','resort'], true)) return 'centro_turistico';
+        return 'actividad';
+    }
+
+    private function ingOsmToDato(array $e, string $municipio, string $departamento): array
+    {
+        $tags = is_array($e['tags'] ?? null) ? $e['tags'] : [];
+        $la = $e['lat'] ?? ($e['center']['lat'] ?? null);
+        $lo = $e['lon'] ?? ($e['center']['lon'] ?? null);
+        $dir = trim(implode(' ', array_filter([$tags['addr:street'] ?? '', $tags['addr:housenumber'] ?? ''])));
+        $website = $tags['website'] ?? ($tags['contact:website'] ?? null);
+        $acts = [];
+        $leisure = $this->ingNorm((string)($tags['leisure'] ?? ''));
+        if ($leisure === 'nature_reserve') $acts[] = 'senderismo';
+        return [
+            'nombre' => $tags['name'] ?? '',
+            'tipo' => $this->ingOsmTipo($tags),
+            'descripcion' => ($tags['name'] ?? 'Sitio') . ' - sitio registrado en ' . $municipio . '.',
+            'direccion' => $dir ?: null,
+            'ciudad' => $tags['addr:city'] ?? $municipio,
+            'departamento' => $departamento,
+            'telefono' => $tags['phone'] ?? ($tags['contact:phone'] ?? null),
+            'website' => $website ?: null,
+            'fuenteWeb' => $website ? $this->ingClasificarWeb($website) : null,
+            'coordenadas' => ['lat'=>(float)$la,'lng'=>(float)$lo],
+            'actividades' => $acts,
+        ];
+    }
+
+    public function ingestionPreview(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $body = $this->body();
+            $formato = (string)($body['formato'] ?? 'json');
+            $contenido = (string)($body['contenido'] ?? '');
+            $municipio = trim((string)($body['municipio'] ?? ''));
+            if (trim($contenido) === '') { Response::error('Falta contenido', 400); return; }
+            if ($formato === 'json') {
+                $data = json_decode($contenido, true);
+                if ($data === null) { Response::error('JSON inválido. Revisa comas, comillas y corchetes.', 400); return; }
+                $crudos = is_array($data) ? (array_is_list($data) ? $data : ($data['sitios'] ?? $data['sites'] ?? $data['lugares'] ?? [$data])) : [$data];
+            } elseif ($formato === 'csv') {
+                $crudos = $this->ingParseCsv($contenido);
+            } else {
+                Response::error('El texto libre necesita un proveedor de IA activo. Usa JSON o CSV en este backend PHP.', 400); return;
+            }
+            $rows = [];
+            foreach (array_values($crudos) as $i => $c) { $rows[] = $this->ingNormalizeRow($i, is_array($c)?$c:[], $municipio ?: null); }
+            Response::json(['total'=>count($rows), 'rows'=>$rows]);
+        });
+    }
+
+    public function ingestionScrape(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $body = $this->body();
+            $municipio = trim((string)($body['municipio'] ?? ''));
+            $departamento = trim((string)($body['departamento'] ?? 'Cundinamarca'));
+            $tipos = is_array($body['tipos'] ?? null) ? array_values(array_filter(array_map('strval', $body['tipos']))) : [];
+            if ($municipio === '') { Response::error('Indica el municipio a buscar.', 400); return; }
+            try {
+                $geo = $this->ingGeocode($municipio, $departamento ?: 'Cundinamarca');
+                $elements = $this->ingFetchOsm($geo['lat'], $geo['lon'], $tipos);
+                $rows = [];
+                foreach ($elements as $i => $e) {
+                    $dato = $this->ingOsmToDato($e, $municipio, $departamento ?: 'Cundinamarca');
+                    $rows[] = $this->ingNormalizeRow($i, $dato, $municipio);
+                }
+                Response::json(['total'=>count($rows), 'rows'=>$rows, 'centro'=>['lat'=>$geo['lat'],'lon'=>$geo['lon'],'nombre'=>$geo['nombre']], 'fuente'=>'OpenStreetMap']);
+            } catch (Throwable $e) {
+                Response::error($e->getMessage() ?: 'No se pudo completar el scraping', 400);
+            }
+        });
+    }
+
+    public function ingestionExecute(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $body = $this->body();
+            $items = is_array($body['items'] ?? null) ? $body['items'] : [];
+            $publicar = !empty($body['publicarNuevos']);
+            $creados = 0; $actualizados = 0; $omitidos = 0; $errores = [];
+            foreach ($items as $it) {
+                $accion = (string)($it['accion'] ?? 'omitir');
+                $datos = is_array($it['datos'] ?? null) ? $it['datos'] : [];
+                $slugObj = trim((string)($it['slugObjetivo'] ?? ''));
+                if ($accion === 'omitir') { $omitidos++; continue; }
+                try {
+                    $nombre = trim((string)($datos['nombre'] ?? ''));
+                    if ($nombre === '') { $omitidos++; continue; }
+                    $slug = $this->ingSlug($nombre);
+                    $tipo = $this->ingMapTipo($datos['tipo'] ?? '') ?: 'actividad';
+                    $payload = [
+                        'nombre'=>$nombre, 'slug'=>$slug, 'tipo'=>$tipo,
+                        'descripcion'=>($datos['descripcion'] ?? null) ?: null,
+                        'ubicacion'=>($datos['ubicacion'] ?? $datos['ciudad'] ?? null) ?: null,
+                        'direccion'=>($datos['direccion'] ?? null) ?: null,
+                        'ciudad'=>($datos['ciudad'] ?? null) ?: null,
+                        'departamento'=>($datos['departamento'] ?? null) ?: null,
+                        'telefono'=>($datos['telefono'] ?? null) ?: null,
+                        'email'=>($datos['email'] ?? null) ?: null,
+                        'whatsapp'=>($datos['whatsapp'] ?? null) ?: null,
+                        'precioNoche'=>(float)($datos['precioNoche'] ?? 0),
+                        'capacidadMaxima'=>max(1,(int)($datos['capacidadMaxima'] ?? 4)),
+                        'numeroHabitaciones'=>isset($datos['numeroHabitaciones']) ? (int)$datos['numeroHabitaciones'] : 1,
+                        'admiteMascotas'=>!empty($datos['admiteMascotas']) ? 1 : 0,
+                        'seguroDisponible'=>!empty($datos['seguroDisponible']) ? 1 : 0,
+                        'actividades'=>json_encode(array_values(is_array($datos['actividades'] ?? null)?$datos['actividades']:[]), JSON_UNESCAPED_UNICODE),
+                        'imagenes'=>json_encode(array_values(is_array($datos['imagenes'] ?? null)?$datos['imagenes']:[]), JSON_UNESCAPED_UNICODE),
+                        'videos'=>json_encode([]), 'servicioImagenes'=>json_encode([]), 'redesSociales'=>json_encode(!empty($datos['website'])?['sitio_web'=>$datos['website']]:new stdClass()),
+                        'coordenadas'=>json_encode(is_array($datos['coordenadas'] ?? null)?$datos['coordenadas']:new stdClass()),
+                    ];
+                    if ($accion === 'actualizar' && $slugObj !== '') {
+                        $stmt = $this->pdo()->prepare('UPDATE properties SET nombre=?,tipo=?,descripcion=?,ubicacion=?,direccion=?,ciudad=?,departamento=?,telefono=?,email=?,whatsapp=?,precioNoche=?,capacidadMaxima=?,numeroHabitaciones=?,admiteMascotas=?,seguroDisponible=?,actividades=?,coordenadas=?,updated_at=CURRENT_TIMESTAMP WHERE slug=?');
+                        $stmt->execute([$payload['nombre'],$payload['tipo'],$payload['descripcion'],$payload['ubicacion'],$payload['direccion'],$payload['ciudad'],$payload['departamento'],$payload['telefono'],$payload['email'],$payload['whatsapp'],$payload['precioNoche'],$payload['capacidadMaxima'],$payload['numeroHabitaciones'],$payload['admiteMascotas'],$payload['seguroDisponible'],$payload['actividades'],$payload['coordenadas'],$slugObj]);
+                        $actualizados++;
+                    } else {
+                        $id = $this->uuid();
+                        $estado = $publicar ? 'PUBLICADO' : 'BORRADOR';
+                        $stmt = $this->pdo()->prepare('INSERT INTO properties (id,slug,nombre,tipo,descripcion,ubicacion,direccion,ciudad,departamento,telefono,email,whatsapp,estrellas,calificacion,precioNoche,capacidadMaxima,numeroHabitaciones,horarioCheckIn,horarioCheckOut,reglamento,politicasCancelacion,admiteMascotas,seguroDisponible,actividades,imagenes,videos,servicioImagenes,redesSociales,coordenadas,estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,0,0,?,?,?,?,NULL,NULL,NULL,NULL,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE nombre=VALUES(nombre),tipo=VALUES(tipo),descripcion=VALUES(descripcion),telefono=VALUES(telefono),updated_at=CURRENT_TIMESTAMP');
+                        $stmt->execute([$id,$payload['slug'],$payload['nombre'],$payload['tipo'],$payload['descripcion'],$payload['ubicacion'],$payload['direccion'],$payload['ciudad'],$payload['departamento'],$payload['telefono'],$payload['email'],$payload['whatsapp'],$payload['precioNoche'],$payload['capacidadMaxima'],$payload['numeroHabitaciones'],$payload['admiteMascotas'],$payload['seguroDisponible'],$payload['actividades'],$payload['imagenes'],$payload['videos'],$payload['servicioImagenes'],$payload['redesSociales'],$payload['coordenadas'],$estado]);
+                        $creados++;
+                    }
+                } catch (Throwable $e) { $errores[] = ($datos['nombre'] ?? 'fila') . ': ' . $e->getMessage(); }
+            }
+            Response::json(['creados'=>$creados,'actualizados'=>$actualizados,'omitidos'=>$omitidos,'errores'=>$errores]);
+        });
+    }
+
+    public function ingestionEstado(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json(['pendientes'=>0,'desactualizados'=>[],'ultimaVerificacion'=>null]);
+        });
+    }
+    public function ingestionActualizaciones(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json([]);
+        });
+    }
+    public function ingestionVerificar(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json(['ok'=>true,'mensaje'=>'Verificación automática no disponible en backend PHP. Usa Scrapear municipio.']);
+        });
+    }
+    public function ingestionResolver(array $params): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json(['ok'=>true]);
+        });
+    }
+    public function ingestionGoogle(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $body = $this->body();
+            $rows = is_array($body['rows'] ?? null) ? $body['rows'] : [];
+            $out = array_map(fn($r) => ['datos'=>$r['datos'] ?? $r, 'agregado'=>[]], $rows);
+            Response::json(['total'=>count($out),'enriquecidos'=>0,'rows'=>$out,'message'=>'Enriquecimiento Google no configurado en backend PHP.']);
+        });
+    }
+    public function ingestionEnriquecer(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $body = $this->body();
+            $rows = is_array($body['rows'] ?? null) ? $body['rows'] : [];
+            $out = array_map(fn($r) => ['datos'=>$r['datos'] ?? $r, 'agregado'=>[]], $rows);
+            Response::json(['total'=>count($out),'enriquecidos'=>0,'rows'=>$out]);
+        });
+    }
+    public function getClavesEstado(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json(['google_places'=>false]);
+        });
+    }
 }
