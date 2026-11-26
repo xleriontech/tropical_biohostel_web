@@ -13,7 +13,7 @@ const EXPLORAR_LINKS = [
   { href: "/rutas", label: "Rutas del café", Icon: Coffee },
   { href: "/fical-y-el-cafe", label: "Fical y el café", Icon: BookOpen },
   { href: "/bienestar", label: "Bienestar", Icon: Flower2 },
-  { href: "/donaciones", label: "Donar 🌳", Icon: HeartHandshake },
+  { href: "/donaciones", label: "Donar", Icon: HeartHandshake },
   { href: "/terminos", label: "Términos", Icon: ScrollText },
   { href: "/en", label: "English", Icon: Compass },
 ];
@@ -152,7 +152,7 @@ export default function NavBar() {
               className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg lg:inline-flex"
               title="Donar · Siembra y carbono"
             >
-              <HeartHandshake className="h-4 w-4" /> Donar 🌳
+              <HeartHandshake className="h-4 w-4" /> Donar
             </a>
             <button
               onClick={() => setMenuOpen(!menuOpen)}

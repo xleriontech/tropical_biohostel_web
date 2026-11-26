@@ -40,6 +40,29 @@ export default function AdminLayout({
   const pathname = usePathname();
   const { showToast } = useToast();
 
+  // PWA exclusiva admin
+  useEffect(() => {
+    const manifestHref = "/admin.webmanifest";
+    let link = document.querySelector('link[rel="manifest"][data-admin-pwa]') as HTMLLinkElement | null;
+    const prev = document.querySelector('link[rel="manifest"]:not([data-admin-pwa])') as HTMLLinkElement | null;
+    const prevHref = prev?.getAttribute("href") || "";
+    if (prev) prev.setAttribute("href", manifestHref);
+    else {
+      link = document.createElement("link");
+      link.rel = "manifest";
+      link.href = manifestHref;
+      link.setAttribute("data-admin-pwa", "1");
+      document.head.appendChild(link);
+    }
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/admin-sw.js", { scope: "/admin/" }).catch(() => {});
+    }
+    return () => {
+      if (prev) prev.setAttribute("href", prevHref || "/manifest.webmanifest");
+      if (link) link.remove();
+    };
+  }, []);
+
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem("token");

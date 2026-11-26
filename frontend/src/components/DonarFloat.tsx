@@ -30,7 +30,7 @@ export default function DonarFloat() {
             href="/donaciones/"
             className="mt-3 block rounded-full bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-2.5 text-center text-sm font-bold text-white shadow-lg hover:from-emerald-500 hover:to-green-600"
           >
-            Donar 🌳
+            Donar
           </a>
         </div>
       )}
@@ -42,7 +42,7 @@ export default function DonarFloat() {
       >
         <HeartHandshake className="h-6 w-6" />
         <span className="text-xs font-black uppercase tracking-widest [writing-mode:vertical-rl]">
-          Donar 🌳
+          Donar
         </span>
       </button>
     </div>

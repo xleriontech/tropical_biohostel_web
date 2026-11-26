@@ -563,7 +563,7 @@ export default function BusquedaInteligentePage() {
               return (
                 <a
                   key={m.propiedad.id}
-                  href={`/property/${m.propiedad.slug}`}
+                  href={m.propiedad?.slug ? `/property/${m.propiedad.slug}/` : "/busqueda-inteligente/"}
                   className="block overflow-hidden rounded-2xl border bg-white shadow-sm transition-shadow hover:shadow-md"
                 >
                   <div className="flex flex-col sm:flex-row">

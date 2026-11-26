@@ -1,0 +1,34 @@
+{
+  "name": "Tropical Biohostel - Administración",
+  "short_name": "TB Admin",
+  "description": "Panel de administración de Tropical Biohostel.",
+  "lang": "es-CO",
+  "dir": "ltr",
+  "id": "/admin/",
+  "start_url": "/admin/?source=pwa",
+  "scope": "/admin/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#F5EFE0",
+  "theme_color": "#007A33",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.svg?v=5",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg?v=5",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Reservas", "url": "/admin/reservas/", "icons": [{ "src": "/favicon.svg?v=5", "sizes": "any", "type": "image/svg+xml" }] },
+    { "name": "Propiedades", "url": "/admin/properties/", "icons": [{ "src": "/favicon.svg?v=5", "sizes": "any", "type": "image/svg+xml" }] }
+  ]
+}

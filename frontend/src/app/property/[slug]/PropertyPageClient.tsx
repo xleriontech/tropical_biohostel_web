@@ -51,26 +51,26 @@ export default function PropertyPageClient({ slug }: { slug: string }) {
   }
 
   if (error || !property) {
+    const backHref = slug === "cosmic-bungalow" ? "/cosmic-bungalow/" : "/busqueda-inteligente/";
+    const backLabel = slug === "cosmic-bungalow" ? "Volver a Cosmic Bungalow" : "Volver a la búsqueda";
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <h1 className="font-display text-3xl font-semibold text-foreground">No se pudo cargar esta propiedad</h1>
+        <h1 className="font-display text-3xl font-semibold text-foreground">Alojamiento no disponible</h1>
         <p className="mt-4 text-muted-foreground">
-          En este momento no podemos mostrar la información de reserva. Puedes volver a intentarlo en unos minutos o contactarnos directamente.
+          No pudimos cargar este alojamiento. Puede que ya no esté publicado o que haya un problema temporal de conexión.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <a
-            href={slug === "cosmic-bungalow" ? "/cosmic-bungalow/" : "/"}
+            href={backHref}
             className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
           >
-            {slug === "cosmic-bungalow" ? "Volver a Cosmic Bungalow" : "Volver al inicio"}
+            {backLabel}
           </a>
           <a
-            href="https://wa.me/573209079174"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/"
             className="rounded-full border border-input px-6 py-3 text-sm font-semibold text-foreground hover:bg-secondary"
           >
-            Contactar por WhatsApp
+            Ir al inicio
           </a>
         </div>
       </div>
