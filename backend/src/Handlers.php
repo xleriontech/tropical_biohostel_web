@@ -83,13 +83,30 @@ final class Handlers
         return $default;
     }
 
+    private function ensureSiteConfigTable(): void
+    {
+        $this->pdo()->exec("CREATE TABLE IF NOT EXISTS site_config (
+            config_key VARCHAR(100) PRIMARY KEY,
+            value_json LONGTEXT NOT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    }
+
     private function setConfigValue(string $key, mixed $value): void
     {
         $json = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $stmt = $this->pdo()->prepare(
-            'INSERT INTO site_config (config_key, value_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE value_json = VALUES(value_json), updated_at = CURRENT_TIMESTAMP'
-        );
-        $stmt->execute([$key, $json]);
+        try {
+            $stmt = $this->pdo()->prepare(
+                'INSERT INTO site_config (config_key, value_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE value_json = VALUES(value_json), updated_at = CURRENT_TIMESTAMP'
+            );
+            $stmt->execute([$key, $json]);
+        } catch (Throwable $e) {
+            $this->ensureSiteConfigTable();
+            $stmt = $this->pdo()->prepare(
+                'INSERT INTO site_config (config_key, value_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE value_json = VALUES(value_json), updated_at = CURRENT_TIMESTAMP'
+            );
+            $stmt->execute([$key, $json]);
+        }
     }
 
     // ---------- Properties ----------
