@@ -736,6 +736,32 @@ final class Handlers
         });
     }
 
+    public function updateReservaEstado(array $params): void
+    {
+        $this->safe(function () use ($params) {
+            $this->requireAdmin();
+            $id = (string)($params['id'] ?? '');
+            $body = $this->body();
+            $estado = strtoupper(trim((string)($body['estado'] ?? '')));
+            $allowed = ['PENDIENTE','CONFIRMADA','CANCELADA','NO_SHOW','COMPLETADA'];
+            if (!in_array($estado, $allowed, true)) { Response::error('Estado inválido', 400); return; }
+            $stmt = $this->pdo()->prepare('UPDATE reservas SET estado = ?, updated_at = NOW() WHERE id = ?');
+            $stmt->execute([$estado, $id]);
+            Response::json(['ok'=>true,'id'=>$id,'estado'=>$estado]);
+        });
+    }
+
+    public function deleteReserva(array $params): void
+    {
+        $this->safe(function () use ($params) {
+            $this->requireAdmin();
+            $id = (string)($params['id'] ?? '');
+            $stmt = $this->pdo()->prepare('DELETE FROM reservas WHERE id = ?');
+            $stmt->execute([$id]);
+            Response::json(['ok'=>true,'id'=>$id]);
+        });
+    }
+
     public function getPropertyAvailability(array $params): void
     {
         $this->safe(function () use ($params) {

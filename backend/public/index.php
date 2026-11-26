@@ -71,6 +71,8 @@ $router->add('GET', '/reservas', [$h, 'getReservas']);
 $router->add('GET', '/reservas/{id}', [$h, 'getReservaById']);
 $router->add('PATCH', '/reservas/{id}/cancelar', [$h, 'cancelarReserva']);
 $router->add('PATCH', '/reservas/{id}/no-show', [$h, 'noShowReserva']);
+$router->add('PATCH', '/reservas/{id}/estado', [$h, 'updateReservaEstado']);
+$router->add('DELETE', '/reservas/{id}', [$h, 'deleteReserva']);
 
 // Chat (stub PHP - Nati en modo básico mientras el backend NestJS/IA no está desplegado)
 $router->add('GET', '/chat/saludo', [$h, 'chatSaludo']);
