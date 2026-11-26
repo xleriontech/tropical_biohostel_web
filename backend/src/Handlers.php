@@ -87,7 +87,8 @@ final class Handlers
         try {
             [$k,$v,$names] = $this->siteConfigCols();
             if (!$names) return $default;
-            $stmt = $this->pdo()->prepare("SELECT `$v` AS val FROM site_config WHERE `$k` = ? LIMIT 1");
+            $order = in_array('updated_at', $names, true) ? 'ORDER BY updated_at DESC' : '';
+            $stmt = $this->pdo()->prepare("SELECT `$v` AS val FROM site_config WHERE `$k` = ? $order LIMIT 1");
             $stmt->execute([$key]);
             $row = $stmt->fetch();
             if ($row && array_key_exists('val', $row)) {
@@ -116,11 +117,18 @@ final class Handlers
         $do = function() use ($key,$json) {
             [$k,$v,$names] = $this->siteConfigCols();
             if (!$names) { $this->ensureSiteConfigTable(); [$k,$v,$names] = $this->siteConfigCols(); }
-            $upd = "`$v` = VALUES(`$v`)";
+            // UPDATE primero (compatible con tablas sin UNIQUE en key)
+            $upd = "`$v` = ?";
             if (in_array('updated_at', $names, true)) $upd .= ", updated_at = CURRENT_TIMESTAMP";
-            $sql = "INSERT INTO site_config (`$k`, `$v`) VALUES (?, ?) ON DUPLICATE KEY UPDATE $upd";
-            $stmt = $this->pdo()->prepare($sql);
-            $stmt->execute([$key, $json]);
+            $stmt = $this->pdo()->prepare("UPDATE site_config SET $upd WHERE `$k` = ?");
+            $stmt->execute([$json, $key]);
+            if ($stmt->rowCount() > 0) return;
+            // Puede existir con mismo valor (rowCount 0) o no existir
+            $chk = $this->pdo()->prepare("SELECT 1 FROM site_config WHERE `$k` = ? LIMIT 1");
+            $chk->execute([$key]);
+            if ($chk->fetchColumn()) return; // ya existe, mismo valor
+            $stmt2 = $this->pdo()->prepare("INSERT INTO site_config (`$k`, `$v`) VALUES (?, ?)");
+            $stmt2->execute([$key, $json]);
         };
         try { $do(); }
         catch (Throwable $e) {
