@@ -67,14 +67,32 @@ final class Handlers
         });
     }
 
+    private function siteConfigCols(): array
+    {
+        try {
+            $cols = $this->pdo()->query('SHOW COLUMNS FROM site_config')->fetchAll();
+            $names = array_map(fn($c) => (string)($c['Field'] ?? ''), is_array($cols) ? $cols : []);
+        } catch (Throwable $e) {
+            $names = [];
+        }
+        $keyCol = null; $valCol = null;
+        foreach (['config_key','key','clave','name','config_name','setting_key'] as $c) { if (in_array($c, $names, true)) { $keyCol = $c; break; } }
+        foreach (['value_json','value','valor','config_value','setting_value','data'] as $c) { if (in_array($c, $names, true)) { $valCol = $c; break; } }
+        if (!$keyCol || !$valCol) { $keyCol = $keyCol ?: 'config_key'; $valCol = $valCol ?: 'value_json'; }
+        return [$keyCol, $valCol, $names];
+    }
+
     private function getConfigValue(string $key, mixed $default): mixed
     {
         try {
-            $stmt = $this->pdo()->prepare('SELECT value_json FROM site_config WHERE config_key = ? LIMIT 1');
+            [$k,$v,$names] = $this->siteConfigCols();
+            if (!$names) return $default;
+            $stmt = $this->pdo()->prepare("SELECT `$v` AS val FROM site_config WHERE `$k` = ? LIMIT 1");
             $stmt->execute([$key]);
             $row = $stmt->fetch();
-            if ($row && isset($row['value_json'])) {
-                $decoded = json_decode($row['value_json'], true);
+            if ($row && array_key_exists('val', $row)) {
+                $raw = $row['val'];
+                $decoded = is_string($raw) ? json_decode($raw, true) : $raw;
                 return $decoded === null ? $default : $decoded;
             }
         } catch (Throwable $e) {
@@ -95,17 +113,19 @@ final class Handlers
     private function setConfigValue(string $key, mixed $value): void
     {
         $json = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        try {
-            $stmt = $this->pdo()->prepare(
-                'INSERT INTO site_config (config_key, value_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE value_json = VALUES(value_json), updated_at = CURRENT_TIMESTAMP'
-            );
+        $do = function() use ($key,$json) {
+            [$k,$v,$names] = $this->siteConfigCols();
+            if (!$names) { $this->ensureSiteConfigTable(); [$k,$v,$names] = $this->siteConfigCols(); }
+            $upd = "`$v` = VALUES(`$v`)";
+            if (in_array('updated_at', $names, true)) $upd .= ", updated_at = CURRENT_TIMESTAMP";
+            $sql = "INSERT INTO site_config (`$k`, `$v`) VALUES (?, ?) ON DUPLICATE KEY UPDATE $upd";
+            $stmt = $this->pdo()->prepare($sql);
             $stmt->execute([$key, $json]);
-        } catch (Throwable $e) {
+        };
+        try { $do(); }
+        catch (Throwable $e) {
             $this->ensureSiteConfigTable();
-            $stmt = $this->pdo()->prepare(
-                'INSERT INTO site_config (config_key, value_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE value_json = VALUES(value_json), updated_at = CURRENT_TIMESTAMP'
-            );
-            $stmt->execute([$key, $json]);
+            $do();
         }
     }
 
