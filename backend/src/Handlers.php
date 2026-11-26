@@ -713,7 +713,131 @@ final class Handlers
         });
     }
 
-    // ---------- Chat (Nati básico) ----------
+    // ---------- Chat (Nati básico / IA opcional) ----------
+    private function chatAiEnabled(): bool
+    {
+        $c = $this->config['chat_ai'] ?? [];
+        return !empty($c['enabled']) && !empty($c['api_key']);
+    }
+
+    private function chatPropertyContext(int $limit = 12): string
+    {
+        try {
+            $stmt = $this->pdo()->prepare("SELECT nombre,tipo,slug,precioNoche,capacidadMaxima,ciudad,actividades,descripcion FROM properties WHERE estado='PUBLICADO' ORDER BY calificacion DESC, created_at DESC LIMIT ?");
+            $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $rows = $stmt->fetchAll();
+            $lines = [];
+            foreach ($rows as $r) {
+                $acts = json_decode($r['actividades'] ?? '[]', true);
+                $acts = is_array($acts) ? implode(', ', array_slice($acts, 0, 6)) : '';
+                $desc = mb_substr(trim((string)($r['descripcion'] ?? '')), 0, 120);
+                $lines[] = "- {$r['nombre']} ({$r['tipo']}, slug {$r['slug']}, $" . number_format((float)$r['precioNoche'],0,',','.') . "/noche o persona, cap {$r['capacidadMaxima']}, {$r['ciudad']}) actividades: {$acts}. {$desc}";
+            }
+            return $lines ? implode("\n", $lines) : "No hay propiedades publicadas en este momento.";
+        } catch (Throwable $e) {
+            return "No se pudo cargar el catálogo.";
+        }
+    }
+
+    private function chatAiReply(string $msg, string $sessionId): ?array
+    {
+        if (!$this->chatAiEnabled()) return null;
+        $c = $this->config['chat_ai'] ?? [];
+        $baseUrl = rtrim((string)($c['base_url'] ?? 'https://api.openai.com/v1'), '/');
+        $apiKey = (string)($c['api_key'] ?? '');
+        $model = (string)($c['model'] ?? 'gpt-4o-mini');
+        $system = (string)($c['system_prompt'] ?? 'Eres Nati, anfitriona virtual de Tropical Biohostel.');
+        $catalog = $this->chatPropertyContext();
+
+        $system .= "\n\nCatálogo actual de Tropical Biohostel:\n" . $catalog;
+        $system .= "\n\nResponde en texto corto y útil. Si recomiendas opciones, menciona sus nombres exactos. Al final no incluyas JSON.";
+        $system .= "\nContacto: WhatsApp +57 320 907 9174, reservas@tropicalbiohostel.com, hola@tropicalbiohostel.com, luna@tropicalbiohostel.com.";
+
+        $payload = [
+            'model' => $model,
+            'temperature' => 0.4,
+            'messages' => [
+                ['role' => 'system', 'content' => $system],
+                ['role' => 'user', 'content' => $msg],
+            ],
+        ];
+
+        $ch = curl_init($baseUrl . '/chat/completions');
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $apiKey,
+            ],
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_TIMEOUT => 20,
+            CURLOPT_CONNECTTIMEOUT => 8,
+        ]);
+        $raw = curl_exec($ch);
+        $err = curl_error($ch);
+        $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($raw === false || $err || $status < 200 || $status >= 300) return null;
+
+        $json = json_decode((string)$raw, true);
+        $text = $json['choices'][0]['message']['content'] ?? null;
+        if (!is_string($text) || trim($text) === '') return null;
+        $text = trim($text);
+
+        // sugerencias simples según contenido
+        $sugerencias = ['Hospedaje', 'Experiencias', 'Donar', 'Reservar por WhatsApp'];
+        $low = mb_strtolower($msg . ' ' . $text);
+        if (preg_match('/reserv|disponib|fecha/', $low)) $sugerencias = ['Ver hospedaje', 'Experiencias', 'Contacto'];
+        elseif (preg_match('/don|arbol|siembra/', $low)) $sugerencias = ['Ver donaciones', 'Hospedaje', 'Contacto'];
+
+        // adjuntar propiedades si el mensaje parece pedirlas
+        $propiedades = [];
+        if (preg_match('/hosped|caba|glamping|cosmic|bungal|habitaci|dormir|aloj|experienc|actividad|tour|cafe|ruta|recomiend|opcion|que tienen|mostrar/', $low)) {
+            $q = preg_match('/experienc|actividad|tour|ruta/', $low) ? '' : '';
+            try { $propiedades = $this->buscarPropsForChat($msg, $low); } catch (Throwable $e) { $propiedades = []; }
+        }
+
+        return [
+            'reply' => $text,
+            'sessionId' => $sessionId,
+            'propiedades' => $propiedades,
+            'ubicacion' => null,
+            'sugerencias' => $sugerencias,
+        ];
+    }
+
+    private function buscarPropsForChat(string $msgRaw, string $low): array
+    {
+        $tipo = '';
+        if (preg_match('/experienc|actividad|tour|ruta/', $low)) $tipo = 'actividad';
+        $q = '';
+        if (!preg_match('/^(hola|buenas|buenos dias|buen dia|hey|gracias)$/u', trim($low))) {
+            $q = $msgRaw;
+        }
+        try {
+            $where = ['estado = "PUBLICADO"'];
+            $params = [];
+            if ($tipo !== '') { $where[] = 'tipo = ?'; $params[] = $tipo; }
+            if ($q !== '' && $tipo === '') {
+                $like = '%' . $q . '%';
+                $where[] = '(nombre LIKE ? OR descripcion LIKE ? OR ubicacion LIKE ? OR ciudad LIKE ? OR actividades LIKE ? OR tipo LIKE ?)';
+                array_push($params, $like, $like, $like, $like, $like, $like);
+            }
+            $sql = 'SELECT * FROM properties WHERE ' . implode(' AND ', $where) . ' ORDER BY calificacion DESC, created_at DESC LIMIT 4';
+            $stmt = $this->pdo()->prepare($sql);
+            $stmt->execute($params);
+            $rows = array_map([$this, 'normalizeProperty'], $stmt->fetchAll());
+            if (!$rows && $tipo === '') {
+                $stmt2 = $this->pdo()->prepare("SELECT * FROM properties WHERE estado='PUBLICADO' ORDER BY calificacion DESC, created_at DESC LIMIT 4");
+                $stmt2->execute();
+                $rows = array_map([$this, 'normalizeProperty'], $stmt2->fetchAll());
+            }
+            return $rows;
+        } catch (Throwable $e) { return []; }
+    }
+
     public function chatSaludo(): void
     {
         Response::json([
@@ -730,6 +854,15 @@ final class Handlers
             $msg = mb_strtolower($msgRaw);
             $sessionId = trim((string) ($body['sessionId'] ?? ''));
             if ($sessionId === '') $sessionId = $this->uuid();
+
+            // Intentar IA si está configurada
+            if ($msgRaw !== '') {
+                $ai = $this->chatAiReply($msgRaw, $sessionId);
+                if (is_array($ai) && !empty($ai['reply'])) {
+                    Response::json($ai);
+                    return;
+                }
+            }
 
             $reply = "Gracias por escribirnos. Puedo ayudarte con información general del Tropical Biohostel. Para atención personalizada, escríbenos por WhatsApp al +57 320 907 9174 o al correo reservas@tropicalbiohostel.com.";
             $sugerencias = ['Hospedaje', 'Experiencias', 'Donar', 'Contacto'];
@@ -765,7 +898,6 @@ final class Handlers
                     $sugerencias = ['Ver donaciones', 'Siembra un árbol', 'Contacto'];
                 } elseif (preg_match('/hosped|caba|glamping|cosmic|bungal|habitaci|dormir|aloj/', $msg)) {
                     $propiedades = $buscarProps('', '', 4);
-                    // priorizar tipos de hospedaje
                     $hosp = array_values(array_filter($propiedades, fn($p) => in_array($p['tipo'] ?? '', ['glamping','hotel','hostal','centro_turistico','finca'])));
                     if ($hosp) $propiedades = $hosp;
                     $reply = $propiedades
@@ -785,7 +917,6 @@ final class Handlers
                     $reply = "¡Hola! 🌿 Soy Nati. Con gusto te oriento. ¿Te interesa hospedaje, experiencias, donaciones o reservas?";
                     $sugerencias = ['Hospedaje', 'Experiencias', 'Donar', 'Reservar por WhatsApp'];
                 } else {
-                    // búsqueda libre en propiedades
                     $propiedades = $buscarProps('', $msgRaw, 4);
                     if ($propiedades) {
                         $reply = "Encontré estas opciones relacionadas con tu búsqueda:";

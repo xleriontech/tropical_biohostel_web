@@ -25,4 +25,14 @@ return [
     'admin_password' => 'CAMBIAR_PASSWORD_ADMIN',
     'admin_token' => 'CAMBIAR_TOKEN_ADMIN_LARGO',
     'admin_name' => 'Administrador',
+    // Chat IA (opción 1): proveedor compatible con OpenAI Chat Completions.
+    // Ejemplos base_url: https://api.openai.com/v1  |  https://api.groq.com/openai/v1  |  https://openrouter.ai/api/v1
+    'chat_ai' => [
+        'enabled' => false,
+        'provider' => 'openai-compatible',
+        'base_url' => 'https://api.openai.com/v1',
+        'api_key' => '',
+        'model' => 'gpt-4o-mini',
+        'system_prompt' => 'Eres Nati, anfitriona virtual de Tropical Biohostel en Nocaima, Cundinamarca. Responde en español, cálida y clara. Ayuda con hospedaje, experiencias, reservas, donaciones y contacto. Si no sabes un dato exacto, dilo con honestidad y sugiere WhatsApp +57 320 907 9174 o reservas@tropicalbiohostel.com. No inventes precios ni disponibilidad.',
+    ],
 ];
