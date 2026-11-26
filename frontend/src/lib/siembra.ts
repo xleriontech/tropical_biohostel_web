@@ -114,17 +114,11 @@ export interface OrdenCuidado {
 }
 
 /**
- * Base del API de siembra, que vive en el cPanel (PHP + MariaDB).
- * Se configura aparte de NEXT_PUBLIC_API_URL porque el resto del sitio sigue
- * hablando con el backend NestJS.
- *
- *   NEXT_PUBLIC_SIEMBRA_API_URL=https://xlerion.com.co/siembra
- *
- * Los archivos PHP son frontend/src/app/donaciones/siembra/*.php y se publican
- * en public_html/siembra/ del cPanel.
+ * Base del API de siembra (PHP + MariaDB), servida desde el mismo cPanel.
+ * Los archivos PHP se publican en public_html/siembra/.
  */
 const API = (
-  process.env.NEXT_PUBLIC_SIEMBRA_API_URL || "https://xlerion.com.co/siembra"
+  process.env.NEXT_PUBLIC_SIEMBRA_API_URL || "https://tropicalbiohostel.com/siembra"
 ).replace(/\/+$/, "");
 
 const url = (p: string) => `${API}${p}`;

@@ -8,20 +8,20 @@ import NotificationBell from "@/components/NotificationBell";
 import { useToast } from "@/components/Toast";
 
 const ADMIN_LINKS = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/properties", label: "Propiedades" },
-  { href: "/admin/alimentacion", label: "Alimentación de datos" },
-  { href: "/admin/sponsors", label: "Patrocinadores" },
-  { href: "/admin/ads", label: "Anuncios" },
-  { href: "/admin/ai-providers", label: "Proveedores IA" },
-  { href: "/admin/rag", label: "Base de conocimiento" },
-  { href: "/admin/interesados", label: "Interesados" },
-  { href: "/admin/repo", label: "Publicar cambios" },
-  { href: "/admin/donaciones", label: "Donaciones" },
-  { href: "/admin/comidas", label: "Comidas y Menús" },
-  { href: "/admin/claves", label: "Claves API" },
-  { href: "/admin/reservas", label: "Reservas" },
-  { href: "/admin/config", label: "Configuración" },
+  { href: "/admin/", label: "Dashboard" },
+  { href: "/admin/properties/", label: "Propiedades" },
+  { href: "/admin/alimentacion/", label: "Alimentación de datos" },
+  { href: "/admin/sponsors/", label: "Patrocinadores" },
+  { href: "/admin/ads/", label: "Anuncios" },
+  { href: "/admin/ai-providers/", label: "Proveedores IA" },
+  { href: "/admin/rag/", label: "Base de conocimiento" },
+  { href: "/admin/interesados/", label: "Interesados" },
+  { href: "/admin/repo/", label: "Publicar cambios" },
+  { href: "/admin/donaciones/", label: "Donaciones" },
+  { href: "/admin/comidas/", label: "Comidas y Menús" },
+  { href: "/admin/claves/", label: "Claves API" },
+  { href: "/admin/reservas/", label: "Reservas" },
+  { href: "/admin/config/", label: "Configuración" },
   // Panel de la finca: vive fuera de /admin porque tiene su propio login PHP.
   { href: "/finca", label: "Siembra · finca" },
 ];
@@ -74,7 +74,7 @@ export default function AdminLayout({
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     window.dispatchEvent(new Event("auth-change"));
-    router.push("/auth/login");
+    router.push("/auth/login/");
   };
 
   const shownNotifsRef = useRef<Set<string>>(new Set());
@@ -155,7 +155,7 @@ export default function AdminLayout({
             <a
               key={l.href}
               href={l.href}
-              data-active={pathname === l.href}
+              data-active={(pathname === l.href || pathname === l.href.replace(/\/$/, ""))}
               onClick={() => setMenuOpen(false)}
               className="side-link no-dark block rounded px-3 py-2 text-sm transition-colors"
             >
