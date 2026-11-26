@@ -1723,8 +1723,55 @@ final class Handlers
             if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
             $body = $this->body();
             $rows = is_array($body['rows'] ?? null) ? $body['rows'] : [];
-            $out = array_map(fn($r) => ['datos'=>$r['datos'] ?? $r, 'agregado'=>[]], $rows);
-            Response::json(['total'=>count($out),'enriquecidos'=>0,'rows'=>$out,'message'=>'Enriquecimiento Google no configurado en backend PHP.']);
+            $apiKey = trim((string)($body['apiKey'] ?? ''));
+            if ($apiKey === '') { $apiKey = trim((string)($this->getConfigValue('googlePlacesKey', ''))); }
+            if ($apiKey === '' || strlen($apiKey) < 10) {
+                Response::error('Falta una API key válida de Google Places. Habilita "Places API (New)" en Google Cloud y pega la key.', 400); return;
+            }
+            $out = []; $enriquecidos = 0;
+            foreach ($rows as $row) {
+                $datos = is_array($row['datos'] ?? null) ? $row['datos'] : (is_array($row) ? $row : []);
+                $agregado = [];
+                try {
+                    $q = trim((string)($datos['nombre'] ?? '') . ' ' . (string)($datos['ciudad'] ?? $datos['ubicacion'] ?? ''));
+                    if ($q === '') { $out[] = ['datos'=>$datos,'agregado'=>[]]; continue; }
+                    $ch = curl_init('https://places.googleapis.com/v1/places:searchText');
+                    curl_setopt_array($ch, [
+                        CURLOPT_RETURNTRANSFER=>true, CURLOPT_POST=>true,
+                        CURLOPT_HTTPHEADER=>['Content-Type: application/json','X-Goog-Api-Key: '.$apiKey,'X-Goog-FieldMask: places.id,places.displayName'],
+                        CURLOPT_POSTFIELDS=>json_encode(['textQuery'=>$q,'maxResultCount'=>1]),
+                        CURLOPT_TIMEOUT=>20, CURLOPT_CONNECTTIMEOUT=>8,
+                    ]);
+                    $raw = curl_exec($ch); $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+                    $sj = json_decode((string)$raw, true);
+                    $placeId = $sj['places'][0]['id'] ?? null;
+                    if ($status === 400 || $status === 403) { Response::error('Google rechazó la key. Habilita "Places API (New)" y revisa restricciones de la API key.', 400); return; }
+                    if (!$placeId) { $out[] = ['datos'=>$datos,'agregado'=>[]]; continue; }
+
+                    $ch2 = curl_init('https://places.googleapis.com/v1/' . rawurlencode($placeId));
+                    curl_setopt_array($ch2, [
+                        CURLOPT_RETURNTRANSFER=>true,
+                        CURLOPT_HTTPHEADER=>['Content-Type: application/json','X-Goog-Api-Key: '.$apiKey,'X-Goog-FieldMask: displayName,formattedAddress,nationalPhoneNumber,internationalPhoneNumber,websiteUri,rating,userRatingCount,regularOpeningHours,editorialSummary'],
+                        CURLOPT_TIMEOUT=>20, CURLOPT_CONNECTTIMEOUT=>8,
+                    ]);
+                    $raw2 = curl_exec($ch2); $st2 = (int)curl_getinfo($ch2, CURLINFO_HTTP_CODE); curl_close($ch2);
+                    $r = json_decode((string)$raw2, true);
+                    if ($st2 < 200 || $st2 >= 300 || !is_array($r)) { $out[] = ['datos'=>$datos,'agregado'=>[]]; continue; }
+
+                    $tel = $r['nationalPhoneNumber'] ?? ($r['internationalPhoneNumber'] ?? null);
+                    if ($tel && empty($datos['telefono'])) { $datos['telefono'] = substr((string)$tel, 0, 30); $agregado[] = 'teléfono'; }
+                    if (!empty($r['websiteUri']) && empty($datos['website'])) { $datos['website'] = (string)$r['websiteUri']; $agregado[] = 'web'; }
+                    if (!empty($r['formattedAddress']) && empty($datos['direccion'])) { $datos['direccion'] = (string)$r['formattedAddress']; $agregado[] = 'dirección'; }
+                    if (!empty($r['rating'])) { $datos['ratingGoogle'] = (float)$r['rating']; $agregado[] = 'rating'; }
+                    if (!empty($r['userRatingCount'])) { $datos['resenasGoogle'] = (int)$r['userRatingCount']; }
+                    if (!empty($r['editorialSummary']['text']) && (empty($datos['descripcion']) || str_contains((string)$datos['descripcion'], 'sitio registrado en'))) {
+                        $datos['descripcion'] = (string)$r['editorialSummary']['text']; $agregado[] = 'descripción';
+                    }
+                    if (count($agregado) > 0) $enriquecidos++;
+                } catch (Throwable $e) { /* ignorar fila */ }
+                $out[] = ['datos'=>$datos,'agregado'=>$agregado];
+            }
+            Response::json(['total'=>count($out),'enriquecidos'=>$enriquecidos,'rows'=>$out]);
         });
     }
     public function ingestionEnriquecer(): void
