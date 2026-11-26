@@ -1385,6 +1385,159 @@ final class Handlers
         });
     }
 
+    // ---------- Métodos de pago ----------
+    private function paymentDefaults(): array
+    {
+        return [
+            ['id'=>'wompi','name'=>'Wompi','category'=>'nacional','enabled'=>false,'mode'=>'sandbox','public_key'=>'','secret_key'=>'','extra'=>['events_secret'=>''],'webhook_url'=>'','keyUrl'=>'https://comercios.wompi.co/','docUrl'=>'https://docs.wompi.co/','note'=>'Colombia: tarjetas, PSE, Nequi, transferencia Bancolombia.'],
+            ['id'=>'epayco','name'=>'ePayco','category'=>'nacional','enabled'=>false,'mode'=>'sandbox','public_key'=>'','secret_key'=>'','extra'=>['p_key'=>''],'webhook_url'=>'','keyUrl'=>'https://dashboard.epayco.com/configuration','docUrl'=>'https://docs.epayco.com/','note'=>'Colombia: tarjetas, PSE, Efecty, Daviplata, etc.'],
+            ['id'=>'payu','name'=>'PayU Latam','category'=>'nacional','enabled'=>false,'mode'=>'sandbox','public_key'=>'','secret_key'=>'','extra'=>['merchant_id'=>'','account_id'=>''],'webhook_url'=>'','keyUrl'=>'https://merchants.payulatam.com/','docUrl'=>'https://developers.payulatam.com/','note'=>'Colombia/Latam: tarjetas, PSE, pagos en efectivo.'],
+            ['id'=>'bold','name'=>'Bold','category'=>'nacional','enabled'=>false,'mode'=>'sandbox','public_key'=>'','secret_key'=>'','extra'=>[],'webhook_url'=>'','keyUrl'=>'https://bold.co/','docUrl'=>'https://developers.bold.co/','note'=>'Colombia: datáfonos y pagos en línea.'],
+            ['id'=>'mercadopago','name'=>'Mercado Pago','category'=>'internacional','enabled'=>false,'mode'=>'sandbox','public_key'=>'','secret_key'=>'','extra'=>[],'webhook_url'=>'','keyUrl'=>'https://www.mercadopago.com.co/developers/panel/app','docUrl'=>'https://www.mercadopago.com.co/developers/','note'=>'Latam: tarjetas, PSE y medios locales.'],
+            ['id'=>'paypal','name'=>'PayPal','category'=>'internacional','enabled'=>false,'mode'=>'sandbox','public_key'=>'','secret_key'=>'','extra'=>[],'webhook_url'=>'','keyUrl'=>'https://developer.paypal.com/dashboard/applications/sandbox','docUrl'=>'https://developer.paypal.com/docs/','note'=>'Internacional: pagos con cuenta PayPal y tarjeta.'],
+            ['id'=>'stripe','name'=>'Stripe','category'=>'internacional','enabled'=>false,'mode'=>'sandbox','public_key'=>'','secret_key'=>'','extra'=>['webhook_secret'=>''],'webhook_url'=>'','keyUrl'=>'https://dashboard.stripe.com/apikeys','docUrl'=>'https://docs.stripe.com/','note'=>'Internacional: tarjetas y múltiples medios de pago.'],
+        ];
+    }
+
+    private function paymentConfigMerged(): array
+    {
+        $defaults = $this->paymentDefaults();
+        $saved = $this->getConfigValue('paymentMethods', []);
+        $savedMap = [];
+        if (is_array($saved)) foreach ($saved as $p) { if (is_array($p) && !empty($p['id'])) $savedMap[(string)$p['id']] = $p; }
+        $out = [];
+        foreach ($defaults as $d) {
+            $s = $savedMap[$d['id']] ?? [];
+            $m = array_merge($d, $s);
+            $m['id'] = $d['id']; $m['name'] = $d['name']; $m['category'] = $d['category']; $m['keyUrl'] = $d['keyUrl']; $m['docUrl'] = $d['docUrl'];
+            $m['enabled'] = !empty($m['enabled']);
+            $m['mode'] = in_array($m['mode'] ?? 'sandbox', ['sandbox','live'], true) ? $m['mode'] : 'sandbox';
+            $m['public_key'] = (string)($m['public_key'] ?? '');
+            $m['secret_key'] = (string)($m['secret_key'] ?? '');
+            $m['webhook_url'] = (string)($m['webhook_url'] ?? '');
+            $m['extra'] = is_array($m['extra'] ?? null) ? $m['extra'] : [];
+            $out[] = $m;
+            unset($savedMap[$d['id']]);
+        }
+        return $out;
+    }
+
+    public function getPaymentConfigAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $rows = $this->paymentConfigMerged();
+            $public = array_map(function($p) {
+                $p['has_secret'] = !empty($p['secret_key']);
+                $p['secret_masked'] = $p['has_secret'] ? ('••••' . substr((string)$p['secret_key'], -4)) : '';
+                unset($p['secret_key']);
+                if (is_array($p['extra'])) {
+                    foreach ($p['extra'] as $k=>$v) { if (is_string($v) && $v !== '') $p['extra'][$k.'_masked'] = '••••' . substr($v,-4); }
+                }
+                return $p;
+            }, $rows);
+            Response::json(['providers' => $public]);
+        });
+    }
+
+    public function savePaymentConfigAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $body = $this->body();
+            $incoming = is_array($body['providers'] ?? null) ? $body['providers'] : [];
+            $current = $this->paymentConfigMerged();
+            $byId = [];
+            foreach ($current as $c) $byId[$c['id']] = $c;
+            foreach ($incoming as $p) {
+                $id = (string)($p['id'] ?? '');
+                if ($id === '' || !isset($byId[$id])) continue;
+                $cur = $byId[$id];
+                $cur['enabled'] = !empty($p['enabled']);
+                $cur['mode'] = in_array($p['mode'] ?? 'sandbox', ['sandbox','live'], true) ? $p['mode'] : 'sandbox';
+                $cur['public_key'] = trim((string)($p['public_key'] ?? $cur['public_key']));
+                $cur['webhook_url'] = trim((string)($p['webhook_url'] ?? $cur['webhook_url']));
+                $sk = trim((string)($p['secret_key'] ?? ''));
+                if ($sk !== '') $cur['secret_key'] = $sk;
+                if (!empty($p['clear_secret'])) $cur['secret_key'] = '';
+                if (is_array($p['extra'] ?? null)) {
+                    foreach ($p['extra'] as $k=>$v) {
+                        if (str_ends_with((string)$k, '_masked')) continue;
+                        $v = trim((string)$v);
+                        if ($v !== '') $cur['extra'][$k] = $v;
+                        if ($v === '' && isset($p['clear_extra']) && in_array($k, (array)$p['clear_extra'], true)) $cur['extra'][$k] = '';
+                    }
+                }
+                $byId[$id] = $cur;
+            }
+            $this->setConfigValue('paymentMethods', array_values($byId));
+            Response::json(['ok'=>true]);
+        });
+    }
+
+    public function testPaymentConfigAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $body = $this->body();
+            $id = (string)($body['id'] ?? '');
+            $cfg = $this->paymentConfigMerged();
+            $p = null; foreach ($cfg as $c) { if ($c['id'] === $id) { $p = $c; break; } }
+            if (!$p) { Response::json(['ok'=>false,'error'=>'Proveedor no encontrado']); return; }
+            $pk = trim((string)($body['public_key'] ?? $p['public_key']));
+            $sk = trim((string)($body['secret_key'] ?? '')); if ($sk === '') $sk = (string)$p['secret_key'];
+            $mode = in_array($body['mode'] ?? $p['mode'], ['sandbox','live'], true) ? ($body['mode'] ?? $p['mode']) : 'sandbox';
+            $t0 = microtime(true);
+            $ok=false; $msg=''; $status=0;
+            try {
+                if ($id === 'stripe') {
+                    if ($sk === '') throw new RuntimeException('Falta secret key.');
+                    $ch = curl_init('https://api.stripe.com/v1/balance');
+                    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_USERPWD=>$sk.':', CURLOPT_TIMEOUT=>15]);
+                    $raw = curl_exec($ch); $status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE); $err=curl_error($ch); curl_close($ch);
+                    if ($err) throw new RuntimeException($err);
+                    $j = json_decode((string)$raw,true);
+                    $ok = $status >= 200 && $status < 300;
+                    $msg = $ok ? 'Conexión Stripe OK.' : (string)($j['error']['message'] ?? ('HTTP '.$status));
+                } elseif ($id === 'paypal') {
+                    if ($pk === '' || $sk === '') throw new RuntimeException('Falta client_id o secret.');
+                    $base = $mode === 'live' ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com';
+                    $ch = curl_init($base.'/v1/oauth2/token');
+                    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_POST=>true, CURLOPT_USERPWD=>$pk.':'.$sk, CURLOPT_POSTFIELDS=>'grant_type=client_credentials', CURLOPT_HTTPHEADER=>['Accept: application/json'], CURLOPT_TIMEOUT=>15]);
+                    $raw = curl_exec($ch); $status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE); $err=curl_error($ch); curl_close($ch);
+                    if ($err) throw new RuntimeException($err);
+                    $j = json_decode((string)$raw,true);
+                    $ok = !empty($j['access_token']);
+                    $msg = $ok ? 'Conexión PayPal OK.' : (string)($j['error_description'] ?? $j['message'] ?? ('HTTP '.$status));
+                } elseif ($id === 'mercadopago') {
+                    if ($sk === '') throw new RuntimeException('Falta access token (secret key).');
+                    $ch = curl_init('https://api.mercadopago.com/users/me');
+                    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_HTTPHEADER=>['Authorization: Bearer '.$sk], CURLOPT_TIMEOUT=>15]);
+                    $raw = curl_exec($ch); $status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE); $err=curl_error($ch); curl_close($ch);
+                    if ($err) throw new RuntimeException($err);
+                    $j = json_decode((string)$raw,true);
+                    $ok = $status >= 200 && $status < 300 && !empty($j['id']);
+                    $msg = $ok ? ('Conexión Mercado Pago OK (usuario '.$j['id'].').') : (string)($j['message'] ?? ('HTTP '.$status));
+                } elseif ($id === 'wompi') {
+                    if ($pk === '') throw new RuntimeException('Falta llave pública.');
+                    $base = $mode === 'live' ? 'https://production.wompi.co/v1' : 'https://sandbox.wompi.co/v1';
+                    $ch = curl_init($base.'/merchants/'.rawurlencode($pk));
+                    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_TIMEOUT=>15]);
+                    $raw = curl_exec($ch); $status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE); $err=curl_error($ch); curl_close($ch);
+                    if ($err) throw new RuntimeException($err);
+                    $j = json_decode((string)$raw,true);
+                    $ok = $status >= 200 && $status < 300 && isset($j['data']['id']);
+                    $msg = $ok ? 'Llave pública Wompi válida.' : (string)($j['error']['reason'] ?? $j['error']['messages'][0] ?? ('HTTP '.$status));
+                } else {
+                    $ok = ($pk !== '' || $sk !== '');
+                    $msg = $ok ? 'Credenciales guardadas. Prueba automática no disponible para este proveedor; verifica en su panel.' : 'Falta al menos una clave para probar.';
+                }
+            } catch (Throwable $e) { $ok=false; $msg=$e->getMessage(); }
+            $ms = (int) round((microtime(true)-$t0)*1000);
+            Response::json(['ok'=>$ok,'ms'=>$ms,'status'=>$status,'message'=>$msg,'provider'=>$id]);
+        });
+    }
+
     // ---------- Ingesta / Scraping ----------
     private function ingSlug(string $s): string
     {
