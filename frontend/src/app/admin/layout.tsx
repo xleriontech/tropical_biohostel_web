@@ -43,7 +43,7 @@ export default function AdminLayout({
     const checkAuth = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        router.push("/auth/login");
+        router.push("/auth/login/");
         return;
       }
 
@@ -53,7 +53,7 @@ export default function AdminLayout({
 
       if (!res.ok) {
         localStorage.removeItem("token");
-        router.push("/auth/login");
+        router.push("/auth/login/");
         return;
       }
 

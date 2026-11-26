@@ -182,7 +182,7 @@ export default function NavBar() {
                 </button>
               </div>
             ) : (
-              <a href="/auth/login" className="nav-link hidden text-sm sm:inline">
+              <a href="/auth/login/" className="nav-link hidden text-sm sm:inline">
                 Iniciar Sesión
               </a>
             )}
@@ -226,7 +226,7 @@ export default function NavBar() {
                   </button>
                 </>
               ) : (
-                <a href="/auth/login" className="m-link rounded-lg px-3 py-2.5 text-sm">
+                <a href="/auth/login/" className="m-link rounded-lg px-3 py-2.5 text-sm">
                   Iniciar Sesión
                 </a>
               )}

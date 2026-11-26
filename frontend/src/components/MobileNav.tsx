@@ -15,7 +15,7 @@ export default function MobileNav() {
     { href: "/", label: "Explorar", Icon: Compass, active: pathname === "/" },
     { href: "/busqueda-inteligente", label: "Buscar", Icon: Search, active: pathname.startsWith("/busqueda-inteligente") },
     { href: "/guardados", label: "Guardados", Icon: Heart, active: pathname.startsWith("/guardados"), badge: guardados.length },
-    { href: "/auth/login", label: "Perfil", Icon: User, active: pathname.startsWith("/auth") },
+    { href: "/auth/login/", label: "Perfil", Icon: User, active: pathname.startsWith("/auth") },
   ];
 
   return (
