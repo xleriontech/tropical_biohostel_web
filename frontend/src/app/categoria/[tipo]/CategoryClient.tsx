@@ -183,7 +183,7 @@ export default function CategoryClient({ tipo }: { tipo: string }) {
               Tres formas de habitar la naturaleza
             </h2>
             <div className="mt-8 grid gap-6 md:grid-cols-3">
-              <a href="/cosmic-bungalow" className="group rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+              <a href="/cosmic-bungalow/" className="group rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
                 <h3 className="font-display text-xl font-semibold text-foreground group-hover:text-primary">Cosmic Bungalow</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                   Una pieza de arquitectura orgánica con diseño hexagonal (5 × 5 m), construida artesanalmente en guadua y ladrillo. Totalmente equipada para una estadía sin preocupaciones, cuenta con un baño amplio y una pileta al aire libre privada para refrescarte bajo el cielo abierto.
@@ -191,7 +191,7 @@ export default function CategoryClient({ tipo }: { tipo: string }) {
                 <p className="mt-4 text-sm font-semibold text-primary">$360.000 / noche</p>
                 <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary">Ver alojamiento <ArrowRight className="h-3.5 w-3.5" /></span>
               </a>
-              <a href="/cabana-de-la-luna" className="group rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+              <a href="/cabana-de-la-luna/" className="group rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
                 <h3 className="font-display text-xl font-semibold text-foreground group-hover:text-primary">Cabaña de la Luna</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                   Un espacio cálido y acogedor de 5 × 5 m, completamente equipado y pensado para el máximo confort. Dispone de un amplio baño y un cómodo vestier, ideal para desconectarte con todas las comodidades a tu alcance. (Capacidad conjunta entre ambas cabañas: hasta 7 personas).
@@ -199,7 +199,7 @@ export default function CategoryClient({ tipo }: { tipo: string }) {
                 <p className="mt-4 text-sm font-semibold text-primary">$360.000 / noche</p>
                 <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary">Ver alojamiento <ArrowRight className="h-3.5 w-3.5" /></span>
               </a>
-              <a href="/glamping" className="group rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+              <a href="/glamping/" className="group rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
                 <h3 className="font-display text-xl font-semibold text-foreground group-hover:text-primary">Glamping</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                   La combinación perfecta entre aventura y confort. Diseñado para grupos o familias de hasta 4 personas que desean dormir inmersos en los sonidos del bosque sin renunciar a una estadía placentera.
@@ -268,13 +268,13 @@ export default function CategoryClient({ tipo }: { tipo: string }) {
             <div>
               <p className="mb-6 text-sm text-muted-foreground">
                 Explora nuestras experiencias en la finca. Para ver el catálogo completo, visita{" "}
-                <a href="/experiencias" className="font-semibold text-primary hover:underline">Experiencias</a>.
+                <a href="/experiencias/" className="font-semibold text-primary hover:underline">Experiencias</a>.
               </p>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {EXPERIENCIAS_CATALOGO.es.items.map((item) => (
                   <a
                     key={item.id}
-                    href="/experiencias"
+                    href="/experiencias/"
                     className="group overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md"
                   >
                     <div className="h-48 overflow-hidden">

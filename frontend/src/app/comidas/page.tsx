@@ -208,7 +208,7 @@ export default function ComidasPage() {
               menú ideal para tu visita.
             </p>
             <a
-              href="/gastronomia"
+              href="/gastronomia/"
               className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               <UtensilsCrossed className="h-4 w-4" /> Conocer la gastronomía

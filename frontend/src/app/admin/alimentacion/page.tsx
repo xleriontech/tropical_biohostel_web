@@ -657,7 +657,7 @@ export default function AlimentacionPage() {
             {googleGuardada ? (
               <span className="rounded-full bg-green-100 px-2 py-0.5 text-[11px] font-semibold text-green-800">key guardada ✓</span>
             ) : (
-              <a href="/admin/claves" className="text-xs font-normal text-primary hover:underline">configúrala en Claves API</a>
+              <a href="/admin/claves/" className="text-xs font-normal text-primary hover:underline">configúrala en Claves API</a>
             )}
             <span className="block font-normal text-muted-foreground">(opcional: rating, horario y teléfono de Google)</span>
           </p>

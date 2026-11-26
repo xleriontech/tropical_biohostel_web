@@ -125,7 +125,7 @@ export default function ExperienciasPage() {
             reserva previa.
           </p>
           <a
-            href="/categoria/actividades"
+            href="/categoria/actividades/"
             className="mt-5 inline-flex items-center gap-2 rounded-full bg-bosque px-6 py-3 text-sm font-semibold text-crema shadow-lg transition-all hover:-translate-y-0.5 hover:bg-tierra"
           >
             Consultar disponibilidad y reservar mi experiencia

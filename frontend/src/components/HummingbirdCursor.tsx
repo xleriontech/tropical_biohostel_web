@@ -47,7 +47,7 @@ export default function HummingbirdCursor() {
 
     const onClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
-      const termLink = target?.closest('a[href="/terminos"], a[href*="terminos"]') as HTMLAnchorElement | null;
+      const termLink = target?.closest('a[href="/terminos/"], a[href*="terminos"]') as HTMLAnchorElement | null;
       if (!termLink) return;
       spawnFeathers(e.clientX, e.clientY);
       if (e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {

@@ -37,7 +37,7 @@ export default function OfflinePage() {
           Ir al inicio
         </Link>
         <Link
-          href="/rutas"
+          href="/rutas/"
           className="inline-flex items-center gap-2 rounded-full border border-input px-6 py-2.5 text-sm font-medium hover:bg-secondary"
         >
           <Coffee className="h-4 w-4" />

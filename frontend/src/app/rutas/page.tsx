@@ -38,7 +38,7 @@ export default function RutasPage() {
             Mi abuela recogía el fruto maduro, lo secaba al sol y lo tostaba en su olla. Hoy hago la
             misma experiencia con cada uno de nuestros huéspedes: del cafetal a la taza.
           </p>
-          <a href="/fical-y-el-cafe" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">
+          <a href="/fical-y-el-cafe/" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">
             Conocer la historia →
           </a>
         </div>

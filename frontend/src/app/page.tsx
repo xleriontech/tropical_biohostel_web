@@ -94,7 +94,7 @@ export default function HomePage() {
                 {HERO.es.ctaHospedaje}
               </a>
               <a
-                href="/cosmic-bungalow"
+                href="/cosmic-bungalow/"
                 className="rounded-full border border-white/40 bg-white/15 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/25"
               >
                 {HERO.es.ctaCosmic}
@@ -103,7 +103,7 @@ export default function HomePage() {
 
             <div className="mt-8 flex flex-wrap justify-center gap-2">
               <a
-                href="/busqueda-inteligente"
+                href="/busqueda-inteligente/"
                 className="group flex max-w-full items-center gap-2 rounded-full bg-gradient-to-r from-[hsl(var(--grad-from))] to-[hsl(var(--grad-to))] px-5 py-3 text-sm font-bold shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:px-8 sm:py-3.5 sm:text-base"
                 style={{
                   color: "hsl(var(--grad-fg))",
@@ -205,7 +205,7 @@ export default function HomePage() {
           ))}
         </div>
         <a
-          href="/territorio"
+          href="/territorio/"
           className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl"
         >
           <Leaf className="h-5 w-5" /> Descubrir el territorio
@@ -225,7 +225,7 @@ export default function HomePage() {
             <p className="font-medium text-foreground">{HOSPEDAJE.es.cierre}</p>
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <a href="/property/tropical-biohostel" className="group overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md">
+            <a href="/property/tropical-biohostel/" className="group overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md">
               <div className="h-48 overflow-hidden">
                 <img src="/fotos/BioHostel5.jpg" alt="Interior de las cabañas con baño privado" loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
               </div>
@@ -235,7 +235,7 @@ export default function HomePage() {
                 <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary">Ver hospedaje <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
               </div>
             </a>
-            <a href="/property/tropical-biohostel" className="group overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md">
+            <a href="/property/tropical-biohostel/" className="group overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md">
               <div className="h-48 overflow-hidden">
                 <img src="/fotos/sitio/Screenshot_20260909_093715_Instagram.jpg" alt="Comedor para 10 personas" loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
               </div>
@@ -245,7 +245,7 @@ export default function HomePage() {
                 <p className="mt-2 font-display text-xl font-semibold text-primary">$120.000 <span className="text-xs font-normal text-muted-foreground">por persona / noche</span></p>
               </div>
             </a>
-            <a href="/cosmic-bungalow" className="group overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md">
+            <a href="/cosmic-bungalow/" className="group overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md">
               <div className="h-48 overflow-hidden">
                 <img src="/fotos/BioHostel2.jpg" alt="Pileta natural al aire libre del Cosmic Bungalow" loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
               </div>
@@ -278,7 +278,7 @@ export default function HomePage() {
               <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">{RUTAS.es.titulo}</h2>
               <p className="mt-3 max-w-3xl leading-relaxed text-white/80">{RUTAS.es.intro}</p>
             </div>
-            <a href="/rutas" className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-950 shadow-lg hover:bg-white/90">
+            <a href="/rutas/" className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-950 shadow-lg hover:bg-white/90">
               Ver las rutas <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -327,10 +327,10 @@ export default function HomePage() {
                 ))}
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="/cosmic-bungalow" className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-emerald-950 hover:bg-emerald-50">
+                <a href="/cosmic-bungalow/" className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-emerald-950 hover:bg-emerald-50">
                   Descubrir Cosmic Bungalow
                 </a>
-                <a href="/property/cosmic-bungalow" className="rounded-full border border-white/40 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10">
+                <a href="/property/cosmic-bungalow/" className="rounded-full border border-white/40 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10">
                   Ver y reservar
                 </a>
               </div>
@@ -364,7 +364,7 @@ export default function HomePage() {
             <h3 className="mt-3 font-display text-xl font-semibold">{GASTRONOMIA.es.titulo}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{GASTRONOMIA.es.cuerpo1}</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{GASTRONOMIA.es.cuerpo2}</p>
-            <a href="/gastronomia" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
+            <a href="/gastronomia/" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
               Del territorio a la mesa →
             </a>
           </div>
@@ -381,7 +381,7 @@ export default function HomePage() {
                 </span>
               ))}
             </div>
-            <a href="/experiencias" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
+            <a href="/experiencias/" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
               Ver experiencias →
             </a>
           </div>
@@ -398,7 +398,7 @@ export default function HomePage() {
                 </span>
               ))}
             </div>
-            <a href="/bienestar" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
+            <a href="/bienestar/" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
               Pausa y bienestar →
             </a>
           </div>
@@ -422,7 +422,7 @@ export default function HomePage() {
         </div>
         <p className="mx-auto mt-6 max-w-xl font-medium">{CIERRE.es.final}</p>
         <p className="mt-2 text-sm text-muted-foreground">
-          ¿Prefieres leer en inglés? <a href="/en" className="text-primary hover:underline">Read in English</a>
+          ¿Prefieres leer en inglés? <a href="/en/" className="text-primary hover:underline">Read in English</a>
         </p>
         <a
           href="https://www.google.com/maps/search/Tropical%20Biohostel%20Nocaima"

@@ -46,7 +46,7 @@ export default function AdminPropertiesPage() {
           </p>
         </div>
         <a
-          href="/admin/properties/new"
+          href="/admin/properties/new/"
           className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
           + Nueva Propiedad
@@ -177,7 +177,7 @@ export default function AdminPropertiesPage() {
             <p className="mt-2 text-muted-foreground">
               {properties.length === 0 ? "No hay propiedades todavía" : "Sin resultados con ese filtro"}
             </p>
-            <a href="/admin/properties/new" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
+            <a href="/admin/properties/new/" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
               Crear propiedad
             </a>
           </div>

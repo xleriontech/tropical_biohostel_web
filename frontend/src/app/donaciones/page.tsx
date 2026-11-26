@@ -35,7 +35,7 @@ export default function DonacionesPage() {
       </p>
 
       <a
-        href="/donaciones/siembra"
+        href="/donaciones/siembra/"
         className="group mt-8 flex flex-col gap-4 overflow-hidden rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
       >
         <span>

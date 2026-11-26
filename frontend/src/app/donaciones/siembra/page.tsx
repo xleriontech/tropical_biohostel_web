@@ -88,7 +88,7 @@ export default function SiembraPage() {
         <nav className="text-sm text-muted-foreground" aria-label="Ruta">
           <a href="/" className="hover:text-foreground">Inicio</a>
           <span className="mx-2">/</span>
-          <a href="/donaciones" className="hover:text-foreground">Donaciones</a>
+          <a href="/donaciones/" className="hover:text-foreground">Donaciones</a>
           <span className="mx-2">/</span>
           <span className="text-foreground">Siembra</span>
         </nav>
@@ -272,7 +272,7 @@ export default function SiembraPage() {
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                     <p className="text-xs text-muted-foreground">
                       ¿Es tu árbol?{" "}
-                      <a href="/donaciones/mi-arbol" className="font-semibold text-bosque underline">
+                      <a href="/donaciones/mi-arbol/" className="font-semibold text-bosque underline">
                         Ábrelo con tu código
                       </a>{" "}
                       para leer el parte de la finca.
@@ -305,7 +305,7 @@ export default function SiembraPage() {
                 <p className="mt-3 rounded-xl bg-secondary/70 px-4 py-3 text-sm text-tierra">
                   La finca está terminando de conectar el pago por PayPal. Mientras tanto puedes apoyar la
                   siembra en{" "}
-                  <a href="/donaciones" className="font-semibold text-bosque underline">
+                  <a href="/donaciones/" className="font-semibold text-bosque underline">
                     los proyectos ya abiertos
                   </a>
                   , o escribirnos por el chat para apadrinar tu árbol por consignación.
@@ -342,7 +342,7 @@ export default function SiembraPage() {
                   el parte de la finca.
                 </p>
                 <a
-                  href="/donaciones/mi-arbol"
+                  href="/donaciones/mi-arbol/"
                   className="mt-3 inline-block rounded-full border border-bosque px-5 py-2 text-sm font-semibold text-bosque hover:bg-secondary"
                 >
                   Consultar mi árbol →

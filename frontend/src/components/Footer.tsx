@@ -21,7 +21,7 @@ export default function Footer() {
             huéspedes), Cosmic Bungalow, comedor para 10 y cocina abierta.
           </p>
           <p className="mt-3 text-sm">
-            <a href="/en" className="text-primary hover:underline">Read in English</a>
+            <a href="/en/" className="text-primary hover:underline">Read in English</a>
           </p>
           <div className="mt-5">
             <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Contacto</p>
@@ -50,18 +50,18 @@ export default function Footer() {
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Recorrer</p>
           <div className="mt-3 flex flex-col items-start gap-2 text-sm">
-            <a href="/cosmic-bungalow" className="font-medium hover:underline">Cosmic Bungalow</a>
-            <a href="/territorio" className="hover:underline">Territorio</a>
-            <a href="/gastronomia" className="hover:underline">Gastronomía</a>
-            <a href="/experiencias" className="hover:underline">Experiencias</a>
-            <a href="/rutas" className="hover:underline">Rutas del café</a>
-            <a href="/fical-y-el-cafe" className="hover:underline">Fical y el café</a>
-            <a href="/bienestar" className="hover:underline">Bienestar · Yoga, Tai Chi, Chi Kung</a>
-            <a href="/donaciones" className="font-medium hover:underline">Donar · Siembra y carbono 🌳</a>
-            <a href="/busqueda-inteligente" className="hover:underline">Zemisqua · Buscador ancestral</a>
-            <a href="/guardados" className="hover:underline">Guardados</a>
-            <a href="/privacidad" className="hover:underline text-xs">Política de privacidad</a>
-            <a href="/terminos" className="hover:underline text-xs">Términos y condiciones</a>
+            <a href="/cosmic-bungalow/" className="font-medium hover:underline">Cosmic Bungalow</a>
+            <a href="/territorio/" className="hover:underline">Territorio</a>
+            <a href="/gastronomia/" className="hover:underline">Gastronomía</a>
+            <a href="/experiencias/" className="hover:underline">Experiencias</a>
+            <a href="/rutas/" className="hover:underline">Rutas del café</a>
+            <a href="/fical-y-el-cafe/" className="hover:underline">Fical y el café</a>
+            <a href="/bienestar/" className="hover:underline">Bienestar · Yoga, Tai Chi, Chi Kung</a>
+            <a href="/donaciones/" className="font-medium hover:underline">Donar · Siembra y carbono 🌳</a>
+            <a href="/busqueda-inteligente/" className="hover:underline">Zemisqua · Buscador ancestral</a>
+            <a href="/guardados/" className="hover:underline">Guardados</a>
+            <a href="/privacidad/" className="hover:underline text-xs">Política de privacidad</a>
+            <a href="/terminos/" className="hover:underline text-xs">Términos y condiciones</a>
           </div>
         </div>
         <div>

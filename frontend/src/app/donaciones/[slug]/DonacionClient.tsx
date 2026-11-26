@@ -139,7 +139,7 @@ export default function DonarProyectoPage({ slug: slugProp }: { slug: string }) 
       <nav className="mb-4 text-sm text-muted-foreground">
         <a href="/" className="hover:text-foreground">Inicio</a>
         <span className="mx-2">/</span>
-        <a href="/donaciones" className="hover:text-foreground">Donaciones</a>
+        <a href="/donaciones/" className="hover:text-foreground">Donaciones</a>
         <span className="mx-2">/</span>
         <span className="text-foreground">{proyecto.titulo}</span>
       </nav>
@@ -183,7 +183,7 @@ export default function DonarProyectoPage({ slug: slugProp }: { slug: string }) 
           <p className="mt-2 text-sm text-muted-foreground">
             Tu donación de ${montoFinal} {proyecto.moneda} quedó registrada para “{proyecto.titulo}”.
           </p>
-          <a href="/donaciones" className="mt-4 inline-block text-sm font-medium text-primary hover:underline">
+          <a href="/donaciones/" className="mt-4 inline-block text-sm font-medium text-primary hover:underline">
             Ver otros proyectos →
           </a>
         </div>

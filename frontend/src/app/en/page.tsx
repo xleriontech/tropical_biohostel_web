@@ -55,7 +55,7 @@ export default function EnglishPage() {
         ))}
       </div>
       <p className="mt-3 font-medium italic">{FICAL.en.cierre}</p>
-      <a href="/fical-y-el-cafe" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">
+      <a href="/fical-y-el-cafe/" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">
         Read the full story →
       </a>
 
@@ -86,7 +86,7 @@ export default function EnglishPage() {
       </ul>
       <p className="mt-3 font-medium">{CIERRE.en.final}</p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <a href="/cosmic-bungalow" className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">Meet Cosmic Bungalow</a>
+        <a href="/cosmic-bungalow/" className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">Meet Cosmic Bungalow</a>
         <a href="/" className="rounded-full border border-input px-6 py-2.5 text-sm font-medium hover:bg-secondary">Versión en español</a>
       </div>
     </div>

@@ -103,7 +103,7 @@ export default function GlampingPage() {
           <nav className="mb-6 text-sm text-white/60">
             <a href="/" className="hover:text-white">Inicio</a>
             <span className="mx-2">/</span>
-            <a href="/categoria/hostales" className="hover:text-white">{lang === "es" ? "Hospedaje" : "Lodging"}</a>
+            <a href="/categoria/hostales/" className="hover:text-white">{lang === "es" ? "Hospedaje" : "Lodging"}</a>
             <span className="mx-2">/</span>
             <span className="text-white">{t.nombre}</span>
           </nav>
@@ -125,7 +125,7 @@ export default function GlampingPage() {
             <a href="https://wa.me/573209079174" target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-emerald-950 shadow-xl hover:bg-emerald-50">
               {t.cta}
             </a>
-            <a href="/categoria/hostales" className="rounded-full border border-white/40 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10">
+            <a href="/categoria/hostales/" className="rounded-full border border-white/40 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10">
               {lang === "es" ? "Ver todos los alojamientos" : "See all lodging"}
             </a>
           </div>

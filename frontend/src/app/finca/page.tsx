@@ -195,7 +195,7 @@ function Login({ alEntrar }: { alEntrar: (usuario: string) => void }) {
         </form>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          <Link href="/donaciones/siembra" className="underline decoration-piedra underline-offset-4 hover:text-cascara">
+          <Link href="/donaciones/siembra/" className="underline decoration-piedra underline-offset-4 hover:text-cascara">
             Ir al tablero público
           </Link>
         </p>
@@ -848,7 +848,7 @@ export default function FincaPage() {
         <header className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <Link
-              href="/donaciones/siembra"
+              href="/donaciones/siembra/"
               className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-cascara"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden />

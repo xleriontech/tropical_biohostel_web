@@ -55,10 +55,10 @@ export default function CosmicBungalowPage() {
           </div>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a href="/property/cosmic-bungalow" className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-emerald-950 shadow-xl hover:bg-emerald-50">
+            <a href="/property/cosmic-bungalow/" className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-emerald-950 shadow-xl hover:bg-emerald-50">
               {lang === "es" ? "Ver y reservar" : "See & book"}
             </a>
-            <a href="/bienestar" className="rounded-full border border-white/40 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10">
+            <a href="/bienestar/" className="rounded-full border border-white/40 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10">
               Yoga · Chi Kung · Tai Chi
             </a>
           </div>
@@ -144,7 +144,7 @@ export default function CosmicBungalowPage() {
 
         <p className="mx-auto mt-8 max-w-2xl text-center font-display text-xl italic leading-relaxed">{t.cierre}</p>
         <div className="mt-6 text-center">
-          <a href="/property/cosmic-bungalow" className="inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
+          <a href="/property/cosmic-bungalow/" className="inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
             {lang === "es" ? "Reservar Cosmic Bungalow" : "Book Cosmic Bungalow"}
           </a>
         </div>

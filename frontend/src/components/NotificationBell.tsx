@@ -24,7 +24,7 @@ export default function NotificationBell() {
   }, []);
 
   return (
-    <a href="/admin/reservas" className="relative inline-block p-1 text-foreground hover:text-primary transition-colors">
+    <a href="/admin/reservas/" className="relative inline-block p-1 text-foreground hover:text-primary transition-colors">
       <Bell className="h-5 w-5" />
       {count > 0 && (
         <span className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">

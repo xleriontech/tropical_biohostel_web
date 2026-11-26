@@ -91,27 +91,27 @@ export default function NavBar() {
                 <div className="invisible absolute left-0 top-full z-50 w-52 translate-y-1 pt-2 opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                   <div className="themed-drop overflow-hidden rounded-xl border bg-white shadow-lg">
                     <a
-                      href="/categoria/hostales"
+                      href="/categoria/hostales/"
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:text-foreground"
                     >
                       Nuestros alojamientos
                     </a>
                     <a
-                      href="/cosmic-bungalow"
+                      href="/cosmic-bungalow/"
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:text-foreground"
                     >
                       <MoonStar className="h-4 w-4" />
                       Cosmic Bungalow
                     </a>
                     <a
-                      href="/cabana-de-la-luna"
+                      href="/cabana-de-la-luna/"
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:text-foreground"
                     >
                       <Moon className="h-4 w-4" />
                       Cabaña de la Luna
                     </a>
                     <a
-                      href="/glamping"
+                      href="/glamping/"
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:text-foreground"
                     >
                       <Tent className="h-4 w-4" />
@@ -120,7 +120,7 @@ export default function NavBar() {
                   </div>
                 </div>
               </div>
-              <a href="/experiencias" className="nav-link text-sm">
+              <a href="/experiencias/" className="nav-link text-sm">
                 Experiencias
               </a>
               <div className="group relative">
@@ -142,13 +142,13 @@ export default function NavBar() {
                   </div>
                 </div>
               </div>
-              <a href="/busqueda-inteligente" title="Zemisqua · Buscador ancestral" className="flex items-center gap-1.5 text-sm font-medium text-[hsl(var(--menu))] hover:opacity-85">
+              <a href="/busqueda-inteligente/" title="Zemisqua · Buscador ancestral" className="flex items-center gap-1.5 text-sm font-medium text-[hsl(var(--menu))] hover:opacity-85">
                 <Brain className="h-4 w-4" />
                 Zemisqua
               </a>
             </div>
             <a
-              href="/donaciones"
+              href="/donaciones/"
               className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg sm:inline-flex"
               title="Donar · Siembra y carbono"
             >
@@ -169,7 +169,7 @@ export default function NavBar() {
             {user ? (
               <div className="hidden items-center gap-4 sm:flex">
                 {(user.role === "admin" || user.role === "propietario") && (
-                  <a href="/admin" className="text-sm font-medium text-[hsl(var(--menu))] hover:opacity-85">
+                  <a href="/admin/" className="text-sm font-medium text-[hsl(var(--menu))] hover:opacity-85">
                     Admin
                   </a>
                 )}
@@ -208,13 +208,13 @@ export default function NavBar() {
                   {l.label}
                 </a>
               ))}
-              <a href="/busqueda-inteligente" className="m-active flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium">
+              <a href="/busqueda-inteligente/" className="m-active flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium">
                 <Brain className="h-4 w-4" /> Zemisqua · Buscador ancestral
               </a>
               {user ? (
                 <>
                   {(user.role === "admin" || user.role === "propietario") && (
-                    <a href="/admin" className="rounded-lg px-3 py-2.5 text-sm font-medium text-[hsl(var(--menu))]">
+                    <a href="/admin/" className="rounded-lg px-3 py-2.5 text-sm font-medium text-[hsl(var(--menu))]">
                       Admin
                     </a>
                   )}

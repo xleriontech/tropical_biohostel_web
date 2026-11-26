@@ -27,7 +27,7 @@ export default function DonarFloat() {
             Siembra árboles nativos y compensa tu huella de carbono.
           </p>
           <a
-            href="/donaciones"
+            href="/donaciones/"
             className="mt-3 block rounded-full bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-2.5 text-center text-sm font-bold text-white shadow-lg hover:from-emerald-500 hover:to-green-600"
           >
             Donar 🌳

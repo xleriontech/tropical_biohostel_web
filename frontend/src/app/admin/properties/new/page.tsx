@@ -102,7 +102,7 @@ export default function NewPropertyPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-6 flex items-center gap-3">
-        <a href="/admin/properties" className="flex items-center gap-1.5 rounded-lg border border-input px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a href="/admin/properties/" className="flex items-center gap-1.5 rounded-lg border border-input px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="h-4 w-4" /> Volver
         </a>
         <h1 className="text-2xl font-bold">Nueva Propiedad</h1>
@@ -359,7 +359,7 @@ export default function NewPropertyPage() {
                   </span>
                 ) : "Crear Propiedad"}
               </button>
-              <a href="/admin/properties" className="rounded-xl border border-input px-6 py-3 text-sm text-muted-foreground hover:text-foreground transition-colors">Cancelar</a>
+              <a href="/admin/properties/" className="rounded-xl border border-input px-6 py-3 text-sm text-muted-foreground hover:text-foreground transition-colors">Cancelar</a>
             </div>
           </form>
         </div>

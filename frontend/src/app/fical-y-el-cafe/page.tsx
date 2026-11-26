@@ -35,7 +35,7 @@ export default function FicalCafePage() {
           <p className="mx-auto mt-4 max-w-2xl text-lg text-white/85">{t.subtitulo}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a
-              href="/rutas"
+              href="/rutas/"
               className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-emerald-950 shadow-xl hover:bg-emerald-50"
             >
               Ver las rutas del café
@@ -144,7 +144,7 @@ export default function FicalCafePage() {
               </a>
             ))}
             <a
-              href="/rutas"
+              href="/rutas/"
               className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
               Ver las 3 rutas

@@ -178,7 +178,7 @@ export default function AdminDashboard() {
         <div className="rounded-xl border bg-white p-6 shadow-sm">
           <h2 className="mb-4 font-semibold">Acciones Rápidas</h2>
           <div className="space-y-3">
-            <a href="/admin/properties/new"
+            <a href="/admin/properties/new/"
               className="flex items-center gap-3 rounded-lg border border-input p-3 transition-colors hover:bg-secondary/50">
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><Building2 className="h-5 w-5" /></span>
               <div>
@@ -186,7 +186,7 @@ export default function AdminDashboard() {
                 <p className="text-xs text-muted-foreground">Agregar un alojamiento al catálogo</p>
               </div>
             </a>
-            <a href="/admin/sponsors"
+            <a href="/admin/sponsors/"
               className="flex items-center gap-3 rounded-lg border border-input p-3 transition-colors hover:bg-secondary/50">
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><HeartHandshake className="h-5 w-5" /></span>
               <div>
@@ -194,7 +194,7 @@ export default function AdminDashboard() {
                 <p className="text-xs text-muted-foreground">Administrar sponsors y anuncios</p>
               </div>
             </a>
-            <a href="/admin/config"
+            <a href="/admin/config/"
               className="flex items-center gap-3 rounded-lg border border-input p-3 transition-colors hover:bg-secondary/50">
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><Settings className="h-5 w-5" /></span>
               <div>

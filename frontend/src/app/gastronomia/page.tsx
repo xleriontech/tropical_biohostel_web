@@ -36,8 +36,8 @@ export default function GastronomiaPage() {
       </div>
       <p className="mt-4 rounded-2xl border bg-secondary/30 p-5 font-medium leading-relaxed">{t.cierre}</p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <a href="/property/mesa-tropical" className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">Ver Mesa Tropical</a>
-        <a href="/territorio" className="rounded-full border border-input px-6 py-2.5 text-sm font-medium hover:bg-secondary">Conocer la huerta</a>
+        <a href="/property/mesa-tropical/" className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">Ver Mesa Tropical</a>
+        <a href="/territorio/" className="rounded-full border border-input px-6 py-2.5 text-sm font-medium hover:bg-secondary">Conocer la huerta</a>
       </div>
     </div>
   );

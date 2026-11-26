@@ -215,7 +215,7 @@ export default function ConsultaArbol({ codigoInicial }: { codigoInicial: string
         {!ficha && !cargando && (
           <p className="mt-6 text-sm text-muted-foreground">
             ¿Aún no tienes árbol?{" "}
-            <a href="/donaciones/siembra" className="font-semibold text-bosque underline">
+            <a href="/donaciones/siembra/" className="font-semibold text-bosque underline">
               Elige una casilla del tablero
             </a>{" "}
             y apadrina un café o un cacao.
