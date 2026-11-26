@@ -26,6 +26,17 @@ interface Mensaje {
 
 const fmtCOP = (v: number) => "$" + v.toLocaleString("es-CO");
 
+function sugerenciaLink(s: string): { href: string; external?: boolean } | null {
+  const t = s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (t.includes("donacion") || t.includes("donar")) return { href: "/donaciones/" };
+  if (t.includes("siembra") || t.includes("arbol")) return { href: "/donaciones/siembra/" };
+  if (t.includes("contacto") || t.includes("whatsapp") || t.includes("reservar por whatsapp")) return { href: "https://wa.me/573209079174", external: true };
+  if (t.includes("hospedaje") || t.includes("ver hospedaje")) return { href: "/#hospedaje" };
+  if (t.includes("experienc")) return { href: "/#experiencias" };
+  if (t.includes("busqueda") || t.includes("zemisqua")) return { href: "/busqueda-inteligente/" };
+  return null;
+}
+
 /** Mini-markdown seguro para Nati: [texto](url), **negrita** y saltos de línea. */
 function renderRico(texto: string | undefined | null, claro: boolean) {
   const txt = texto ?? "";
@@ -291,15 +302,19 @@ export default function ChatWidget() {
 
           {ultimasSugerencias.length > 0 && !cargando && (
             <div className="flex gap-2 overflow-x-auto px-3 pb-2">
-              {ultimasSugerencias.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => enviar(s)}
-                  className="shrink-0 rounded-full border border-emerald-400/40 px-3 py-1 text-xs text-emerald-200 transition hover:bg-emerald-500/20"
-                >
-                  {s}
-                </button>
-              ))}
+              {ultimasSugerencias.map((s) => {
+                const link = sugerenciaLink(s);
+                const cls = "shrink-0 rounded-full border border-emerald-400/40 px-3 py-1 text-xs text-emerald-200 transition hover:bg-emerald-500/20";
+                return link ? (
+                  link.external ? (
+                    <a key={s} href={link.href} target="_blank" rel="noopener noreferrer" className={cls}>{s}</a>
+                  ) : (
+                    <Link key={s} href={link.href} className={cls}>{s}</Link>
+                  )
+                ) : (
+                  <button key={s} onClick={() => enviar(s)} className={cls}>{s}</button>
+                );
+              })}
             </div>
           )}
 
