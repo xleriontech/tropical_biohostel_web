@@ -1180,6 +1180,19 @@ final class Handlers
         Response::json([]);
     }
 
+    public function getAdminProperties(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $limit = min(1000, max(1, (int) $this->query('limit', 500)));
+            $stmt = $this->pdo()->prepare('SELECT * FROM properties ORDER BY created_at DESC LIMIT ?');
+            $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $items = array_map([$this, 'normalizeProperty'], $stmt->fetchAll());
+            Response::json(['items' => $items, 'total' => count($items)]);
+        });
+    }
+
     public function getAdminDashboard(): void
     {
         $this->safe(function () {

@@ -79,6 +79,7 @@ $router->add('POST', '/chat/mensaje', [$h, 'chatMensaje']);
 $router->add('GET', '/notificaciones/count', [$h, 'getNotificacionesCount']);
 $router->add('GET', '/notificaciones', [$h, 'getNotificaciones']);
 $router->add('GET', '/admin/dashboard', [$h, 'getAdminDashboard']);
+$router->add('GET', '/admin/properties', [$h, 'getAdminProperties']);
 $router->add('GET', '/admin/chat-ai-config', [$h, 'getChatAiConfigAdmin']);
 $router->add('PUT', '/admin/chat-ai-config', [$h, 'saveChatAiConfigAdmin']);
 $router->add('GET', '/admin/chat-ai-models', [$h, 'getChatAiModelsAdmin']);
