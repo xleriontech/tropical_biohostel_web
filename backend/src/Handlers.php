@@ -2224,11 +2224,24 @@ final class Handlers
         $this->safe(function () {
             if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
             try {
-                $stmt = $this->pdo()->query('SELECT p.id, p.titulo, p.estado, p.activo, COALESCE(SUM(CASE WHEN d.estado="APROBADA" THEN d.monto ELSE 0 END),0) AS recaudado, COUNT(CASE WHEN d.estado="APROBADA" THEN 1 END) AS donantes FROM donacion_proyectos p LEFT JOIN donaciones d ON d.proyecto_id=p.id GROUP BY p.id, p.titulo, p.estado, p.activo ORDER BY p.created_at DESC');
+                $stmt = $this->pdo()->query('SELECT p.*, COALESCE(SUM(CASE WHEN d.estado="APROBADA" THEN d.monto ELSE 0 END),0) AS recaudado, COUNT(CASE WHEN d.estado="APROBADA" THEN 1 END) AS donantes FROM donacion_proyectos p LEFT JOIN donaciones d ON d.proyecto_id=p.id GROUP BY p.id ORDER BY p.created_at DESC');
                 $rows = $stmt->fetchAll() ?: [];
-                foreach ($rows as &$r) { $r['recaudado'] = 0 + ($r['recaudado'] ?? 0); $r['donantes'] = (int)($r['donantes'] ?? 0); }
-                Response::json($rows);
-            } catch (Throwable $e) { Response::json([['_debug_error' => $e->getMessage()]]); }
+                $out = [];
+                foreach ($rows as $r) {
+                    $activo = isset($r['activo']) ? (int)$r['activo'] === 1 : true;
+                    $out[] = [
+                        'id' => $r['id'] ?? null,
+                        'titulo' => $r['titulo'] ?? '',
+                        'estado' => $r['estado'] ?? ($activo ? 'ACTIVO' : 'INACTIVO'),
+                        'activo' => $activo,
+                        'recaudado' => 0 + ($r['recaudado'] ?? 0),
+                        'donantes' => (int)($r['donantes'] ?? 0),
+                        'meta' => isset($r['meta']) ? (0 + $r['meta']) : null,
+                        'moneda' => $r['moneda'] ?? 'USD',
+                    ];
+                }
+                Response::json($out);
+            } catch (Throwable $e) { Response::json([]); }
         });
     }
 
