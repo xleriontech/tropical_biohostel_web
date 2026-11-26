@@ -71,13 +71,26 @@ final class Handlers
     {
         try {
             $cols = $this->pdo()->query('SHOW COLUMNS FROM site_config')->fetchAll();
-            $names = array_map(fn($c) => (string)($c['Field'] ?? ''), is_array($cols) ? $cols : []);
+            $cols = is_array($cols) ? $cols : [];
         } catch (Throwable $e) {
-            $names = [];
+            $cols = [];
+        }
+        $names = array_map(fn($c) => (string)($c['Field'] ?? ''), $cols);
+        $pri = null; $priAuto = false;
+        foreach ($cols as $c) {
+            if (($c['Key'] ?? '') === 'PRI') {
+                $pri = (string)$c['Field'];
+                $extra = strtolower((string)($c['Extra'] ?? ''));
+                $type = strtolower((string)($c['Type'] ?? ''));
+                $priAuto = str_contains($extra, 'auto_increment') || str_contains($type, 'int');
+                break;
+            }
         }
         $keyCol = null; $valCol = null;
         foreach (['config_key','key','clave','name','config_name','setting_key'] as $c) { if (in_array($c, $names, true)) { $keyCol = $c; break; } }
         foreach (['value_json','value','valor','config_value','setting_value','data'] as $c) { if (in_array($c, $names, true)) { $valCol = $c; break; } }
+        // Si hay PK string no-auto, preferirla como keyCol
+        if ($pri && $pri !== $valCol && !$priAuto) $keyCol = $pri;
         if (!$keyCol || !$valCol) { $keyCol = $keyCol ?: 'config_key'; $valCol = $valCol ?: 'value_json'; }
         return [$keyCol, $valCol, $names];
     }
