@@ -210,6 +210,20 @@ final class Handlers
             }, $imgs, array_keys($imgs));
         }
         if (!isset($row['images'])) $row['images'] = [];
+        // Alias convenientes para frontend/chat
+        if (!isset($row['precio']) && isset($row['precioNoche'])) $row['precio'] = $row['precioNoche'];
+        if (!isset($row['imagen'])) {
+            $img = null;
+            if (!empty($row['images']) && is_array($row['images'])) {
+                $first = $row['images'][0] ?? null;
+                $img = is_array($first) ? ($first['url'] ?? null) : (is_string($first) ? $first : null);
+            }
+            if (!$img && !empty($row['imagenes']) && is_array($row['imagenes'])) {
+                $first = $row['imagenes'][0] ?? null;
+                $img = is_array($first) ? ($first['url'] ?? null) : (is_string($first) ? $first : null);
+            }
+            $row['imagen'] = $img ?: null;
+        }
         return $row;
     }
 
