@@ -64,6 +64,12 @@ $router->add('GET', '/donaciones/proyectos/{slug}', [$h, 'getDonacionProyectoByS
 $router->add('GET', '/donaciones/paypal-public', [$h, 'getPaypalPublic']);
 $router->add('POST', '/donaciones/orden', [$h, 'createDonacionOrden']);
 $router->add('POST', '/donaciones/capturar', [$h, 'capturarDonacion']);
+$router->add('GET', '/admin/donaciones', [$h, 'getDonacionesAdmin']);
+$router->add('GET', '/admin/donaciones/resumen', [$h, 'getDonacionesResumenAdmin']);
+$router->add('POST', '/admin/donaciones/proyectos', [$h, 'upsertDonacionProyectoAdmin']);
+$router->add('PUT', '/admin/donaciones/proyectos/{id}', [$h, 'upsertDonacionProyectoAdmin']);
+$router->add('DELETE', '/admin/donaciones/proyectos/{id}', [$h, 'deleteDonacionProyectoAdmin']);
+$router->add('POST', '/admin/donaciones/manual', [$h, 'createDonacionManualAdmin']);
 
 // Reservas
 $router->add('POST', '/reservas', [$h, 'createReserva']);

@@ -35,8 +35,8 @@ export default function AdminDonacionesPage() {
       fetch(`${API}/admin/donaciones`, { headers: auth() }).then((x) => x.json()),
       fetch(`${API}/donaciones/paypal-public`).then((x) => x.json()).catch(() => ({})),
     ]);
-    setResumen(r);
-    setDons(d);
+    setResumen(Array.isArray(r) ? r : []);
+    setDons(Array.isArray(d) ? d : []);
     if (c?.clientId !== undefined) {
       setPp({ clientId: c.clientId || "", mode: c.mode || "sandbox", currency: c.currency || "USD", paypalMe: c.paypalMe || "" });
     }

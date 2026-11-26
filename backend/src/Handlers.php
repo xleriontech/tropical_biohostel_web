@@ -2217,4 +2217,80 @@ final class Handlers
             Response::json(['ok'=>true,'message'=>'Este módulo aún no está implementado en el backend PHP.']);
         });
     }
+
+    // ---------- Donaciones admin ----------
+    public function getDonacionesResumenAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            try {
+                $stmt = $this->pdo()->query('SELECT p.id, p.titulo, p.estado, p.activo, COALESCE(SUM(CASE WHEN d.estado="APROBADA" THEN d.monto ELSE 0 END),0) AS recaudado, COUNT(CASE WHEN d.estado="APROBADA" THEN 1 END) AS donantes FROM donacion_proyectos p LEFT JOIN donaciones d ON d.proyecto_id=p.id GROUP BY p.id, p.titulo, p.estado, p.activo ORDER BY p.created_at DESC');
+                $rows = $stmt->fetchAll() ?: [];
+                foreach ($rows as &$r) { $r['recaudado'] = 0 + ($r['recaudado'] ?? 0); $r['donantes'] = (int)($r['donantes'] ?? 0); }
+                Response::json($rows);
+            } catch (Throwable $e) { Response::json([]); }
+        });
+    }
+
+    public function getDonacionesAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            try {
+                $stmt = $this->pdo()->query('SELECT d.*, p.titulo AS proyecto_titulo FROM donaciones d LEFT JOIN donacion_proyectos p ON p.id=d.proyecto_id ORDER BY d.created_at DESC LIMIT 500');
+                $rows = $stmt->fetchAll() ?: [];
+                $out = [];
+                foreach ($rows as $r) {
+                    $out[] = [
+                        'id' => $r['id'] ?? null,
+                        'nombre' => $r['nombre'] ?? null,
+                        'monto' => 0 + ($r['monto'] ?? 0),
+                        'moneda' => $r['moneda'] ?? 'USD',
+                        'estado' => $r['estado'] ?? 'PENDIENTE',
+                        'esManual' => !empty($r['es_manual']) || empty($r['paypal_order_id']),
+                        'createdAt' => $r['created_at'] ?? null,
+                        'proyecto' => ['titulo' => $r['proyecto_titulo'] ?? 'Proyecto'],
+                    ];
+                }
+                Response::json($out);
+            } catch (Throwable $e) { Response::json([]); }
+        });
+    }
+
+    public function upsertDonacionProyectoAdmin(array $params): void
+    {
+        $this->safe(function () use ($params) {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            Response::json(['ok'=>true,'message'=>'CRUD de proyectos de donación no está completamente portado en PHP.']);
+        });
+    }
+
+    public function deleteDonacionProyectoAdmin(array $params): void
+    {
+        $this->safe(function () use ($params) {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $id = (string)($params['id'] ?? '');
+            try { $stmt = $this->pdo()->prepare('DELETE FROM donacion_proyectos WHERE id = ?'); $stmt->execute([$id]); } catch (Throwable $e) {}
+            Response::json(['ok'=>true]);
+        });
+    }
+
+    public function createDonacionManualAdmin(): void
+    {
+        $this->safe(function () {
+            if (!$this->isAdmin()) { Response::error('No autorizado', 401); return; }
+            $b = $this->body();
+            $proyectoId = trim((string)($b['proyectoId'] ?? ''));
+            $monto = (float)($b['monto'] ?? 0);
+            if ($proyectoId === '' || $monto <= 0) { Response::error('Datos inválidos', 400); return; }
+            try {
+                $id = $this->uuid();
+                $stmt = $this->pdo()->prepare('INSERT INTO donaciones (id, proyecto_id, monto, moneda, nombre, email, mensaje, estado, es_manual, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, "APROBADA", 1, NOW())');
+                $stmt->execute([$id,$proyectoId,$monto,trim((string)($b['moneda'] ?? 'USD')) ?: 'USD',trim((string)($b['nombre'] ?? '')) ?: null,trim((string)($b['email'] ?? '')) ?: null,trim((string)($b['mensaje'] ?? '')) ?: null]);
+                Response::json(['ok'=>true,'id'=>$id]);
+            } catch (Throwable $e) {
+                Response::json(['ok'=>false,'message'=>'No se pudo registrar la donación manual: '.$e->getMessage()]);
+            }
+        });
+    }
 }
