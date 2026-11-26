@@ -482,6 +482,7 @@ final class Handlers
             }
 
             Response::json([
+                'access_token' => $adminToken,
                 'token' => $adminToken,
                 'user' => [
                     'id' => 'admin',
