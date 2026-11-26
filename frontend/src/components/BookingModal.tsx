@@ -17,14 +17,15 @@ function traducirError(msg: string): string {
     .replace(/fechaSalida must be a valid ISO 8601 date string/gi, "La fecha de salida no es válida");
 }
 
-const ESTADO_INICIAL = {  nombre: "",
+const ESTADO_INICIAL = {
+  nombre: "",
   email: "",
   telefono: "",
   identificacion: "",
   fechaLlegada: "",
   fechaSalida: "",
   huespedes: 1,
-  metodoPago: "EFECTIVO" as "TARJETA" | "EFECTIVO",
+  metodoPago: "EFECTIVO",
   notas: "",
   aceptaTerminos: false,
 };
@@ -47,8 +48,21 @@ export default function BookingModal({
   const [error, setError] = useState("");
   const [disp, setDisp] = useState<{ disponible: boolean; conflictoCon: { desde: string; hasta: string; fuente: string } | null } | null>(null);
   const [checking, setChecking] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState<Array<{id:string;name:string}>>([{id:"EFECTIVO",name:"Pagar en efectivo al llegar"}]);
   const { showToast } = useToast();
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"}/config/payment-methods`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        const methods = Array.isArray(data?.methods) ? data.methods : [];
+        if (methods.length > 0) {
+          setPaymentMethods(methods.map((m: any) => ({ id: String(m.id || "").toUpperCase(), name: String(m.name || m.id) })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Verifica disponibilidad (nuestras reservas + Airbnb/Booking) al elegir fechas
   useEffect(() => {
@@ -216,10 +230,11 @@ export default function BookingModal({
             </div>
             <div>
               <label className="mb-1 block text-xs font-medium text-muted-foreground">Método de pago</label>
-              <select value={form.metodoPago} onChange={(e) => setForm({ ...form, metodoPago: e.target.value as any })}
+              <select value={form.metodoPago} onChange={(e) => setForm({ ...form, metodoPago: e.target.value })}
                 className="w-full rounded-xl border border-input bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-                <option value="EFECTIVO">Pagar en efectivo al llegar</option>
-                <option value="TARJETA">Pagar con tarjeta</option>
+                {paymentMethods.map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
               </select>
             </div>
           </div>

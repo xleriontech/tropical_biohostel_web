@@ -619,7 +619,10 @@ final class Handlers
                 Response::error('Faltan campos obligatorios de la reserva', 400);
                 return;
             }
-            if (!in_array($metodoPago, ['EFECTIVO', 'TARJETA'], true)) $metodoPago = 'EFECTIVO';
+            $allowed = ['EFECTIVO', 'TARJETA'];
+            foreach ($this->paymentConfigMerged() as $pm) { if (!empty($pm['enabled'])) $allowed[] = strtoupper((string)$pm['id']); }
+            $allowed = array_values(array_unique($allowed));
+            if (!in_array($metodoPago, $allowed, true)) $metodoPago = 'EFECTIVO';
             if ($fechaSalida <= $fechaLlegada) {
                 Response::error('La fecha de salida debe ser posterior a la llegada', 400);
                 return;
@@ -1535,6 +1538,26 @@ final class Handlers
             } catch (Throwable $e) { $ok=false; $msg=$e->getMessage(); }
             $ms = (int) round((microtime(true)-$t0)*1000);
             Response::json(['ok'=>$ok,'ms'=>$ms,'status'=>$status,'message'=>$msg,'provider'=>$id]);
+        });
+    }
+
+    public function getPublicPaymentMethods(): void
+    {
+        $this->safe(function () {
+            $rows = $this->paymentConfigMerged();
+            $out = [];
+            foreach ($rows as $p) {
+                if (empty($p['enabled'])) continue;
+                $out[] = [
+                    'id' => $p['id'],
+                    'name' => $p['name'],
+                    'category' => $p['category'],
+                    'mode' => $p['mode'],
+                ];
+            }
+            // Siempre incluir efectivo como opción base
+            array_unshift($out, ['id'=>'efectivo','name'=>'Efectivo al llegar','category'=>'local','mode'=>'live']);
+            Response::json(['methods' => $out]);
         });
     }
 

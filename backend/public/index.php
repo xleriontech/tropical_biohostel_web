@@ -45,6 +45,7 @@ $router->add('GET', '/health', fn() => Response::json(['ok' => true]));
 $router->add('GET', '/config/parallax', [$h, 'getParallax']);
 $router->add('GET', '/config/ads-display', [$h, 'getAdsDisplay']);
 $router->add('GET', '/config/site-branding', [$h, 'getSiteBranding']);
+$router->add('GET', '/config/payment-methods', [$h, 'getPublicPaymentMethods']);
 
 // Public content
 $router->add('GET', '/properties', [$h, 'getProperties']);
